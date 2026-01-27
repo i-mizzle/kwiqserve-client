@@ -1,16 +1,25 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import store from './store/store.js'
 import './App.css'
 import Login from './pages/auth/Login.jsx'
+import ErrorNotifier from './components/elements/ErrorNotifier.jsx'
+import SuccessNotifier from './components/elements/SuccessNotifier.jsx'
+import ScrollToTop from './components/Layouts/ScrollToTop.jsx'
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        {/* <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} /> */}
-      </Routes>
-    </Router>
+    <Provider store={store}>
+      <ErrorNotifier />
+      <SuccessNotifier />
+      <ScrollToTop>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          {/* <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} /> */}
+        </Routes>
+      </ScrollToTop>
+    </Provider>
   )
 }
 

@@ -1,0 +1,82 @@
+// Errors
+export const ERROR = 'ERROR'
+export const CLEAR_ERROR = 'CLEAR_ERROR'
+
+// Success
+export const SET_SUCCESS = 'SET_SUCCESS'
+export const CLEAR_SUCCESS = 'CLEAR_SUCCESS'
+
+// Categories
+export const GET_CATEGORIES = 'GET_CATEGORIES';
+export const GETTING_CATEGORIES = 'GETTING_CATEGORIES';
+export const CREATE_CATEGORY = 'CREATE_CATEGORY';
+export const CREATING_CATEGORY = 'CREATING_CATEGORY';
+export const UPDATE_CATEGORY = 'UPDATE_CATEGORY';
+export const UPDATING_CATEGORY = 'UPDATING_CATEGORY';
+export const DELETE_CATEGORY = 'DELETE_CATEGORY';
+export const DELETING_CATEGORY = 'DELETING_CATEGORY';
+export const CATEGORIES_ERROR = 'CATEGORIES_ERROR';
+
+// Items
+export const GET_ITEMS = 'GET_ITEMS';
+export const GETTING_ITEMS = 'GETTING_ITEMS';
+export const CREATE_ITEM = 'CREATE_ITEM';
+export const CREATING_ITEM = 'CREATING_ITEM';
+export const UPDATE_ITEM = 'UPDATE_ITEM';
+export const UPDATING_ITEM = 'UPDATING_ITEM';
+export const DELETE_ITEM = 'DELETE_ITEM';
+export const DELETING_ITEM = 'DELETING_ITEM';
+export const ITEMS_ERROR = 'ITEMS_ERROR';
+
+// Tables
+export const GET_TABLES = 'GET_TABLES';
+export const GETTING_TABLES = 'GETTING_TABLES';
+export const CREATE_TABLE = 'CREATE_TABLE';
+export const CREATING_TABLE = 'CREATING_TABLE';
+export const UPDATE_TABLE = 'UPDATE_TABLE';
+export const UPDATING_TABLE = 'UPDATING_TABLE';
+export const DELETE_TABLE = 'DELETE_TABLE';
+export const DELETING_TABLE = 'DELETING_TABLE';
+export const TABLES_ERROR = 'TABLES_ERROR';
+
+// Menus
+export const GET_MENUS = 'GET_MENUS';
+export const GETTING_MENUS = 'GETTING_MENUS';
+export const CREATE_MENU = 'CREATE_MENU';
+export const CREATING_MENU = 'CREATING_MENU';
+export const UPDATE_MENU = 'UPDATE_MENU';
+export const UPDATING_MENU = 'UPDATING_MENU';
+export const DELETE_MENU = 'DELETE_MENU';
+export const DELETING_MENU = 'DELETING_MENU';
+export const MENUS_ERROR = 'MENUS_ERROR';
+
+// Orders
+export const GET_ORDERS = 'GET_ORDERS';
+export const GETTING_ORDERS = 'GETTING_MENUS';
+export const CREATE_ORDER = 'CREATE_ORDER';
+export const CREATING_ORDER = 'CREATING_ORDER';
+export const UPDATE_ODER = 'UPDATE_ODER';
+export const UPDATING_ORDER = 'UPDATING_ORDER';
+export const DELETE_ORDER = 'DELETE_ORDER';
+export const DELETING_ORDER = 'DELETING_ORDER';
+export const ORDERS_ERROR = 'ORDERS_ERROR';
+
+// Transactions
+export const GET_TRANSACTIONS = 'GET_TRANSACTIONS';
+export const GTETING_TRANSACTIONS = 'GTETING_TRANSACTIONS';
+
+// Roles & Permissions
+export const GET_PERMISSIONS = 'GET_PERMISSIONS';
+export const GETTING_PERMISSIONS = 'GETTING_PERMISSIONS';
+export const GET_ROLES = 'GET_ROLES';
+export const GETTING_ROLES = 'GETTING_ROLES';
+export const CREATE_ROLE = 'CREATE_ROLE';
+export const CREATING_ROLE = 'CREATING_ROLE';
+export const UPDATE_ROLE = 'UPDATE_ROLE';
+export const UPDATING_ROLE = 'UPDATING_ROLE';
+export const ROLES_PERMISSIONS_ERROR = 'ROLES_PERMISSIONS_ERROR';
+
+// Audit logs
+export const GET_AUDIT_LOGS = 'GET_AUDIT_LOGS';
+export const GETTING_AUDIT_LOGS = 'GETTING_AUDIT_LOGS';
+export const AUDIT_LOGS_ERROR = 'AUDIT_LOGS_ERROR';
