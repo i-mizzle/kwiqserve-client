@@ -7,15 +7,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#3B82F6',
-        secondary: '#8B5CF6',
-        'dark-gray': '#1F2937',
-        'light-gray': '#E5E7EB',
-        accent: '#F59E0B',
-        white: '#FFFFFF',
+        'ss-dark-blue': '#0C1B33', // prussian blue
+        'ss-black': '#030A11', // ink black
+        'ss-dark-gray': '#303436', // gunmetal
+        'ss-light-gray': '#E5E7EB', // alice blue
+        'ss-pale-blue': '#E5FCFF', // azue mist
+        'ss-white': '#FCFFFF',
       },
       fontFamily: {
-        'stack-sans-pro': ['Stack Sans Headline', 'system-ui', 'sans-serif'],
+        'stack-sans-headline': ['Stack Sans Headline', 'system-ui', 'sans-serif'],
+        'bricolage-grotesque': ['Bricolage Grotesque', 'system-ui', 'sans-serif'],
         'outfit': ['Outfit', 'system-ui', 'sans-serif'],
       },
     },

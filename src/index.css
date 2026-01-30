@@ -1,11 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Stack+Sans+Headline:wght@200..700&display=swap');
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Outfit:wght@100..900&family=Stack+Sans+Headline:wght@200..700&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@theme {
+  /* Custom Colors */
+  --color-ss-dark-blue: #0C1B33;
+  --color-ss-black: #030A11;
+  --color-ss-dark-gray: #303436;
+  --color-ss-light-gray: #E5E7EB;
+  --color-ss-pale-blue: #E5FCFF;
+  --color-ss-white: #FCFFFF;
+
+  /* Custom Fonts */
+  --font-family-stack-sans-headline: 'Stack Sans Headline', system-ui, sans-serif;
+  --font-family-bricolage-grotesque: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-family-outfit: 'Outfit', system-ui, sans-serif;
+}
 
 :root {
-  font-family: 'Stack Sans Headline', 'Outfit', system-ui, sans-serif;
+  font-family: 'Outfit', sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -17,6 +29,14 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, button {
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+}
+
+p, a, span, li, label {
+  font-family: 'Outfit', system-ui, sans-serif;
 }
 
 a {

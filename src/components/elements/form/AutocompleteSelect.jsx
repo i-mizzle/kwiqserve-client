@@ -8,7 +8,7 @@ import { useOutsideAlerter } from './SelectField';
 const AutocompleteSelect = ({
     selectOptions, 
     inputLabel, 
-    placeholderText,
+    inputPlaceholder,
     displayImage, 
     imageField, 
     bgImage,
@@ -114,7 +114,7 @@ const AutocompleteSelect = ({
                     className={`rounded py-3 px-3 block w-full focus:border-gray-800 focus:outline-none hover:border-gray-200 hover:bg-gray-50 border bg-gray-100  transition duration-200 focus:bg-white text-sm font-outfit placeholder:font-outfit  ${hasError ? 'border-red-600' : 'border-gray-100'}`}
                     onClick={()=>{openOptions()}}  
                     onFocus={()=>{openOptions()}}  
-                    placeholder={placeholderText}
+                    placeholder={inputPlaceholder}
                     readOnly={disabled}
                     // onBlur={()=>{closeOptions()}} 
                     onChange={(e)=>{filterOptions(e.target.value)}}
@@ -156,11 +156,11 @@ const AutocompleteSelect = ({
                                 }
                             >
                                 {displayImage && !bgImage &&
-                                    <img alt="" src={option[imageField]} className='w-[30px]' />
+                                    <img alt="" src={option[imageField]} className='w-7.5' />
                                 }
 
                                 {displayImage && bgImage &&
-                                    <div className='w-[35px] h-[35px] rounded-full' style={{
+                                    <div className='w-8.75 h-8.75 rounded-full' style={{
                                         backgroundImage: `url(${ option[imageField]})`, backgroundSize: 'cover', backgroundPosition: 'center'
                                     }} />
                                 }
@@ -192,7 +192,7 @@ const AutocompleteSelect = ({
                         ))}
                         {/* Footer Buttone */}
                         {includeButton && includeButton === true &&
-                            <button className='absolute -bottom-[55px] left-[10%] right-auto w-[80%] px-3 py-4 text-center text-sm bg-black font-tomato transition duration-200 hover:bg-gray-800 text-white flex items-center justify-center gap-x-1' onClick={()=>{buttonAction()}}>
+                            <button className='absolute -bottom-13.75 left-[10%] right-auto w-[80%] px-3 py-4 text-center text-sm bg-black font-tomato transition duration-200 hover:bg-gray-800 text-white flex items-center justify-center gap-x-1' onClick={()=>{buttonAction()}}>
                                 <PlusIcon className={`w-4 h-4`}/>
                                 {buttonLabel}
                             </button>

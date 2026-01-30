@@ -31,73 +31,151 @@ const SelectField = ({
   titleField,
   hasError,
   returnFieldValue,
+  inputPlaceholder,
   preSelectedIndex,
   preSelected,
   preSelectedLabel,
-  requiredField
+  requiredField,
+  position='top-[90px]'
 }) => {
   const [activeValue, setActiveValue] = useState('');
-  const [visibleOptions] = useState(selectOptions);
-  // const [optionsOpen, setOptionsOpen] = useState(false);
+  const [visibleOptions, setVisibleOptions] = useState(selectOptions);
+  const [optionsOpen, setOptionsOpen] = useState(false);
 
   useEffect(() => {
     const preSelect = () => {
-      if (preSelected !== undefined) {
-        const selectedOption = selectOptions.find(
-          (option) => option[preSelectedLabel] === preSelected
-        );
-        if (selectedOption) {
-          setActiveValue(selectedOption[titleField]);
-        }
-      } else if (preSelectedIndex !== undefined && selectOptions[preSelectedIndex]) {
-        setActiveValue(selectOptions[preSelectedIndex][titleField]);
+      if(!preSelected || preSelected === undefined) {
+        return
       }
-    };
-    preSelect();
-  }, [preSelected, preSelectedLabel, selectOptions, titleField, preSelectedIndex]);
 
-  // const closeOptions = () => {
-  //   setOptionsOpen(false);
-  // };
+      selectOptions?.forEach((option) => {
+        if (preSelectedLabel && preSelectedLabel !== '' && option[preSelectedLabel] && option[preSelectedLabel] === preSelected) {
+          setActiveValue(option[titleField])
+        }
 
-  const changeActiveValue = (valueIndex) => {
-    if (valueIndex !== '') {
-      setActiveValue(selectOptions[valueIndex][titleField] || selectOptions[valueIndex]);
-      returnFieldValue(selectOptions[valueIndex]);
+        if ((!preSelectedLabel || preSelectedLabel === '') && option === preSelected) {
+          setActiveValue(option)
+        }
+      })
     }
-    // closeOptions();
-  };
+    preSelect()
+  
+  }, [preSelected, preSelectedLabel, selectOptions, titleField])
+
+
+  const openOptions = () => {
+    if(disabled) {return}
+    setOptionsOpen(true)
+  }
+
+  const closeOptions = () => {
+    setOptionsOpen(false)
+  }
+
+  const filterOptions = (term) => {
+    const filtered = selectOptions.filter((option)=> {
+      if (titleField && titleField !== '') {
+        return option[titleField].toLowerCase().includes(term.toLowerCase())
+      } else {
+        return option.toLowerCase().includes(term.toLowerCase())
+      }
+    })
+    setActiveValue(term)
+    setVisibleOptions(filtered)
+  }
+
+  const changeActiveValue = (value, object) => {
+    setActiveValue(value)
+    returnFieldValue(object)
+    closeOptions()
+  }
 
   const wrapperRef = useRef(null);
-  // useOutsideAlerter(wrapperRef, closeOptions);
+  useOutsideAlerter(wrapperRef, closeOptions);
 
   return (
-    <div ref={wrapperRef} className="relative w-full">
-      <div>
-        <label
-          className={`text-sm lg:text-md cursor-text bg-white z-30 relative block py-1 transition duration-200 mb-1 
+    <div  ref={wrapperRef} className='relative w-full'>
+            <div 
+                // className={`w-full cursor-text border rounded py-4 pl-4 pr-2 relative z-0 flex items-center justify-between 
+                // ${disabled ? 'border-gray-300' : ''} 
+                // ${isFocused || activeValue !== '' ? 'border-black bg-white' : 'border-black bg-gray-100'} 
+                // ${hasError && 'border-red-600'}`} 
+                // onClick={()=>{focusField()}} 
+                // onBlur={()=>{setIsFocused(false)}}
+            >
+                {/* ${isFocused || activeValue !== '' ? '-translate-y-8 bg-white' : 'translate-y-0 bg-gray-100'}   */}
+                {inputLabel && inputLabel !== '' && <label 
+                className={`text-sm lg:text-md cursor-text block bg-transparent relative py-1 mb-1 transition duration-200  
                 ${hasError ? 'text-red-600' : 'text-gray-500'}`}>
-          {requiredField && requiredField === true && <span className="text-red-600">*</span>}
-          {inputLabel}
-        </label>
+                    {requiredField && requiredField === true && <span className='text-red-600'>*</span>} {inputLabel}
+                </label>}
+                
+                {/* Text input */}
+                <input 
+                    type="text" 
+                    className={`rounded py-3 px-3 block w-full focus:border-gray-800 focus:outline-none hover:border-gray-200 hover:bg-gray-50 border bg-gray-100  transition duration-200 focus:bg-white text-sm font-outfit placeholder:font-outfit  ${hasError ? 'border-red-600' : 'border-gray-100'}`}
+                    onClick={()=>{openOptions()}}  
+                    onFocus={()=>{openOptions()}}  
+                    placeholder={inputPlaceholder}
+                    readOnly={disabled}
+                    // onBlur={()=>{closeOptions()}} 
+                    onChange={(e)=>{}}
+                    value={activeValue} 
+                />
+                {/* <img alt="" src={ChevronDown} className='absolute w-5 top-3 right-3' /> */}
+                {/* <button onClick={()=>{openOptions()}}>
+                    <TwoWayChevronIcon className="w-5 h-5 text-black" />
+                </button> */}
+            </div>
+            {/* Options */}
+            {optionsOpen &&
+                <div className={`absolute shadow-lg border border-gray-200 rounded w-full left-0 py-1 bg-white overflow-y-scroll pt-1 z-50 ${position}`} 
+                style={{
+                    maxHeight: '350px', 
+                    paddingBottom:'5px'
+                }}>
+                    <div className='relative'>
+                        {visibleOptions.map((option, optionIndex) => (
+                            <button key={optionIndex} 
+                                className={
+                                    `relative w-full px-3 py-2 my-1 flex flex-row text-left items-center gap-x-3 text-sm transition duration-200 hover:bg-gray-100 
+                                    ${conditionalItemStyling && option[conditionalItemStyling.conditionTriggerKey] == true 
+                                        ? conditionalItemStyling.classes 
+                                        : 'text-gray-500'}`
+                                } 
+                                
+                                onClick={()=>{
+                                    if(conditionalItemStyling && option[conditionalItemStyling.conditionTriggerKey] === true) {
+                                        fireConditionalAction(option)
+                                    } else {
+                                        changeActiveValue(titleField !== '' ? option[titleField] : option, option)}
+                                    }
+                                }
+                            >
+                                {displayImage && !bgImage &&
+                                    <img alt="" src={option[imageField]} className='w-7.5' />
+                                }
 
-        <select
-          className={`rounded py-3 px-3 text-sm block w-full focus:border-gray-800 focus:outline-none hover:border-gray-200 hover:bg-gray-50 border bg-gray-100  transition duration-200 focus:bg-white font-outfit placeholder:font-outfit  ${hasError ? 'border-red-600' : 'border-gray-100'}`}
-          onChange={(e) => { changeActiveValue(e.target.value); }}
-          value={selectOptions.findIndex(option => option[titleField] === activeValue)}
-          disabled={disabled}
-        >
-          <option value="">
-            -- select an option --
-          </option>
-          {visibleOptions?.map((option, optionIndex) => (
-            <option value={optionIndex} key={optionIndex}>
-              {option[titleField]}
-            </option>
-          ))}
-        </select>
-      </div>
-    </div>
+                                {displayImage && bgImage &&
+                                    <div className='w-8.75 h-8.75 rounded-full' style={{
+                                        backgroundImage: `url(${ option[imageField]})`, backgroundSize: 'cover', backgroundPosition: 'center'
+                                    }} />
+                                }
+                                {/* <img alt="" src={option[imageField]} className='w-[30px]' /> */}
+
+                                {conditionalItemStyling && option[conditionalItemStyling.conditionTriggerKey]}
+
+                                
+                                {titleField !== '' ? option[titleField] : option}
+                            </button>
+                        ))}
+                        
+                    </div>
+                </div>
+            }
+
+            
+        </div>
   );
 };
 

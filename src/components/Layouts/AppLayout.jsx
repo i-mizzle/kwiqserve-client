@@ -4,7 +4,7 @@ import CollapsedSidebar from '../partials/CollapsedSidebar'
 import Sidebar from '../partials/Sidebar'
 import { defaultSidebarState } from '../../utils'
 
-const Layout = ({children, pageTitle}) => {
+const AppLayout = ({children, pageTitle}) => {
     const [sidebarState, setSidebarState] = useState(defaultSidebarState() || 'closed');
     const toggleSidebar = () => {
         if(sidebarState === 'closed') {
@@ -48,4 +48,4 @@ const Layout = ({children, pageTitle}) => {
     )
 }
 
-export default Layout
+export default AppLayout

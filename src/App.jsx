@@ -6,6 +6,7 @@ import Login from './pages/auth/Login.jsx'
 import ErrorNotifier from './components/elements/ErrorNotifier.jsx'
 import SuccessNotifier from './components/elements/SuccessNotifier.jsx'
 import ScrollToTop from './components/Layouts/ScrollToTop.jsx'
+import Signup from './pages/onboarding/Signup.jsx'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <ScrollToTop>
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
           {/* <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} /> */}
         </Routes>

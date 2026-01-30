@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import EyeIcon from '../icons/EyeIcon'
 import EyeOffIcon from '../icons/EyeOffIcon'
+import PasswordMeter from '../PasswordMeter'
 
 const PasswordField = ({
     requiredField,
@@ -12,6 +13,7 @@ const PasswordField = ({
     disabled, 
     inputPlaceholder,
     maxLength,
+    showPasswordMeter
 }) => {
     const [ fieldValue, setFieldValue ] = useState(preloadValue)
     const [ hiddenInput, setHiddenInput ] = useState(true)
@@ -39,7 +41,7 @@ const PasswordField = ({
              {requiredField && requiredField === true && <span className='text-red-600'>*</span>}   {inputLabel}
             </label>
 
-            <span className={`absolute z-40 cursor-pointer pt-2 top-[40px] right-4`} onClick={(e)=>{toggleHiddenInput(e)}}>
+            <span className={`absolute z-40 cursor-pointer pt-2 top-10 right-4`} onClick={(e)=>{toggleHiddenInput(e)}}>
                 {hiddenInput ?
                 <EyeIcon className={`w-5 h-5 text-gray-600`} />
                 :
@@ -57,7 +59,7 @@ const PasswordField = ({
                 disabled={disabled}
             />
 
-            
+            {showPasswordMeter === true && <PasswordMeter password={fieldValue} />}
 
         </div>
     )
