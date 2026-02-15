@@ -118,14 +118,14 @@ export const hasPermissions = (requiredPermissions) => {
 }
 
 export const businessDetails = () => {
-    const business = JSON.parse(localStorage.getItem('business'));
+    const business = JSON.parse(localStorage.getItem('currentBusiness'));
     return business
 }
 
-export const storeDetails = () => {
-    const store = JSON.parse(localStorage.getItem('currentStore'));
-    return store
-}
+// export const storeDetails = () => {
+//     const store = JSON.parse(localStorage.getItem('currentBusiness'));
+//     return store
+// }
 
 export const userDetails = () => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -194,10 +194,10 @@ return [
 }
 
 import countryStates from './assets/static/country-states.json'
+import { StatesLgas } from './assets/static/stateslgas';
 
 export const parseNigerianStates = () => {
     const statesArray = []
-
     for (const [key, value] of Object.entries(countryStates.NG.divisions)) {
         statesArray.push({
             label: value,
@@ -206,6 +206,12 @@ export const parseNigerianStates = () => {
     }
 
     return statesArray
+}
+
+export const stateCities = (state)  => {
+    const states = StatesLgas
+    const cities = states.find(st => st.stateSlug === slugify(state))
+    return cities.lgas
 }
 
 export const generateCode = (length, isNumeric) => {

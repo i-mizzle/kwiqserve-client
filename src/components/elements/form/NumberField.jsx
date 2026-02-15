@@ -7,6 +7,7 @@ const NumberField = ({
     inputType, 
     hasError, 
     returnFieldValue, 
+    inputPlaceholder,
     preloadValue, 
     disabled, 
     includeButton, 
@@ -29,7 +30,7 @@ const NumberField = ({
     return (
         <div>
             {inputLabel && inputLabel !== '' && <label 
-                className={`text-sm lg:text-md cursor-text z-10 relative py-1 transition mb-2 block duration-200  
+                className={`text-sm lg:text-md cursor-text z-10 relative py-1 transition mb-1 block duration-200  
                 ${hasError ? 'text-red-600' : 'text-gray-500'}`}
             >
                 {requiredField && requiredField === true && <span className='text-red-600'>*</span>} {inputLabel}
@@ -41,6 +42,7 @@ const NumberField = ({
                 value={fieldValue}
                 prefix=""
                 decimalSeparator="."
+                placeholder={inputPlaceholder}
                 displayType="input"
                 type="text"
                 maxLength={maxLength}

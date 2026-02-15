@@ -35,7 +35,7 @@ export default function(state = initialState, action){
         case CREATE_TABLE:
         return{
             ...state,
-            creatingTables:false,
+            creatingTable:false,
             tablesError:  null,
             createdTable: action.payload,
         }

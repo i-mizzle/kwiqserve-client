@@ -35,8 +35,8 @@ export default function(state = initialState, action){
         case CREATE_ITEM:
         return{
             ...state,
-            creatingItems:false,
-            itemsError:  null,
+            creatingItem: false,
+            itemsError: null,
             createdItem: action.payload,
         }
          case UPDATING_ITEM:

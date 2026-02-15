@@ -1,45 +1,33 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment } from 'react'
 import AdminHeader from '../partials/AdminHeader'
-import CollapsedSidebar from '../partials/CollapsedSidebar'
-import Sidebar from '../partials/Sidebar'
-import { defaultSidebarState } from '../../utils'
+import { businessDetails } from '../../utils'
 
 const AppLayout = ({children, pageTitle}) => {
-    const [sidebarState, setSidebarState] = useState(defaultSidebarState() || 'closed');
-    const toggleSidebar = () => {
-        if(sidebarState === 'closed') {
-            localStorage.setItem("defaultSidebarState", "open");
-            setSidebarState("open")
-        } else {
-            localStorage.setItem("defaultSidebarState", "closed");
-            setSidebarState("closed")
-        }
-    }
+    // const [sidebarState, setSidebarState] = useState(defaultSidebarState() || 'closed');
+    // const toggleSidebar = () => {
+    //     if(sidebarState === 'closed') {
+    //         localStorage.setItem("defaultSidebarState", "open");
+    //         setSidebarState("open")
+    //     } else {
+    //         localStorage.setItem("defaultSidebarState", "closed");
+    //         setSidebarState("closed")
+    //     }
+    // }
+    const business = businessDetails()
+    // console.log(business)
 
     return (
         <Fragment>
-            <div className="flex flex-row bg-white p-[5px]">
-                <div style={{zIndex: 990}} className={`min-h-screen ${sidebarState === "open" ? 'w-1/6' : 'w-24'}`}>
-                    {sidebarState === "open" ? <div className="h-screen w-1/6 fixed">
-                        <Sidebar toggleFunction={toggleSidebar} />
-                    </div>
-                    :
-                    <div className="h-screen bg-grey w-[80px] fixed">
-                        <CollapsedSidebar toggleFunction={toggleSidebar}   />
-                    </div>}
-
-                    <div className={`z-0 ${sidebarState === 'open' ? "w-1/6" : "w-[80px]"}`} />
-                </div>
-                <div className={`flex flex-col clear-left min-h-screen z-10 ${sidebarState === 'open' ? 'w-5/6' : 'w-full'}`}>
-                    <div className={`fixed z-20 ${sidebarState === 'open' ? "w-5/6" : "w-full pr-20"}`}>
+            <div className="flex flex-row bg-white">
+                <div className={`flex flex-col clear-left min-h-screen z-10 w-full`}>
+                    <div className={`fixed z-20 w-full`}>
                         <AdminHeader 
                             pageTitle={pageTitle} 
-                            sidebarActive={sidebarState === 'open'}  
-                            sidebarToggleFunction={toggleSidebar} 
+                            businessDetails={business}
                         />
                     </div>
                     
-                    <div className={`mt-[50px] min-h-screen py-10 ${sidebarState === 'open' ? 'px-4 2xl:px-10' : 'lg:px-8 2xl:px-12'}`}>
+                    <div className={`mt-10 min-h-[50vh] h-inherit py-10 w-full px-8 lg:px-12 xl:px-32 2xl:px-48`}>
                         <main>{children}</main>
                     </div>
                 </div>

@@ -10,6 +10,7 @@ const TextField = ({
     preloadValue, 
     disabled, 
     maxLength,
+    helperText
 }) => {
     const [ fieldValue, setFieldValue ] = useState(preloadValue || '')
 
@@ -37,6 +38,10 @@ const TextField = ({
                 disabled={disabled}
                 placeholder={inputPlaceholder}
             />
+
+            {helperText && <label className={`text-[13px] lg:text-md cursor-text z-10 relative py-1 transition mb-1 block duration-200 text-gray-500}`}>
+              {helperText}
+            </label>}
 
         </div>
     )

@@ -7,7 +7,7 @@ const headers = authHeader()
 export const fetchOrders = (filterString, page, perPage) => async (dispatch) => {    
     try{
 
-        let url = `${baseUrl}/orders?expand=menu`
+        let url = `${baseUrl}/orders?expand=table`
 
         if(filterString && filterString !== '') {
             url += `${url.includes('?') ? '&' : '?'}${filterString}`

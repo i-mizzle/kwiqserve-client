@@ -8,8 +8,11 @@ import ArrowIcon from '../../components/elements/icons/ArrowIcon'
 import AutocompleteSelect from '../../components/elements/form/AutocompleteSelect'
 import SelectField from '../../components/elements/form/SelectField'
 import { ERROR } from '../../store/types'
-import { debounce } from '../../utils'
+import { baseUrl, debounce, parseNigerianStates, stateCities } from '../../utils'
 import { useDispatch } from 'react-redux'
+import Countdown from '../../components/elements/Countdown'
+import InlinePreloader from '../../components/elements/InlinePreloader'
+import axios from 'axios'
 
 const Signup = () => {
   const [activeStep, setActiveStep] = useState(1)
@@ -33,11 +36,40 @@ const Signup = () => {
   const validateStep1 = () => {
     let errors = {}
 
+    if(!userPayload.name || userPayload.name === '') {
+      errors.name = true
+    }
+
+    if(!userPayload.email || userPayload.email === '') {
+      errors.email = true
+    }
+
+    if(!userPayload.phone || userPayload.phone === '') {
+      errors.phone = true
+    }
+
+    if(!userPayload.password || userPayload.password === '') {
+      errors.password = true
+    }
+
+    if(!userPayload.username || userPayload.username === '') {
+      errors.username = true
+    }
+
     setValidationErrors(errors)
     return errors
   }
 
   const completeStep1 = () => {
+    if (Object.values(validateStep1()).includes(true)) {
+      dispatch({
+        type: ERROR,
+        error: {response: {data: {
+          message: "Form Validation Error: Please check highlighted fields."
+        }}}
+      })
+      return
+    }
     setActiveStep(2)
   }
 
@@ -55,12 +87,12 @@ const Signup = () => {
   const validateSubdomain  = debounce(async (subdomain) => {
     try {
       setValidatingSubdomain(true)
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/validate-subdomain/${subdomain}`)
+      const response = await axios.get(`${baseUrl}/validate-subdomain/${subdomain}`)
       setSubdomainAvailable(response.data.data.available)
       setSubdomainValidated(true)
       setValidatingSubdomain(false)
       if(response.data.data.available){
-        setStoreDetails({...businessPayload, ...{subdomain: subdomain}})
+        setBusinessPayload({...businessPayload, ...{subdomain: subdomain}})
       }
     } catch (error) {
       console.error(error)
@@ -113,22 +145,32 @@ const Signup = () => {
     return errors
   }
 
+  const [signedUp, setSignedUp] = useState(false)
+  const [counted, setCounted] = useState(false)
+  const [creating, setCreating] = useState(false)
+
   const signup = async () => {
     if (Object.values(validateStep2()).includes(true)) {
+      dispatch({
+        type: ERROR,
+        error: {response: {data: {
+          message: "Form Validation Error: Please check highlighted fields."
+        }}}
+      })
       return
     }
     
     try {
-      const data = {...businessPayload, ...{
-          createdBy: userId
-      }}
-      await axios.post(`${baseUrl}/store`, data)
+      const data = {
+        ...userPayload, 
+        ...{
+          business: businessPayload
+        }
+      }
+      await axios.post(`${baseUrl}/onboarding/signup`, data)
       setCreating(false)
-      // dispatch({})
-      // navigate('/')
-      setShowConfetti(true)
       setSignedUp(true)
-      setOtpSent(true)
+      setCounted(false)
 
     } catch (error) {
       console.error('Error creating store:', error);
@@ -141,6 +183,8 @@ const Signup = () => {
     }
   }
 
+  const [resending, setResending] = useState(false)
+
   const resendConfirmationCode = async () => {
     if (Object.values(validateForm()).includes(true)) {
       dispatch({
@@ -151,18 +195,18 @@ const Signup = () => {
 
     try {
       const payload = {
-        email: administratorDetails.email
+        email: userPayload.email
       }
 
-      setProcessing(true)
+      setResending(true)
 
-      await axios.post(`${process.env.REACT_APP_API_URL}/onboarding/email-confirmation/resend`, payload)
+      await axios.post(`${baseUrl}/onboarding/email-confirmation/resend`, payload)
 
-      setProcessing(false)
-      setOtpSent(true)
+      setResending(false)
+      setCounted(false)
     } 
     catch (error) {
-      setProcessing(false)
+      setResending(false)
       console.error('Error creating session:', error);
       dispatch({
         type: ERROR,
@@ -170,6 +214,8 @@ const Signup = () => {
       })
     }
   }
+
+  const [cityOptions, setCityOptions] = useState([])
 
   return (
     <section className='w-full min-h-screen h-inherit bg-ss-pale-blue'>
@@ -191,7 +237,7 @@ const Signup = () => {
         </div>
 
         <div className='w-2/3 bg-white rounded-lg z-990 p-5 shadow-xl shadow-ss-black/10 min-h-screen h-inherit'>
-          <div className='w-1/2 mx-auto mt-26'>
+          {!signedUp && <div className='w-1/2 mx-auto mt-12'>
             <h3 className='font-bold text-2xl text-ss-dark-blue mb-1'>
               Create an account for your business
             </h3>
@@ -214,35 +260,50 @@ const Signup = () => {
                   inputPlaceholder="Your full name"
                   fieldId={`name`} 
                   hasError={validationErrors.name} 
-                  returnFieldValue={()=>{}}
-                  preloadValue="" 
+                  returnFieldValue={(value)=>{setUserPayload({...userPayload, name: value})}}
+                  preloadValue={userPayload.name} 
                   disabled={false} 
                 />
+              </div>
+              <div className='flex items-start jusutify-between gap-x-5'>
+                <div className='mt-2 w-full'>
+                  <TextField 
+                    requiredField={true}
+                    inputLabel="Email" 
+                    inputPlaceholder="Your active email address"
+                    fieldId={`email`} 
+                    hasError={validationErrors.email} 
+                    returnFieldValue={(value)=>{setUserPayload({...userPayload, email: value})}}
+                    preloadValue={userPayload.email} 
+                    disabled={false} 
+                  />
+                </div>
+
+                <div className='mt-2 w-full'>
+                  <TextField 
+                    requiredField={true}
+                    inputLabel="Phone number" 
+                    inputPlaceholder="Your active phone number"
+                    fieldId={`phone`} 
+                    hasError={validationErrors.phone} 
+                    returnFieldValue={(value)=>{setUserPayload({...userPayload, phone: value})}}
+                    preloadValue={userPayload.phone}
+                    disabled={false} 
+                  />
+                </div>
               </div>
 
               <div className='mt-2 w-full'>
                 <TextField 
                   requiredField={true}
-                  inputLabel="Email" 
-                  inputPlaceholder="Your active email address"
-                  fieldId={`email`} 
-                  hasError={validationErrors.email} 
-                  returnFieldValue={()=>{}}
-                  preloadValue="" 
-                  disabled={false} 
-                />
-              </div>
-
-              <div className='mt-2 w-full'>
-                <TextField 
-                  requiredField={true}
-                  inputLabel="Phone number" 
-                  inputPlaceholder="Your active phone number"
-                  fieldId={`phone`} 
+                  inputLabel="Username" 
+                  inputPlaceholder="Select a username"
+                  fieldId={`username`} 
                   hasError={validationErrors.phone} 
-                  returnFieldValue={()=>{}}
-                  preloadValue="" 
+                  returnFieldValue={(value)=>{setUserPayload({...userPayload, username: value})}}
+                  preloadValue={userPayload.username}
                   disabled={false} 
+                  helperText={`Create a short memorable username for your account - this will be your login id.`}
                 />
               </div>
 
@@ -253,8 +314,8 @@ const Signup = () => {
                   inputPlaceholder="Choose a secure password"
                   fieldId={`password`} 
                   hasError={validationErrors.password} 
-                  returnFieldValue={()=>{}}
-                  preloadValue="" 
+                  returnFieldValue={(value)=>{setUserPayload({...userPayload, password: value})}}
+                  preloadValue={userPayload.password}
                   disabled={false} 
                   showPasswordMeter={true}
                 />
@@ -269,7 +330,7 @@ const Signup = () => {
                   inputPlaceholder="The name of your business"
                   fieldId={`business-name`} 
                   hasError={validationErrors.businessName} 
-                  returnFieldValue={()=>{}}
+                  returnFieldValue={(value)=>{setBusinessPayload({...businessPayload, name: value})}}
                   preloadValue="" 
                   disabled={false} 
                 />
@@ -286,10 +347,10 @@ const Signup = () => {
                 <TextField 
                   requiredField={true}
                   inputLabel="Address" 
-                  inputPlaceholder="Where is ths business located"
+                  inputPlaceholder="Where is this business located"
                   fieldId={`business-address`} 
                   hasError={validationErrors.address} 
-                  returnFieldValue={()=>{}}
+                  returnFieldValue={(value)=>{setBusinessPayload({...businessPayload, address: value})}}
                   preloadValue="" 
                   disabled={false} 
                 />
@@ -297,30 +358,46 @@ const Signup = () => {
               <div className='flex items-start justify-between gap-x-5'>
                 <div className='mt-2 w-full'>
                   <AutocompleteSelect 
-                    selectOptions={[]}
+                    selectOptions={parseNigerianStates()}
                     requiredField={true}
                     inputLabel="State" 
-                    inputPlaceholder="Select address state`"
+                    inputPlaceholder="Select address state"
                     fieldId={`business-address-state`} 
                     hasError={validationErrors.state} 
-                    returnFieldValue={()=>{}}
+                    titleField={'label'}
+                    returnFieldValue={(value)=>{
+                      setBusinessPayload({...businessPayload, state: value.label})
+                      setCityOptions(stateCities(value.label))
+                    }}
                     preSelected={""}
                     preSelectedLabel={''} 
                     disabled={false} 
                   />
                 </div>
                 <div className='mt-2 w-full'>
-                  <SelectField 
-                    selectOptions={[]}
+                  {cityOptions.length > 0 ? <SelectField 
+                    selectOptions={cityOptions}
                     requiredField={true}
                     inputLabel="City" 
                     inputPlaceholder="Select address city"
                     fieldId={`business-address-city`} 
                     hasError={validationErrors.city} 
-                    returnFieldValue={()=>{}}
+                    returnFieldValue={(value)=>{setBusinessPayload({...businessPayload, city: value})}}
+                    preloadValue="" 
+                    disabled={false} 
+                    titleField={''}
+                  /> :
+                  <TextField 
+                    requiredField={true}
+                    inputLabel="City" 
+                    inputPlaceholder="Address city"
+                    fieldId={`business-address-city`} 
+                    hasError={validationErrors.city} 
+                    returnFieldValue={(value)=>{setBusinessPayload({...businessPayload, city: value})}}
                     preloadValue="" 
                     disabled={false} 
                   />
+                  }
                 </div>
               </div>
               {/* <h3 className='font-medium mt-5 text-ss-black'>
@@ -330,7 +407,7 @@ const Signup = () => {
                 Please provide your business physical address below.
               </p> */}
 
-              <div className='mt-2 w-full'>
+              <div className='mt-2 w-full relative'>
                 {validatingSubdomain && <span className='absolute top-1.25 right-5'>
                   <InlinePreloader />    
                 </span>}
@@ -362,17 +439,53 @@ const Signup = () => {
               </button>
               <div className='w-full'>
                 <FormButton 
-                  buttonAction={()=>{completeStep1()}} 
+                  buttonAction={()=>{proceed()}} 
                   buttonLabel={
                     activeStep === 1 ? <span className='flex items-center justify-center gap-x-2'>
                       Contiinue
                       <ArrowIcon className={`w-4 h-4`} />
                     </span> : 'Complete signup'
-                  } 
+                  }
+                  processing={creating} 
                 />
               </div>
             </div>
-          </div>
+          </div>}
+
+          {signedUp && <div className='w-1/2 mx-auto mt-26'>
+            <h3 className='font-bold text-3xl text-ss-dark-blue mb-1'>
+              Welcome aboard! 🚀
+            </h3>
+            <h3 className='text-ss-dark-gray text-lg font-semibold'>
+              Your venue is now set up to serve guests smarter and faster with Scanserve.
+            </h3>
+
+            <p className='mt-5 text-ss-black'>
+              We've sent a confirmation email to (<span className="font-semibold">{userPayload.email || ''}</span>). Please click the link in that email to verify your address and activate your account. Once verified, you'll be able to log in and start setting up your tables and menus.
+            </p>
+            <p className='mt-2 text-gray-500'>
+              This step helps us keep Scanserve secure and spam-free.
+            </p>
+
+            <div className='mt-6'>
+              {counted 
+                ? 
+                  <div className='w-full'>
+                    <FormButton 
+                      buttonAction={()=>{resendConfirmationCode()}} 
+                      buttonLabel="Resend Confirmation Email"
+                      processing={resending} 
+                    />
+                  </div>
+                :
+                <>
+                  <p className='py-2 text-sm mt-2'>
+                    Didn&apos;t get the email? please wait <Countdown seconds={60} className='inline text-red-800 font-medium' countdownComplete={()=>{setCounted(true)}} /> seconds
+                  </p>
+                </>
+              }
+            </div>
+          </div>}
         </div>
       </div>
     </section>

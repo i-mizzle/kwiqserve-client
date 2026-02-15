@@ -6,7 +6,7 @@ const Logo = ({
 }) => {
   return (
     <div className='w-max'>
-        <h1 className='font-thin tracking-[0.5em] mb-5' style={{color: color, fontSize: `${size}px`}}>SCANSERVE</h1>
+        <h1 className='font-thin tracking-[0.5em]' style={{color: color, fontSize: `${size}px`}}>SCANSERVE</h1>
     </div>
   )
 }

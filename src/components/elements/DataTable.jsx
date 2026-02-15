@@ -7,6 +7,8 @@ import { usePopper } from 'react-popper'
 import DotsVertical from './icons/DotsVertical';
 import Pagination from './Pagination';
 import EmptyState from './EmptyState';
+import FolderIcon from './icons/FolderIcon';
+import ChevronIcon from './icons/ChevronIcon';
 
 const DataTable = ({
     tableData, 
@@ -15,11 +17,12 @@ const DataTable = ({
     columnDataStyles, 
     allFields, 
     onSelectItems, 
-    onSelectSingle,
     tableOptions, 
     pagination,
     updatePerPage,
-    changePage
+    changePage,
+    expandedIndex,
+    expansion
 }) => {
 
     let [referenceElement, setReferenceElement] = useState()
@@ -31,13 +34,12 @@ const DataTable = ({
 
     useEffect(() => {
         setAllItems(tableData)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     
 
     const toggleAllSelection = () => {
         let newItems = allItems
-        newItems.forEach((singleItem) => {
+        newItems.forEach((singleItem, index) => {
             if (selectedItemsCount > 1) {
                 singleItem.selected = false
             } else {
@@ -73,20 +75,6 @@ const DataTable = ({
         setAllItems(newItems)
     }
 
-    const selectSingle = (itemIndex) => {
-        let newItems = allItems
-        newItems.forEach((singleItem, index) => {
-            if (index === itemIndex ) {
-                singleItem.selected = true
-            } else {
-                singleItem.selected = false
-            }
-        })
-
-        onSelectSingle(itemIndex)
-        setAllItems(newItems)
-    }
-
     const fieldIsSelected = (fieldName) => {
         let isSelected = false
         allFields.forEach((field) => {
@@ -101,30 +89,71 @@ const DataTable = ({
         if(!tableOptions.clickableRows || tableOptions.clickableRows === false) {
             return
         }
-        tableOptions.rowAction(index)
+        tableOptions.rowAction(index.toString())
     }
+    
+
+    const previousPage = () => {
+        if(pagination.currentPage > 1) {
+            changePage(pagination.currentPage - 1)
+        }
+    }
+
+    const nextPage = () => {
+        let pages = Math.ceil(pagination.totalItems / pagination.perPage)
+        if(pagination.currentPage < pages) {
+            changePage(pagination.currentPage + 1)
+        }
+    }
+
+    const changePerPage = (input) => {
+        let pages = Math.ceil(pagination.totalItems / pagination.perPage)
+        updatePerPage(input)
+    }
+
+    const changeCurrentPage = (input) => {
+        let pages = Math.ceil(pagination.totalItems / pagination.perPage)
+        if(!input || input === 0 || input > pages) {
+            return
+        }
+        changePage(input)
+    }
+
+    const lastPage = () => {
+        changePage(Math.ceil(pagination.totalItems / pagination.perPage))
+    }
+    
+    const firstPage = () => {
+        changePage(1)
+    }
+
+    const perPageOptions = [
+        25, 50, 75, 100
+    ]
     
     return (
         <Fragment>
             {/* Table */}
             {!tableData || tableData.length === 0 ? 
 
-                <div className='px-44 py-4'>
-                    <EmptyState
-                        emptyStateText={`Sorry, no data available at the moment`}
-                    />
+                <div className='py-4 flex items-center justify-center'>
+                    <div className='w-full text-center mt-12'>
+                        <FolderIcon className={`w-12 h-12 text-blue-100 mx-auto`} />
+                        <h3 className="w-full text-[15px] text-gray-700 font-[550] text-center mt-2">Nothing found</h3>
+                        <p className="w-full text-sm text-gray-500 font-[550] text-center rounded-lg mt-1">Sorry, no data available at the moment</p>
+                    </div>
                 </div>
 
                 :
                 
                 <div className="pt-2">
                     {/* table header */}
-                    <ul className="bg-gray-50 flex flex-row justify-between items-center w-full text-xs mt-1 px-3 py-2 relative font-[600]">
+                    <ul className="bg-primary flex flex-row justify-between items-center w-full bg-transparent bg-opacity-40 text-xs mt-1 px-3 py-1 relative font-medium">
                        {/* <li className="w-1/12" />  */}
-                        {tableOptions.selectable && tableOptions.multiselect && <input type="checkbox" className="mr-2 absolute left-0" onChange={()=>{toggleAllSelection()}} checked={tableData.length === selectedItemsCount} />}
+                        {tableOptions.selectable && <input type="checkbox" className="mr-2 absolute left-1" onChange={()=>{toggleAllSelection()}} checked={tableData.length === selectedItemsCount} />}
                         {tableHeaders.map((header, headerIndex) => (
                             !header.forPopover && fieldIsSelected(header.columnDisplayName) &&
-                            <li className={`${columnWidths[header.column]} flex flex-row items-center uppercase justify-between ml-2 text-gray-600`} key={headerIndex} >
+                            <li className={`${columnWidths[header.column]} flex flex-row items-center uppercase justify-between ml-2`} key={headerIndex} >
                                 {header.columnDisplayName}
                                 {header.sortable && <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M16 17l-4 4m0 0l-4-4m4 4V3" />
@@ -146,7 +175,7 @@ const DataTable = ({
                                     {...attributes.popper} 
                                     className="absolute z-10"
                                 >
-                                    <div className="bg-primary p-4 shadow-md border rounded border-secondary mt-3">
+                                    <div className="bg-primary p-4 shadow-md border rounded border-gray-100 mt-3 bg-white">
                                         {/* {allFields.map((field, fieldIndex) => )} */}
                                         <p className="font-medium text-gray-400 text-sm pb-2 mb-2 border-b border-gray-200 text-center">All Fields</p>
 
@@ -165,47 +194,67 @@ const DataTable = ({
 
                     {/* Table rows */}
                     {allItems.map((data, dataIndex) => (
-                        <ul onClick={()=>{performRowAction(dataIndex)}} className={`flex flex-row items-start w-full bg-opacity-40 text-xs mt-3 hover:bg-gray-50 cursor-pointer transition duration-200 py-2 px-1 font-sofia-pro text-gray-500 relative ${data.selected ? 'bg-gray-300 bg-opacity-10' : ''}`} key={dataIndex}>
-                            {tableOptions.selectable && tableOptions.multiselect ? <input type="checkbox" onChange={()=>toggleSelection(dataIndex)} checked={data.selected} className="mr-2 ml-1" /> : <span className="inline-block mr-5" />}
-                            {tableHeaders.map((header, headerIndex) => (
-                                !header.forPopover && fieldIsSelected(header.columnDisplayName) &&                                  
-                                <li 
-                                    key={headerIndex} className={`${columnWidths[header.column]} flex flex-row items-center ${tableOptions.selectable && !tableOptions.multiselect ? 'cursor-pointer' : ''}`} 
-                                    onClick={()=>{
-                                        if(tableOptions.selectable && !tableOptions.multiselect) {
-                                            selectSingle(dataIndex)
-                                        }
-                                    }}
-                                >
-                                    <span className={columnDataStyles[header.column] && columnDataStyles[header.column].isConditional ? columnDataStyles[header.column].conditionals[data[header.column]] : columnDataStyles[header.column]}>
-                                        {header.columnDataType === 'image' &&
-                                        <img src={data[header.column]} alt="" />
-                                        }
+                        <Fragment key={dataIndex} >
+                            {/* {dataIndex} == {expandedIndex} */}
+                            <ul className={`border- 
+                                ${tableOptions.dark && tableOptions.dark === true ? 'bg-gray-700 text-gray-100' : 'bg-opacity-40'} rounded-md 
+                                ${tableOptions.expandable && tableOptions.expandable === true ? 'cursor-pointer transition duration-200 hover:bg-gray-100 hover:bg-opacity-50' : ''}
+                                ${expandedIndex === dataIndex.toString() ? 'border-blue-700' : 'border-gray-200'} 
+                                 text-sm mt-3 font-sofia-pro text-gray-500 relative 
+                                ${data.selected ? 'bg-black bg-opacity-20' : ''}`}  
+                                onClick={()=>{performRowAction(dataIndex)}}
+                            >
+                                <div className='px-4 py-6 flex flex-row items-center w-full bg-white shadow-lg shadow-ss-dark-blue/5'>
+                                    {tableOptions.selectable ? <input type="checkbox" onChange={()=>toggleSelection(dataIndex)} checked={data.selected} className="mr-2" /> : <span className="inline-block mr-5" />}
+                                    {tableHeaders.map((header, headerIndex) => (
+                                        !header.forPopover && fieldIsSelected(header.columnDisplayName) &&                                  
+                                        <li key={headerIndex} className={`${columnWidths[header.column]}`} >
+                                            <span className='w-full flex flex-row items-center'>
+                                                <span className={columnDataStyles[header.column] && columnDataStyles[header.column].isConditional ? columnDataStyles[header.column].conditionals[data[header.column]] : columnDataStyles[header.column]}>
+                                                    {header.columnDataType === 'image' &&
+                                                    <img src={data[header.column]} alt="" />
+                                                    }
 
-                                        {header.columnDataType === 'link' &&
-                                        <Link to={data[header.column]} alt="" className="text-ink-navy font-medium"> {data[header.column]} </Link>
-                                        }
+                                                    {header.columnDataType === 'link' &&
+                                                    <Link to={data[header.column]} alt="" className="text-ink-navy font-medium"> {data[header.column]} </Link>
+                                                    }
 
-                                        {header.columnDataType === 'text' &&
-                                        <div> {data[header.column]} </div>
-                                        }
+                                                    {header.columnDataType === 'text' &&
+                                                    <div> {data[header.column]} </div>
+                                                    }
 
-                                        {header.columnDataType === 'JSX' &&
-                                        <div> {data[header.column]} </div>
-                                        }
+                                                    {header.columnDataType === 'JSX' &&
+                                                    <div> {data[header.column]} </div>
+                                                    }
 
-                                        {header.columnDataType === 'popoverTrigger' &&
-                                        <button> {data[header.column]} </button>
-                                        }
-                                    </span>
-                                </li>
-                            ))}
-                        </ul>
+                                                    {header.columnDataType === 'popoverTrigger' &&
+                                                    <button> {data[header.column]} </button>
+                                                    }
+                                                </span>
+                                            </span>
+                                            
+                                        </li>
+                                    ))}
+                                    {tableOptions.expandable && tableOptions.expandable === true && 
+                                        <ChevronIcon className={`absolute right-3.75 top-8.75 w-4 h-4 transform transition duration-200 ${expandedIndex === dataIndex.toString() ? 'rotate-180 text-blue-700' : ''}`} 
+                                    />}
+                                </div>
+                                {/* Expansion */}
+                                {expandedIndex === dataIndex.toString() &&
+                                    <>
+                                        {expansion}
+                                    </>
+                                }
+                            </ul>
+
+                            
+                        </Fragment>
                     ))}
+
                     {pagination && <Pagination 
-                        pagination={pagination} 
-                        changePage={(page)=>{changePage(page)}} 
-                        updatePerPage={(perPage)=>{updatePerPage(perPage)}} />}
+                        pagination={pagination}
+                        changePage={changePage}
+                        updatePerPage={updatePerPage} />}
                 </div>
             }
         </Fragment>
@@ -213,12 +262,14 @@ const DataTable = ({
 }
 
 DataTable.propTypes = {
-    tableData: PropTypes.array.isRequired,
-    tableHeaders: PropTypes.array.isRequired,
-    allFields: PropTypes.array.isRequired,
+    tableData: PropTypes.array,
+    tableHeaders: PropTypes.array,
+    allFields: PropTypes.array,
     columnWidths: PropTypes.object.isRequired,
-    columnDataStyles: PropTypes.object
+    columnDataStyles: PropTypes.object,
+    expandable: PropTypes.bool,
+
     // element: PropTypes.arrayOf(PropTypes.element).isRequired
-  };
+};
 
 export default DataTable

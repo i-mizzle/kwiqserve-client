@@ -1,13 +1,14 @@
 import axios from "axios"
-import { authHeader, baseUrl } from "../../utils"
+import { authHeader, baseUrl, businessDetails } from "../../utils"
 import { CREATE_CATEGORY, CREATING_CATEGORY, DELETE_CATEGORY, DELETING_CATEGORY, GET_CATEGORIES, GETTING_CATEGORIES, SET_SUCCESS, CATEGORIES_ERROR, UPDATE_CATEGORY, UPDATING_CATEGORY } from "../types"
 
 const headers = authHeader()
+const business = businessDetails()
 
-export const fetchCategotys = (filterString, page, perPage) => async (dispatch) => {    
+export const fetchCategories = (filterString, page, perPage) => async (dispatch) => {    
     try{
 
-        let url = `${baseUrl}/categotys?expand=menu`
+        let url = `${baseUrl}/categories/${business._id}`
 
         if(filterString && filterString !== '') {
             url += `${url.includes('?') ? '&' : '?'}${filterString}`
@@ -27,6 +28,7 @@ export const fetchCategotys = (filterString, page, perPage) => async (dispatch) 
         })
 
         const response = await axios.get(url, { headers })
+        // console.log('categories fetched => ', response.data.data)
 
         dispatch({
             type: GET_CATEGORIES,
@@ -42,10 +44,10 @@ export const fetchCategotys = (filterString, page, perPage) => async (dispatch) 
     }
 }
 
-export const createCategoty = (payload) => async (dispatch) => {    
+export const createCategory = (payload) => async (dispatch) => {    
     try{
 
-        let url = `${baseUrl}/categotys`
+        let url = `${baseUrl}/categories`
 
         dispatch( {
             type: CREATING_CATEGORY,
@@ -61,7 +63,7 @@ export const createCategoty = (payload) => async (dispatch) => {
 
         dispatch({
             type: SET_SUCCESS,
-            payload: 'New categoty created successfully'
+            payload: 'New categories created successfully'
         })
         
     }
@@ -73,17 +75,17 @@ export const createCategoty = (payload) => async (dispatch) => {
     }
 }
 
-export const clearCreatedCategoty = () => async (dispatch) => {
+export const clearCreatedCategory = () => async (dispatch) => {
     dispatch({
         type: CREATE_CATEGORY,
         payload: null
     })
 }
 
-export const updateCategoty = (id, payload) => async (dispatch) => {    
+export const updateCategory = (id, payload) => async (dispatch) => {    
     try{
 
-        let url = `${baseUrl}/categotys/${id}`
+        let url = `${baseUrl}/categories/${id}`
 
         dispatch( {
             type: UPDATING_CATEGORY,
@@ -99,7 +101,7 @@ export const updateCategoty = (id, payload) => async (dispatch) => {
 
         dispatch({
             type: SET_SUCCESS,
-            payload: 'Categoty updated successfully'
+            payload: 'Category updated successfully'
         })
         
     }
@@ -111,17 +113,17 @@ export const updateCategoty = (id, payload) => async (dispatch) => {
     }
 }
 
-export const clearUpdatedCategoty = () => async (dispatch) => {
+export const clearUpdatedCategories = () => async (dispatch) => {
     dispatch({
         type: UPDATE_CATEGORY,
         payload: null
     })
 }
 
-export const deleteCategoty = (id) => async (dispatch) => {    
+export const deleteCategories = (id) => async (dispatch) => {    
     try{
 
-        let url = `${baseUrl}/categotys/${id}`
+        let url = `${baseUrl}/categories/${id}`
 
         dispatch( {
             type: DELETING_CATEGORY,
@@ -137,7 +139,7 @@ export const deleteCategoty = (id) => async (dispatch) => {
 
         dispatch({
             type: SET_SUCCESS,
-            payload: 'Categoty deleted successfully'
+            payload: 'Category deleted successfully'
         })
         
     }
@@ -149,7 +151,7 @@ export const deleteCategoty = (id) => async (dispatch) => {
     }
 }
 
-export const clearDeletedCategoty = () => async (dispatch) => {
+export const clearDeletedCategory = () => async (dispatch) => {
     dispatch({
         type: DELETE_CATEGORY,
         payload: null

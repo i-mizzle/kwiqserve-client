@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { FileUploader } from "react-drag-drop-files";
 import { useDispatch } from 'react-redux';
+import axios from 'axios';
 import { ERROR } from '../../../store/types';
+import { baseUrl, authHeader } from '../../../utils';
 import UploadIcon from '../icons/UploadIcon';
 
 const FileUpload = ({hasError, returnFileDetails, fieldLabel, preAddedFile, preAddedFileName, acceptedFormats, maxFileSize}) => {
@@ -10,31 +12,59 @@ const FileUpload = ({hasError, returnFileDetails, fieldLabel, preAddedFile, preA
   const [fileExt, setFileExt] = useState(null)
   const [uploadedFile, setUploadedFile] = useState(null)
   const [fileSize, setFileSize] = useState(null)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [isUploading, setIsUploading] = useState(false)
 //   const [hovering, setHovering] = useState(false)
   const dispatch = useDispatch()
 
   // eslint-disable-next-line no-unused-vars
   const [allowedFormats, setAllowedFormats] = useState(acceptedFormats ? acceptedFormats : ['jpg', 'jpeg', 'png', 'pdf'])
-  const handleFile = (addedFile) => {
-    // console.log('dropped...')
-    // console.log(addedFile)
-    //   if(!allowedFormats.includes(addedFile.name.split('.').pop())) {
-    //     triggerNotification({
-    //       show: true,
-    //       success: false,
-    //       message: `Only ${allowedFormats.join(', ')} formats allowed please.`
-    //     })
-    //     return
-    //   }
+  
+  const handleFile = async (addedFile) => {
+    try {
+      setIsUploading(true)
+      setUploadProgress(0)
+      
+      // Prepare file upload
       setUploadedFile(URL.createObjectURL(addedFile))
-      // setFile(addedFile)
       setFileSize(addedFile.size/1000000)
-      setFileName(addedFile.name.split('.')[0]);
-      setFileExt(addedFile.name.split('.').pop());
-      returnFileDetails({
-        file: addedFile, 
-        fileSize: addedFile.size/1000000
+      setFileName(addedFile.name.split('.')[0])
+      setFileExt(addedFile.name.split('.').pop())
+
+      // Upload file to backend
+      const formData = new FormData()
+      formData.append('file', addedFile)
+
+      const headers = authHeader()
+      const response = await axios.post(`${baseUrl}/files/new`, formData, {
+        headers: {
+          ...headers,
+          'Content-Type': 'multipart/form-data'
+        },
+        onUploadProgress: (progressEvent) => {
+          const percentComplete = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          setUploadProgress(percentComplete)
+        }
       })
+
+      // Return file details with fileUrl from response
+      returnFileDetails({
+        file: addedFile,
+        fileSize: addedFile.size/1000000,
+        fileUrl: response.data.data.file
+      })
+
+      setIsUploading(false)
+    } catch (error) {
+      setIsUploading(false)
+      setUploadProgress(0)
+      dispatch({
+        type: ERROR,
+        error: {response: {data: {
+          message: error.response?.data?.message || 'File upload failed'
+        }}}
+      })
+    }
   }
 
   const UploaderChildren = () =>{
@@ -86,7 +116,21 @@ const FileUpload = ({hasError, returnFileDetails, fieldLabel, preAddedFile, preA
             <UploaderChildren />
           </FileUploader>
 
-{/* {preAddedFileName} */}
+          {/* Upload Progress Bar */}
+          {isUploading && (
+            <div className='mt-4 w-full'>
+              <div className='flex justify-between items-center mb-2'>
+                <p className='text-xs text-gray-600'>Uploading...</p>
+                <p className='text-xs font-medium text-gray-700'>{uploadProgress}%</p>
+              </div>
+              <div className='w-full h-2 bg-gray-200 rounded-full overflow-hidden'>
+                <div 
+                  className='h-full bg-green-500 transition-all duration-300'
+                  style={{ width: `${uploadProgress}%` }}
+                />
+              </div>
+            </div>
+          )}
 
           {(preAddedFile || uploadedFile) && <div className='block lg:flex flex-row-reverse items-center lg:w-inherit relative box-border w-full mt-5'>
               {/* <label
@@ -98,32 +142,33 @@ const FileUpload = ({hasError, returnFileDetails, fieldLabel, preAddedFile, preA
               {uploadedFile &&  (
                   fileExt === 'jpeg' || fileExt === 'png' || fileExt === 'jpg' 
                   ?
-                  <img alt="" className="h-[70px] ml-3 mb-3 shadow-lg border-2 border-white" src={uploadedFile} /> 
+                  <img alt="" className="h-17.5 ml-3 mb-3 shadow-lg border-2 border-white" src={uploadedFile} /> 
                   :
-                  <div className='h-[75px] mb-3 w-[70px] ml-3 flex items-center justify-center border-2 border-white shadow-lg'>
-                      <p className='text-sm font-tomato font-medium text-black'>.{fileExt}</p>
+                  <div className='h-18.75 mb-3 w-17.5 ml-3 flex items-center justify-center border-2 border-white shadow-lg'>
+                    <p className='text-sm font-tomato font-medium text-black'>.{fileExt}</p>
                   </div>
               )}
               {preAddedFile && !uploadedFile && (
                   preAddedFileName.split('.').pop() === 'jpeg' || preAddedFileName.split('.').pop() === 'png' || preAddedFileName.split('.').pop() === 'jpg' 
-                  ?
-                  <>
-                    <a href={preAddedFile} target="_blank" rel="noreferrer">
-                      <img alt="" className="h-[70px]" src={preAddedFile} /> 
+                    ?
+                    <>
+                      <a href={preAddedFile} target="_blank" rel="noreferrer">
+                        <img alt="" className="h-17.5" src={preAddedFile} /> 
+                      </a>
+                      <p className="text-xs px-0 mt-3 lg:px-4 text-black w-full">
+                        File name: <span className='font-medium'>{preAddedFileName.split('/').pop()}</span>
+                      </p> 
+                    </>
+                    :
+                    <a href={preAddedFile} target="_blank" className='h-18.75 w-17.5 border-l-2 border-t-2 border-b-2 border-black flex items-center justify-center' rel="noreferrer">
+                        <p className='text-sm font-tomato font-medium text-black'>.{preAddedFileName.split('.').pop()}</p>
                     </a>
-                    <p className="text-xs px-0 mt-3 lg:px-4 text-black w-full">
-                      File name: <span className='font-medium'>{preAddedFileName.split('/').pop()}</span>
-                    </p> 
-                  </>
-                  :
-                  <a href={preAddedFile} target="_blank" className='h-[75px] w-[70px] border-l-2 border-t-2 border-b-2 border-black flex items-center justify-center' rel="noreferrer">
-                      <p className='text-sm font-tomato font-medium text-black'>.{preAddedFileName.split('.').pop()}</p>
-                  </a>
-              )}
+                )}
                 {fileName && fileName !== '' && 
                 <p className="text-xs px-4 text-black w-full">
-                    File name: <span className='font-medium'>{fileName.substring(0,25)}{fileName.length > 25 && '...'} <br />Size: {fileSize.toLocaleString()} MB</span>
-                </p> }
+                  File name: <span className='font-medium'>{fileName.substring(0,25)}{fileName.length > 25 && '...'} <br />Size: {fileSize.toLocaleString()} MB</span>
+                </p> 
+                }
           </div>}
       </div>
     </div>

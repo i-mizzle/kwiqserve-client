@@ -47,9 +47,9 @@ const ModalDialog = ({
             leaveTo="opacity-0 scale-95"
           >
             <div
-              className={`inline-block w-full ${maxWidthClass || ''} p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-[8px] `}
+              className={`inline-block w-full ${maxWidthClass || ''} p-6 my-8  text-left align-middle transition-all transform bg-white shadow-xl rounded-lg `}
             >
-              <div className='w-full flex items-start justify-between gap-x-[10px]'>
+              <div className='w-full flex items-start justify-between gap-x-2.5'>
                 <DialogTitle
                   as="h3"
                   className="text-md font-medium leading-6 mb-2 w-full"

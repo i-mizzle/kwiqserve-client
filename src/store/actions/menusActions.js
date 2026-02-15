@@ -7,7 +7,7 @@ const headers = authHeader()
 export const fetchMenus = (filterString, page, perPage) => async (dispatch) => {    
     try{
 
-        let url = `${baseUrl}/tables?expand=menu`
+        let url = `${baseUrl}/menus`
 
         if(filterString && filterString !== '') {
             url += `${url.includes('?') ? '&' : '?'}${filterString}`
@@ -45,7 +45,7 @@ export const fetchMenus = (filterString, page, perPage) => async (dispatch) => {
 export const createMenu = (payload) => async (dispatch) => {    
     try{
 
-        let url = `${baseUrl}/tables`
+        let url = `${baseUrl}/menus`
 
         dispatch( {
             type: CREATING_MENU,
@@ -61,7 +61,7 @@ export const createMenu = (payload) => async (dispatch) => {
 
         dispatch({
             type: SET_SUCCESS,
-            payload: 'New table created successfully'
+            payload: 'New menu created successfully'
         })
         
     }

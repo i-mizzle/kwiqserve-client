@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 
 const Checkbox = ({CheckboxLabel, checkboxToggleFunction, isChecked, hasError}) => {
   return (
-    <div className='w-full flex items-start gap-x-2'>
-      <div className='w-[25px] mt-[2px]'>
+    <div className='w-max flex items-start gap-x-2'>
+      <div className='w-6.25 mt-0.5'>
 
         <button 
-            className={`flex items-center justify-center w-[20px] h-[20px] border rounded transition duration-200 text-white 
-            ${isChecked ? 'bg-black border-black' : 'bg-transparent border-gray-500'}
+            className={`flex items-center justify-center w-5 h-5 border rounded transition duration-200 text-white 
+            ${isChecked ? 'bg-ss-black border-black' : 'bg-transparent border-gray-500'}
             ${hasError ? 'border-red-600' : 'border-gray-500'}`
           } 
           onClick={checkboxToggleFunction}
@@ -17,7 +17,7 @@ const Checkbox = ({CheckboxLabel, checkboxToggleFunction, isChecked, hasError}) 
             {isChecked && <CheckIcon className="w-5 h-5 text-white" />}
         </button>
       </div>
-      <p className={`text-sm mt-[2px] ${hasError ? 'text-red-600' : 'text-gray-700'}`}>
+      <p className={`text-sm mt-0.5 ${hasError ? 'text-red-600' : 'text-gray-700'}`}>
         {CheckboxLabel}
       </p>
     </div>
