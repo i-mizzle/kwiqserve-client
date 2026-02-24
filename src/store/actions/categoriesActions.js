@@ -2,11 +2,10 @@ import axios from "axios"
 import { authHeader, baseUrl, businessDetails } from "../../utils"
 import { CREATE_CATEGORY, CREATING_CATEGORY, DELETE_CATEGORY, DELETING_CATEGORY, GET_CATEGORIES, GETTING_CATEGORIES, SET_SUCCESS, CATEGORIES_ERROR, UPDATE_CATEGORY, UPDATING_CATEGORY } from "../types"
 
-const headers = authHeader()
-const business = businessDetails()
-
 export const fetchCategories = (filterString, page, perPage) => async (dispatch) => {    
     try{
+        const headers = authHeader()
+        const business = businessDetails()
 
         let url = `${baseUrl}/categories/${business._id}`
 
@@ -46,6 +45,7 @@ export const fetchCategories = (filterString, page, perPage) => async (dispatch)
 
 export const createCategory = (payload) => async (dispatch) => {    
     try{
+        const headers = authHeader()
 
         let url = `${baseUrl}/categories`
 
@@ -84,6 +84,7 @@ export const clearCreatedCategory = () => async (dispatch) => {
 
 export const updateCategory = (id, payload) => async (dispatch) => {    
     try{
+        const headers = authHeader()
 
         let url = `${baseUrl}/categories/${id}`
 
@@ -122,6 +123,7 @@ export const clearUpdatedCategories = () => async (dispatch) => {
 
 export const deleteCategories = (id) => async (dispatch) => {    
     try{
+        const headers = authHeader()
 
         let url = `${baseUrl}/categories/${id}`
 

@@ -6,11 +6,12 @@ import PlusIcon from '../icons/PlusIcon'
 import { MinusIcon } from '@heroicons/react/solid'
 import { clientId } from '../../../utils'
 import PhotoIcon from '../icons/PhotoIcon'
+import { useParams } from 'react-router-dom'
 
 const ItemInBag = ({item, smallPhotos=false}) => {
     const dispatch = useDispatch()
     const cartState = useSelector((state => state.cart))
-
+    const { tableId } = useParams()
     const addItemToCart = async () => {
         const newCartItem = {
             displayName: item.displayName,
@@ -24,6 +25,7 @@ const ItemInBag = ({item, smallPhotos=false}) => {
         const requestPayload = {
             clientId: clientId(),
             item: newCartItem,
+            table: tableId
         }
 
         setAdding(true)
@@ -35,7 +37,7 @@ const ItemInBag = ({item, smallPhotos=false}) => {
             setAdding(false)
             setTimeout(() => {
                 setAddedToCart(false)
-            }, 5000)
+            }, 1000)
         }
     }
 

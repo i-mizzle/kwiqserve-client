@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PlusIcon } from '@heroicons/react/solid';
 import ModalLayout from '../../Layout/ModalLayout';
 import CreateNewCategory from './CreateNewCategory';
+import ModalDialog from '../../Layouts/ModalDialog';
 
 const Categories = () => {
     const dataState = useSelector((state => state.syncData))
@@ -40,7 +41,7 @@ const Categories = () => {
                 </div>
             </div>
 
-            <ModalLayout
+            <ModalDialog
                 isOpen={creatingNewCategory} 
                 closeModal={()=>{setCreatingNewCategory(false)}} 
                 dialogTitle='Create a category'
@@ -51,7 +52,7 @@ const Categories = () => {
                 closeNewCategory={()=>{setCreatingNewCategory(false)}} 
                 reload={()=>{setRefresh(refresh+1)}}
                 />
-            </ModalLayout>
+            </ModalDialog>
         </>
 
     )

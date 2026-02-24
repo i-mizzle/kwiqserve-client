@@ -7,11 +7,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import PublicCategoryCard from '../../components/elements/items/PublicCategoryCard'
 import { ERROR } from '../../store/types'
 import axios from 'axios'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import Loader from '../../components/elements/Loader'
 import PublicItemCard from '../../components/elements/items/PublicItemCard'
 import EmptyState from '../../components/elements/EmptyState'
 import CloseIcon from '../../components/elements/icons/CloseIcon'
+import ArrowIcon from '../../components/elements/icons/ArrowIcon'
 
 const PublicTable = () => {
   const [loading, setLoading] = useState(true)
@@ -20,7 +21,8 @@ const PublicTable = () => {
   const categoriesSelector = useSelector((state => state.categories))
   const dispatch = useDispatch()
   const { tableId } = useParams()
-
+  const cartSelector = useSelector((state => state.cart))
+  
   useEffect(() => {
     dispatch(fetchCategories('', 0, 0))
 
@@ -127,8 +129,8 @@ const PublicTable = () => {
   
   return (
     <TableLayout>
-      <div className='w-full px-4 bg-gray-50 min-h-screen h-inherit'>
-        <h1 className='mt-5 text-5xl font-bold text-ss-dark-blue'>Create your order</h1>
+      <div className='w-full px-4 bg-gray-50 min-h-screen h-inherit relative pb-0'>
+        <h1 className='mt-5 text-5xl font-bold text-ss-dark-blue'>Place your<br /> order</h1>
         <p className='text-[13px] text-gray-600 mt-2'>Search for a product, or browse our categories to select and add items to your order. Once you checkout, your order will be brought to you at this table.</p>
         <div className='w-full my-4'>
           <SearchField placeholderText={`Search for an item`} />
@@ -200,6 +202,16 @@ const PublicTable = () => {
             </div>}
           </div>}
         </div>
+
+        {cartSelector?.cart && <div className='w-full p-3 shadow-lg shadow-ss-dark-blue/10 bg-white sticky bottom-0 left-0'>
+          <Link to={`/tables/${tableId}/cart`} className='w-full flex items-center justify-between font-bold text-lg border-t border-gray-300 text-ss-pale-blue bg-ss-dark-blue p-4 rounded-lg'>
+            <span>
+              Complete your order <span className='text-sm font-normal'>({cartSelector?.cart?.items?.reduce((total, item) => total + item.quantity, 0)} items)</span>
+            </span>
+            <ArrowIcon className={`w-5 h-5`} />
+          </Link>
+        </div>}
+      
       </div>
     </TableLayout>
   )

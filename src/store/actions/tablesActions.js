@@ -2,10 +2,9 @@ import axios from "axios"
 import { authHeader, baseUrl } from "../../utils"
 import { CREATE_TABLE, CREATING_TABLE, DELETE_TABLE, DELETING_TABLE, GET_TABLES, GETTING_TABLES, SET_SUCCESS, TABLES_ERROR, UPDATE_TABLE, UPDATING_TABLE } from "../types"
 
-const headers = authHeader()
-
 export const fetchTables = (filterString, page, perPage) => async (dispatch) => {    
     try{
+        const headers = authHeader()
 
         let url = `${baseUrl}/tables?expand=menu`
 
@@ -44,6 +43,7 @@ export const fetchTables = (filterString, page, perPage) => async (dispatch) => 
 
 export const createTable = (payload) => async (dispatch) => {    
     try{
+        const headers = authHeader()
 
         let url = `${baseUrl}/tables`
 
@@ -82,6 +82,7 @@ export const clearCreatedTable = () => async (dispatch) => {
 
 export const updateTable = (id, payload) => async (dispatch) => {    
     try{
+        const headers = authHeader()
 
         let url = `${baseUrl}/tables/${id}`
 
@@ -120,6 +121,7 @@ export const clearUpdatedTable = () => async (dispatch) => {
 
 export const deleteTable = (id) => async (dispatch) => {    
     try{
+        const headers = authHeader()
 
         let url = `${baseUrl}/tables/${id}`
 

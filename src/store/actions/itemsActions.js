@@ -2,10 +2,9 @@ import axios from "axios"
 import { authHeader, baseUrl } from "../../utils"
 import { CREATE_ITEM, CREATING_ITEM, DELETE_ITEM, DELETING_ITEM, GET_ITEMS, GETTING_ITEMS, SET_SUCCESS, ITEMS_ERROR, UPDATE_ITEM, UPDATING_ITEM } from "../types"
 
-const headers = authHeader()
-
 export const fetchItems = (filterString, page, perPage) => async (dispatch) => {    
     try{
+        const headers = authHeader()
 
         let url = `${baseUrl}/items?expand=category,variants`
 
@@ -44,6 +43,7 @@ export const fetchItems = (filterString, page, perPage) => async (dispatch) => {
 
 export const createItem = (payload) => async (dispatch) => {    
     try{
+        const headers = authHeader()
 
         let url = `${baseUrl}/items`
 
@@ -82,6 +82,7 @@ export const clearCreatedItem = () => async (dispatch) => {
 
 export const updateItem = (id, payload) => async (dispatch) => {    
     try{
+        const headers = authHeader()
 
         let url = `${baseUrl}/items/${id}`
 
@@ -120,6 +121,7 @@ export const clearUpdatedItem = () => async (dispatch) => {
 
 export const deleteItem = (id) => async (dispatch) => {    
     try{
+        const headers = authHeader()
 
         let url = `${baseUrl}/items/${id}`
 

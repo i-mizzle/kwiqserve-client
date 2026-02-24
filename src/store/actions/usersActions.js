@@ -90,7 +90,7 @@ export const fetchUsers = (
             payload: true
         })
 
-        const response = await axios.get(`${baseUrl}/users/all`, { headers })
+        const response = await axios.get(`${baseUrl}/users/all?expand=businesses.roles`, { headers })
         dispatch({
             type: GET_USERS,
             payload: response.data.data

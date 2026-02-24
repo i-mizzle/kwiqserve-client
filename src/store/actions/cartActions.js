@@ -82,7 +82,7 @@ export const fetchCart = (filterString) => async (dispatch) => {
         })
 
         const response = await axios.get(url, { headers })
-        console.log('cart n actions: ', response.data)
+        console.log('cart in actions: ', response.data)
         dispatch({
             type: FETCH_CART,
             payload: response.data.data

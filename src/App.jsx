@@ -26,6 +26,16 @@ import Tables from './pages/business/tables/Tables.jsx'
 import TableDetails from './pages/business/tables/TableDetails.jsx'
 import PublicTable from './pages/public/PublicTable.jsx'
 import Cart from './pages/public/Cart.jsx'
+import PaymentVerification from './pages/public/PaymentVerification.jsx'
+import Settings from './pages/business/Settings.jsx'
+import Profile from './pages/business/settings/Profile.jsx'
+import Security from './pages/business/settings/Security.jsx'
+import Users from './pages/business/settings/users/Users.jsx'
+import BusinessSettings from './pages/business/settings/BusinessSettings.jsx'
+import Roles from './pages/business/settings/roles-permissions/Roles.jsx'
+import RoleDetails from './pages/business/settings/roles-permissions/RoleDetails.jsx'
+import UserDetails from './pages/business/settings/users/UserDetails.jsx'
+import NewUser from './pages/business/settings/users/NewUser.jsx'
 
 function App() {
   return (
@@ -38,7 +48,8 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/confirm-email/:confirmationCode" element={<ConfirmEmail />} />
           <Route path="/tables/:tableId" element={<PublicTable />} />
-          <Route path="/cart" element={<Cart />} />
+          <Route path="/tables/:tableId/cart" element={<Cart />} />
+          <Route path="/tables/:tableId/verify-payment" element={<PaymentVerification />} />
 
           <Route path="/business" element={<Business />}>
             <Route path="/business/" element={<Navigate replace to="/business/dashboard" />} />
@@ -64,6 +75,19 @@ function App() {
 
             {/* Catch-all for business routes */}
             <Route path="/business/*" element={<BusinessErrorPage />} />
+
+            <Route path="/business/settings" element={<Settings />}>
+              <Route path="/business/settings" element={<Navigate replace to="/business/settings/profile" />} />
+              <Route path="/business/settings/profile" element={<Profile />} />
+              <Route path="/business/settings/business-settings" element={<BusinessSettings />} />
+              {/* <Route path="/business/settings/security" element={<Security />} /> */}
+              <Route path="/business/settings/users" element={<Users />} />
+              <Route path="/business/settings/users/user-details/:userId" element={<UserDetails />} />
+              <Route path="/business/settings/users/new-user" element={<NewUser />} />
+              <Route path="/business/settings/roles" element={<Roles />} />
+              <Route path="/business/settings/roles/:roleId" element={<RoleDetails />} />
+            </Route>
+
           </Route>
           
           {/* Catch-all for non-business routes */}

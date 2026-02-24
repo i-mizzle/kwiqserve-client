@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import LogoutIcon from '../elements/icons/LogoutIcon'
 import { hasPermissions } from '../../utils'
 import Roadmap from '../../assets/images/icons/roadmap-icon.svg'
+import CogIcon from '../elements/icons/CogIcon'
 
 const UserMenu = ({businessDetails, userDetails, logOut}) => {
   return (
@@ -85,12 +86,13 @@ const UserMenu = ({businessDetails, userDetails, logOut}) => {
             </Menu.Item>
             <Menu.Item>
               {({ active }) => (
-                <Link to="/user/profile"
+                <Link to="/business/settings"
                 className={`${
                   active ? 'bg-gray-200 text-white' : 'text-gray-900'
-                } group flex rounded-md items-center w-full px-2 py-2 my-2 text-sm`}
+                } group flex rounded-md items-center gap-x-1.25 w-full px-2 py-2 my-2 text-sm`}
               >
-                  Profile
+                  <CogIcon className={`w-5.5 h-5.5 text-ss-dark-blue`} />
+                  Profile & Settings
                 </Link>
               )}
             </Menu.Item>

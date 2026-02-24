@@ -2,10 +2,9 @@ import axios from "axios"
 import { authHeader, baseUrl } from "../../utils"
 import { CREATE_ORDER, CREATING_ORDER, DELETE_ORDER, DELETING_ORDER, GET_ORDERS, GETTING_ORDERS, SET_SUCCESS, ORDERS_ERROR, UPDATE_ORDER, UPDATING_ORDER } from "../types"
 
-const headers = authHeader()
-
 export const fetchOrders = (filterString, page, perPage) => async (dispatch) => {    
     try{
+        const headers = authHeader()
 
         let url = `${baseUrl}/orders?expand=table`
 
@@ -44,6 +43,7 @@ export const fetchOrders = (filterString, page, perPage) => async (dispatch) => 
 
 export const createOrder = (payload) => async (dispatch) => {    
     try{
+        const headers = authHeader()
 
         let url = `${baseUrl}/orders`
 
@@ -82,6 +82,7 @@ export const clearCreatedOrder = () => async (dispatch) => {
 
 export const updateOrder = (id, payload) => async (dispatch) => {    
     try{
+        const headers = authHeader()
 
         let url = `${baseUrl}/orders/${id}`
 
@@ -120,6 +121,7 @@ export const clearUpdatedOrder = () => async (dispatch) => {
 
 export const deleteOrder = (id) => async (dispatch) => {    
     try{
+        const headers = authHeader()
 
         let url = `${baseUrl}/orders/${id}`
 

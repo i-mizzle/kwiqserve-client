@@ -7,12 +7,15 @@ import { sendToCart } from '../../../store/actions/cartActions'
 
 import CheckIcon from '../icons/CheckIcon'
 import InlinePreloader from '../InlinePreloader'
+import { useParams } from 'react-router-dom'
 
 const PublicItemCard = ({item, addToOrder, itemStock, hideStock, canAddItem, storeSettings, currentPage}) => {
     const dispatch = useDispatch()
     // const cartState = useSelector((state => state.cart))
     const [addedToCart, setAddedToCart] = useState(false)
     const [adding, setAdding] = useState(false)
+
+    const { tableId } = useParams()
     const addItemToCart = async () => {
         const newCartItem = {
             displayName: item.displayName,
@@ -26,6 +29,7 @@ const PublicItemCard = ({item, addToOrder, itemStock, hideStock, canAddItem, sto
         const requestPayload = {
             clientId: clientId(),
             item: newCartItem,
+            table: tableId
         }
 
         setAdding(true)
@@ -37,7 +41,7 @@ const PublicItemCard = ({item, addToOrder, itemStock, hideStock, canAddItem, sto
             setAdding(false)
             setTimeout(() => {
                 setAddedToCart(false)
-            }, 5000)
+            }, 1000)
         }
     }
 

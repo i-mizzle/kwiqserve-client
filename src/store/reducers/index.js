@@ -10,6 +10,7 @@ import menusReducer from "./menusReducer";
 import ordersReducer from "./ordersReducer";
 import transactionsReducer from "./transactionsReducer";
 import cartReducer from "./cartReducer";
+import usersReducer from "./usersReducer";
 
 const rootReducer = combineReducers({
     success: successReducer,
@@ -22,7 +23,8 @@ const rootReducer = combineReducers({
     menus: menusReducer,
     orders: ordersReducer,
     transactions: transactionsReducer,
-    cart: cartReducer
+    cart: cartReducer,
+    users: usersReducer
 });
 
 export default rootReducer;

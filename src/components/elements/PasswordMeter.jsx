@@ -15,7 +15,7 @@ const PasswordMeter = ({ password }) => {
     const hasUppercase = /[A-Z]/.test(password);
     const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
     const hasNumber = /[0-9]/.test(password);
-    const hasMinEightChars = password.length >= 8;
+    const hasMinEightChars = password?.length >= 8;
 
     setChecks({
       lowercase: hasLowercase,

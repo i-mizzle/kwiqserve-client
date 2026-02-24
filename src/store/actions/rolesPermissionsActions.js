@@ -1,6 +1,6 @@
 import axios from "axios"
 import { authHeader, baseUrl } from "../../utils"
-import { CREATE_ROLE, CREATING_ROLE, GETTING_PERMISSIONS, GETTING_ROLES, GET_PERMISSIONS, GET_ROLES, ROLES_PERMISSIONS_ERROR, UPDATE_ROLE, UPDATING_ROLE } from "../types"
+import { CREATE_ROLE, CREATING_ROLE, GETTING_PERMISSIONS, GETTING_ROLES, GET_PERMISSIONS, GET_ROLES, ROLES_PERMISSIONS_ERROR, SET_SUCCESS, UPDATE_ROLE, UPDATING_ROLE } from "../types"
 
 export const fetchPermissions = () => async (dispatch) => {    
     try{
@@ -43,6 +43,11 @@ export const createRole = (rolePayload) => async (dispatch) => {
         dispatch({
             type: CREATE_ROLE,
             payload: response.data.data
+        })
+
+        dispatch({
+            type:SET_SUCCESS,
+            payload: "New role created successfully"
         })
         
     }

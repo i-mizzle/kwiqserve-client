@@ -2,10 +2,9 @@ import axios from "axios"
 import { authHeader, baseUrl } from "../../utils"
 import { CREATE_MENU, CREATING_MENU, DELETE_MENU, DELETING_MENU, GET_MENUS, GETTING_MENUS, SET_SUCCESS, MENUS_ERROR, UPDATE_MENU, UPDATING_MENU } from "../types"
 
-const headers = authHeader()
-
 export const fetchMenus = (filterString, page, perPage) => async (dispatch) => {    
     try{
+        const headers = authHeader()
 
         let url = `${baseUrl}/menus`
 
@@ -44,6 +43,7 @@ export const fetchMenus = (filterString, page, perPage) => async (dispatch) => {
 
 export const createMenu = (payload) => async (dispatch) => {    
     try{
+        const headers = authHeader()
 
         let url = `${baseUrl}/menus`
 
@@ -82,6 +82,7 @@ export const clearCreatedMenu = () => async (dispatch) => {
 
 export const updateMenu = (id, payload) => async (dispatch) => {    
     try{
+        const headers = authHeader()
 
         let url = `${baseUrl}/tables/${id}`
 
@@ -120,6 +121,7 @@ export const clearUpdatedMenu = () => async (dispatch) => {
 
 export const deleteMenu = (id) => async (dispatch) => {    
     try{
+        const headers = authHeader()
 
         let url = `${baseUrl}/tables/${id}`
 

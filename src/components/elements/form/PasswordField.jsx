@@ -41,12 +41,12 @@ const PasswordField = ({
              {requiredField && requiredField === true && <span className='text-red-600'>*</span>}   {inputLabel}
             </label>
 
-            <span className={`absolute z-40 cursor-pointer pt-2 top-10 right-4`} onClick={(e)=>{toggleHiddenInput(e)}}>
+            {!disabled && <span className={`absolute z-40 cursor-pointer pt-2 top-10 right-4`} onClick={(e)=>{toggleHiddenInput(e)}}>
                 {hiddenInput ?
                 <EyeIcon className={`w-5 h-5 text-gray-600`} />
                 :
                 <EyeOffIcon className={`w-5 h-5 text-gray-600`} />}
-            </span>
+            </span>}
 
             <input 
                 id={fieldId} 
