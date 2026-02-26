@@ -236,7 +236,7 @@ const DataTable = ({
                                         </li>
                                     ))}
                                     {tableOptions.expandable && tableOptions.expandable === true && 
-                                        <ChevronIcon className={`absolute right-3.75 top-8.75 w-4 h-4 transform transition duration-200 ${expandedIndex === dataIndex.toString() ? 'rotate-180 text-blue-700' : ''}`} 
+                                        <ChevronIcon className={`absolute right-2 top-10 w-4 h-4 transform transition duration-200 ${expandedIndex === dataIndex.toString() ? 'text-blue-700 rotate-270' : 'rotate-180'}`} 
                                     />}
                                 </div>
                                 {/* Expansion */}

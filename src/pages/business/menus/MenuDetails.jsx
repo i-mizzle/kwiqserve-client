@@ -6,7 +6,7 @@ import TextField from '../../../components/elements/form/TextField'
 import { useNavigate, useParams } from 'react-router-dom'
 import Loader from '../../../components/elements/Loader'
 import { authHeader, baseUrl } from '../../../utils'
-import { clearDeletedMenu, clearUpdatedMenu } from '../../../store/actions/menusActions'
+import { clearDeletedMenu, clearUpdatedMenu, updateMenu } from '../../../store/actions/menusActions'
 import { fetchItems } from '../../../store/actions/itemsActions'
 import axios from 'axios'
 import AutocompleteSelect from '../../../components/elements/form/AutocompleteSelect'
@@ -315,7 +315,7 @@ const MenuDetails = () => {
                   </div>
 
                   <div className='my-8 w-full'>
-                    <FormButton buttonLabel="Create menu" buttonAction={()=>{createNewMenu()}} processing={menusState.creatingMenu} /> 
+                    <FormButton buttonLabel="Save updates to this menu" buttonAction={()=>{updateMenuDetails()}} processing={menusState.creatingMenu} /> 
                   </div>
               </div>
           </div>

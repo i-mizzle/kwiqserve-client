@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
 import AdminHeader from '../partials/AdminHeader'
 import { businessDetails } from '../../utils'
+import PendingOrdersFloater from '../elements/PendingOrdersFloater'
 
 const AppLayout = ({children, pageTitle}) => {
     // const [sidebarState, setSidebarState] = useState(defaultSidebarState() || 'closed');
@@ -27,7 +28,8 @@ const AppLayout = ({children, pageTitle}) => {
                         />
                     </div>
                     
-                    <div className={`mt-10 min-h-[50vh] h-inherit py-10 w-full px-8 lg:px-12 xl:px-32 2xl:px-48`}>
+                    <div className={`mt-10 min-h-[50vh] h-inherit py-10 w-full px-8 lg:px-12 xl:px-32 relative`}>
+                        <PendingOrdersFloater />
                         <main>{children}</main>
                     </div>
                 </div>

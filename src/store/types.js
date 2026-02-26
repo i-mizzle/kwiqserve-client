@@ -6,6 +6,10 @@ export const CLEAR_ERROR = 'CLEAR_ERROR'
 export const SET_SUCCESS = 'SET_SUCCESS'
 export const CLEAR_SUCCESS = 'CLEAR_SUCCESS'
 
+// Notification
+export const SET_NOTIFICATION = 'SET_NOTIFICATION'
+export const CLEAR_NOTIFICATION = 'CLEAR_NOTIFICATION'
+
 // Categories
 export const GET_CATEGORIES = 'GET_CATEGORIES';
 export const GETTING_CATEGORIES = 'GETTING_CATEGORIES';

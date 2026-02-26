@@ -4,6 +4,10 @@ import { CREATE_ORDER, CREATING_ORDER, DELETE_ORDER, DELETING_ORDER, GET_ORDERS,
 
 export const fetchOrders = (filterString, page, perPage) => async (dispatch) => {    
     try{
+        dispatch({
+            type: GET_ORDERS,
+            payload: []
+        })
         const headers = authHeader()
 
         let url = `${baseUrl}/orders?expand=table`

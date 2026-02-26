@@ -11,6 +11,10 @@ import NewTable from '../../../components/elements/tables/NewTable';
 import ModalDialog from '../../../components/Layouts/ModalDialog';
 import ArrowNarrowRight from '../../../components/elements/icons/ArrowNarrowRight';
 import TrashIcon from '../../../components/elements/icons/TrashIcon';
+import MultipleNewTables from '../../../components/elements/tables/MultipleNewTables';
+import SquaresIcon from '../../../components/elements/icons/SquaresIcon';
+import SquaresStackedIcon from '../../../components/elements/icons/SquaresStackedIcon';
+import Pagination from '../../../components/elements/Pagination';
 
 const Tables = () => {
     const [page, setPage] = useState(1)
@@ -26,14 +30,16 @@ const Tables = () => {
         
         if(tablesSelector.createdTable && tablesSelector.createdTable !== null) {
             setCreatingTable(false)
+            setCreatingMultipleTables(false)
             dispatch(clearCreatedTable())
         }
         return () => {
             
         };
-    }, [dispatch, refresh, tablesSelector.createdTable]);
+    }, [dispatch, refresh, page, perPage, tablesSelector.createdTable]);
 
     const [creatingTable, setCreatingTable] = useState(false)
+    const [creatingMultipleTables, setCreatingMultipleTables] = useState(false)
     return (
         <>
             <AppLayout>
@@ -45,10 +51,17 @@ const Tables = () => {
                                     <h1 className='text-3xl font-bold text-ss-dark-gray'>Tables</h1>
                                     <p className='text-gray-500 text-sm'>Create and manage menus for your menu items. Click on a price card to view details or create a new one by clicking "Create a Menu"</p>
                                 </div>
-                                <button onClick={()=>{setCreatingTable(true)}} className='flex w-max gap-x-2 items-center justify-center mt-5 lg:mt-0 bg-ss-dark-blue border border-ss-dark-blue px-4 py-3 rounded-lg text-white transition duration-200 hover:bg-ss-black font-[550]'>
-                                    <PlusIcon className={`h-5 w-5`} />
-                                    Create a Table
-                                </button>
+                                <div className='flex flex-row-reverse gap-x-2'>
+
+                                    <button onClick={()=>{setCreatingTable(true)}} className='flex w-max gap-x-2 items-center justify-center mt-5 lg:mt-0 bg-ss-dark-blue border border-ss-dark-blue px-4 py-3 rounded-lg text-white transition duration-200 hover:bg-ss-black cursor-pointer font-[550]'>
+                                        <PlusIcon className={`h-5 w-5`} />
+                                        Create a Table
+                                    </button>
+                                    <button onClick={()=>{setCreatingMultipleTables(true)}} className='flex w-max gap-x-2 items-center justify-center mt-5 lg:mt-0 bg-ss-pale-blue border border-ss-dark-blue px-4 py-3 rounded-lg transition duration-200 hover:bg-blue-200 cursor-pointer font-[550] text-ss-dark-blue'>
+                                        <SquaresStackedIcon className={`h-5 w-5`} />
+                                        Create Multiple Tables
+                                    </button>
+                                </div>
                             </div>
 
                             <div className='flex items-center justify-between'>
@@ -68,6 +81,7 @@ const Tables = () => {
                                 <CloseIcon className={`w-4 h-4`} /> Clear search
                             </button>}
                             {tablesSelector.tables?.tables?.length > 0 ? 
+                            <>
                                 <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 my-12'>
                                     {tablesSelector.tables?.tables.map((table, tableIndex)=>(
                                         // <MenuCard key={entryIndex} entry={entry} />
@@ -91,7 +105,20 @@ const Tables = () => {
                                             </div>
                                         </div>
                                     ))}
-                                </div> : 
+                                </div> 
+                                <div className='w-full'>
+                                    <Pagination
+                                        pagination={{
+                                            perPage: perPage, 
+                                            currentPage: page,
+                                            totalItems: tablesSelector.tables?.total,
+                                        }}
+                                        changePage={setPage}
+                                        updatePerPage={setPerPage}
+                                    />
+                                </div>
+                                </>
+                                : 
                                 <div className='w-6/12 mx-auto mt-12'>
                                     <EmptyState 
                                         emptyStateText={`Click on the "Create a Table" button above to create a new table`} 
@@ -120,6 +147,16 @@ const Tables = () => {
                 maxWidthClass='max-w-lg'
             >   
                 <NewTable />
+            </ModalDialog>
+
+             <ModalDialog
+                shown={creatingMultipleTables} 
+                closeFunction={()=>{setCreatingMultipleTables(false)}} 
+                dialogTitle='Create new tables'
+                // dialogIntro={`Create a category for store or sale items`}
+                maxWidthClass='max-w-lg'
+            >   
+                <MultipleNewTables />
             </ModalDialog>
         </>
     )

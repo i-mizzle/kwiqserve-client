@@ -73,6 +73,39 @@ export const createTable = (payload) => async (dispatch) => {
     }
 }
 
+
+export const bulkCreateTable = (payload) => async (dispatch) => {    
+    try{
+        const headers = authHeader()
+
+        let url = `${baseUrl}/tables/bulk/create`
+
+        dispatch( {
+            type: CREATING_TABLE,
+            payload: true
+        })
+
+        const response = await axios.post(url, payload, { headers })
+
+        dispatch({
+            type: CREATE_TABLE,
+            payload: response.data.data
+        })
+
+        dispatch({
+            type: SET_SUCCESS,
+            payload: 'New tables created successfully'
+        })
+        
+    }
+    catch(error){
+        dispatch( {
+            type: TABLES_ERROR,
+            error
+        })
+    }
+}
+
 export const clearCreatedTable = () => async (dispatch) => {
     dispatch({
         type: CREATE_TABLE,

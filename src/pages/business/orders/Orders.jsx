@@ -8,6 +8,11 @@ import DataTable from '../../../components/elements/DataTable'
 import OrderExpansion from '../../../components/elements/orders/OrderExpansion'
 import { Link } from 'react-router-dom'
 import { tableHeadersFields } from '../../../utils'
+import OrderSummary from '../../../components/elements/orders/OrderSummary'
+import OrderStatus from '../../../components/elements/orders/OrderStatus'
+import OrderPaymentStatus from '../../../components/elements/orders/OrderPaymentStatus'
+import Currency from '../../../components/elements/Currency'
+import EmptyState from '../../../components/elements/EmptyState'
 
 const Orders = () => {
         const usersState = useSelector((state => state.users))
@@ -43,9 +48,9 @@ const Orders = () => {
 
     const columnWidths = {
         // id: "w-full lg:w-1/12",
-        orderAlias: "w-full lg:w-3/12",
-        sourcePriceCard: "w-full lg:w-2/12",
-        items: "w-full lg:w-2/12",
+        orderAlias: "w-full lg:w-4/12",
+        table: "w-full lg:w-2/12",
+        items: "w-full lg:w-1/12",
         status: "w-full lg:w-2/12",
         value: "w-full lg:w-2/12",
         payment: "w-full lg:w-1/12",
@@ -59,8 +64,8 @@ const Orders = () => {
         data.push(
             {
                 orderAlias: <OrderSummary item={item} />,
-                sourcePriceCard: item.sourceMenu?.name,
-                items: `${item.items?.length || 0} items in order`,
+                table: item.table?.name,
+                items: `${item.items?.length || 0} items`,
                 status: <OrderStatus status={item.status} />,
                 value: <Currency amount={item.total || 0} vat={item.vat !== 0 && item.vat}/>,
                 payment: <OrderPaymentStatus status={item.paymentStatus} />,
@@ -213,6 +218,8 @@ const Orders = () => {
 
                                 <div className='w-full'>
                                     <div className='hidden xl:block'>
+                                    {ordersState?.orders?.orders?.length > 0 ?
+
                                         <DataTable
                                             tableHeaders={tableHeadersFields(cleanupData(ordersState.orders?.orders)[0]).headers} 
                                             tableData={cleanupData(ordersState.orders?.orders)} 
@@ -231,6 +238,9 @@ const Orders = () => {
                                             expandedIndex={rowOpen || ''}
                                             expansion={<OrderExpansion orders={ordersState.orders?.orders} rowOpen={rowOpen} />}
                                         />
+                                         :
+                                        <EmptyState emptyStateText={`No orders have been created for this table yet`} emptyStateTitle={`No Orders Found`} />
+                                        }
                                     </div>
 
                                     <div className='block xl:hidden'>

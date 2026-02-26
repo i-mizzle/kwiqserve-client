@@ -25,7 +25,7 @@ const OrderExpansion = ({orders, rowOpen}) => {
                 </div>
             ))}
 
-            <Link to={`/user/orders/single/${orders[rowOpen]._id}`} className='flex flex-row items-center gap-x-3 mt-5 hover:text-blue-700 transition duration-200'>See full order details <ArrowNarrowRight className={`w-6 h-6`} /></Link>
+            <Link to={`/business/orders/order/${orders[rowOpen]._id}`} className='flex flex-row items-center gap-x-3 mt-5 hover:text-blue-700 transition duration-200'>See full order details <ArrowNarrowRight className={`w-6 h-6`} /></Link>
 
         </div>
     )

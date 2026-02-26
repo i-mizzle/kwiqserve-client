@@ -6,7 +6,7 @@ import StoreFrontIcon from '../../../components/elements/icons/StoreFrontIcon'
 const OrderSummary = ({item}) => {
   return (
     <div className='w-full flex items-start gap-x-2'>
-        <div className='w-10 flex items-center justify-center h-10'>
+        {/* <div className='w-10 flex items-center justify-center h-10'>
             {item.source === 'ONLINE' && 
             <Tooltip title="Online order" placement="top">
                 <div className='w-10 h-10 rounded-lg bg-green-400 bg-opacity-10 flex items-center justify-center'>
@@ -21,7 +21,7 @@ const OrderSummary = ({item}) => {
                 </div>
             </Tooltip>
             }
-        </div>
+        </div> */}
         <div>
             <p className='font-medium'>{item.alias}</p>
             <p className='text-xs'>Date: {new Date(item?.createdAt).toDateString()} - {new Date(item?.createdAt).toLocaleTimeString()}</p>

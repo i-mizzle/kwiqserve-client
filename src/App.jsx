@@ -6,6 +6,7 @@ import Login from './pages/auth/Login.jsx'
 import ErrorNotifier from './components/elements/ErrorNotifier.jsx'
 import SuccessNotifier from './components/elements/SuccessNotifier.jsx'
 import ScrollToTop from './components/Layouts/ScrollToTop.jsx'
+import AppSocketManager from './components/AppSocketManager.jsx'
 import Signup from './pages/onboarding/Signup.jsx'
 import ConfirmEmail from './pages/onboarding/ConfirmEmail.jsx'
 import Dashboard from './pages/business/Dashboard.jsx'
@@ -36,20 +37,25 @@ import Roles from './pages/business/settings/roles-permissions/Roles.jsx'
 import RoleDetails from './pages/business/settings/roles-permissions/RoleDetails.jsx'
 import UserDetails from './pages/business/settings/users/UserDetails.jsx'
 import NewUser from './pages/business/settings/users/NewUser.jsx'
+import CustomerOrderDetails from './pages/public/CustomerOrderDetails.jsx'
+import Notifier from './components/elements/Notifier.jsx'
 
 function App() {
   return (
     <Provider store={store}>
-      <ErrorNotifier />
-      <SuccessNotifier />
-      <ScrollToTop>
-        <Routes>
+      <AppSocketManager>
+        <ErrorNotifier />
+        <SuccessNotifier />
+        <Notifier />
+        <ScrollToTop>
+          <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/confirm-email/:confirmationCode" element={<ConfirmEmail />} />
           <Route path="/tables/:tableId" element={<PublicTable />} />
           <Route path="/tables/:tableId/cart" element={<Cart />} />
           <Route path="/tables/:tableId/verify-payment" element={<PaymentVerification />} />
+          <Route path="/customer-order/:orderRef" element={<CustomerOrderDetails />} />
 
           <Route path="/business" element={<Business />}>
             <Route path="/business/" element={<Navigate replace to="/business/dashboard" />} />
@@ -69,7 +75,7 @@ function App() {
             <Route path="/business/menus/new-menu" element={<NewMenu />} />
 
             <Route path="/business/orders" element={<Orders />} />
-            <Route path="/business/menus/menu/:menuId" element={<OrderDetails />} />
+            <Route path="/business/orders/order/:orderId" element={<OrderDetails />} />
 
             <Route path="/business/payments" element={<Payments />} />
 
@@ -93,7 +99,8 @@ function App() {
           {/* Catch-all for non-business routes */}
           <Route path="*" element={<ErrorPage />} />
         </Routes>
-      </ScrollToTop>
+        </ScrollToTop>
+      </AppSocketManager>
     </Provider>
   )
 }

@@ -229,9 +229,11 @@ const Cart = () => {
       cart: cartState.cart._id,
       paymentChannel: 'web',
       customer: {
-        email: userDetails.email
+        email: userDetails.email,
+        name: userDetails.name,
+        phone: userDetails.phone
       },
-      callbackUrl: `${window.location.host}/tables/${tableId}/verify-payment`
+      callbackUrl: `http://${window.location.host}/tables/${tableId}/verify-payment`
     }
 
     try {

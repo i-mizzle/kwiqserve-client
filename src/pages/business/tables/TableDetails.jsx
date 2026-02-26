@@ -12,6 +12,10 @@ import OrderExpansion from '../../../components/elements/orders/OrderExpansion'
 import DataTable from '../../../components/elements/DataTable'
 import Currency from '../../../components/elements/Currency'
 import ArrowNarrowRight from '../../../components/elements/icons/ArrowNarrowRight'
+import OrderSummary from '../../../components/elements/orders/OrderSummary'
+import OrderStatus from '../../../components/elements/orders/OrderStatus'
+import OrderPaymentStatus from '../../../components/elements/orders/OrderPaymentStatus'
+import EmptyState from '../../../components/elements/EmptyState'
 
 const TableDetails = () => {
   const [tableDetails, setTableDetails] = useState({})
@@ -80,35 +84,35 @@ const TableDetails = () => {
     }
   };
 
-  const columnWidths = {
-    // id: "w-full lg:w-1/12",
-    orderAlias: "w-full lg:w-3/12",
-    sourcePriceCard: "w-full lg:w-2/12",
-    items: "w-full lg:w-2/12",
-    status: "w-full lg:w-2/12",
-    value: "w-full lg:w-2/12",
-    payment: "w-full lg:w-1/12",
-  }
+    const columnWidths = {
+        // id: "w-full lg:w-1/12",
+        orderAlias: "w-full lg:w-4/12",
+        table: "w-full lg:w-2/12",
+        items: "w-full lg:w-1/12",
+        status: "w-full lg:w-2/12",
+        value: "w-full lg:w-2/12",
+        payment: "w-full lg:w-1/12",
+    }
 
-  const cleanupData = (dataSet) => {
-    const data = []
-    if (!dataSet) return []
+    const cleanupData = (dataSet) => {
+        const data = []
+        if (!dataSet) return []
 
-    dataSet.forEach((item, itemIndex) => {
-      data.push(
-        {
-          orderAlias: <OrderSummary item={item} />,
-          sourcePriceCard: item.sourceMenu?.name,
-          items: `${item.items?.length || 0} items in order`,
-          status: <OrderStatus status={item.status} />,
-          value: <Currency amount={item.total || 0} vat={item.vat !== 0 && item.vat}/>,
-          payment: <OrderPaymentStatus status={item.paymentStatus} />,
-        },
-      )
-    })
+        dataSet.forEach((item, itemIndex) => {
+        data.push(
+            {
+                orderAlias: <OrderSummary item={item} />,
+                table: item.table?.name,
+                items: `${item.items?.length || 0} items`,
+                status: <OrderStatus status={item.status} />,
+                value: <Currency amount={item.total || 0} vat={item.vat !== 0 && item.vat}/>,
+                payment: <OrderPaymentStatus status={item.paymentStatus} />,
+            },
+        )
+        })
 
-    return data
-  }
+        return data
+    }
 
   const [rowOpen, setRowOpen] = useState(null)
 
@@ -134,7 +138,7 @@ const TableDetails = () => {
         <Loader />
         :
         <div className='w-full relative pt-12'>
-          <div className='w-full pb-6 px-3 xl:px-12  xl:flex items-start gap-x-5'>
+          <div className='w-full pb-6 px-3 xl:flex items-start gap-x-5'>
             <div className='w-full xl:w-9/12'>
               <div className='w-full flex items-start gap-x-5 pb-12'>
                 <div className='w-1/2'>
@@ -156,36 +160,41 @@ const TableDetails = () => {
                 </div>
                 <div className='w-1/2'>
                   <h3 className='uppercase tracking-[0.5em] text-xs mb-1'>table revenue today</h3>
-                  <h1 className='text-3xl font-bold mb-1 pb-1 border-b border-gray-300'>N223,000</h1>
-                  <p className='text-gray-500 text-sm'>From 13 Orders</p>
+                  <h1 className='text-3xl font-bold mb-1 pb-1 border-b border-gray-300'>N{tableDetails.orders.today.total.toLocaleString()}</h1>
+                  <p className='text-gray-500 text-sm'>From {tableDetails.orders.today.count.toLocaleString()} Orders</p>
 
                   <h3 className='uppercase tracking-[0.5em] text-xs mt-6 mb-2'>total table revenue</h3>
-                  <h1 className='text-3xl font-bold mb-1 pb-1 border-b border-gray-300'>N1,491,900</h1>
-                  <p className='text-gray-500 text-sm'>From 132 Orders</p>
+                  <h1 className='text-3xl font-bold mb-1 pb-1 border-b border-gray-300'>N{tableDetails.orders.total.total.toLocaleString()}</h1>
+                  <p className='text-gray-500 text-sm'>From {tableDetails.orders.total.count.toLocaleString()} Orders</p>
                 </div>
               </div>
 
-              <div className='w-full pt-10'>
+              <div className='w-full pt-10 mb-6'>
                 <h1 className='text-xl font-bold text-ss-dark-gray'>Recent Orders for this table</h1>
                 <p className='text-gray-500 text-sm'>Latest orders placed on this table, you can click on an order to see more details and update order statuses</p>
               </div>
 
-              {ordersSelector.fetchingOrders ?     
+              {ordersSelector?.fetchingOrders ?     
+
                 <Loader /> : 
 
                 <div className='w-full'>
                   <div className='hidden xl:block'>
-                    <DataTable
-                      tableHeaders={tableHeadersFields(cleanupData(ordersSelector.orders?.orders)[0]).headers} 
-                      tableData={cleanupData(ordersSelector.orders?.orders)} 
-                      columnWidths={columnWidths}
-                      columnDataStyles={{}}
-                      allFields={tableHeadersFields(cleanupData(ordersSelector.orders?.orders)[0]).fields}
-                      onSelectItems={()=>{}}
-                      tableOptions={tableOptions}
-                      expandedIndex={rowOpen || ''}
-                      expansion={<OrderExpansion orders={ordersSelector.orders?.orders} rowOpen={rowOpen} />}
-                    />
+                    {ordersSelector.orders.orders?.length > 0 ?
+                      <DataTable
+                        tableHeaders={tableHeadersFields(cleanupData(ordersSelector.orders?.orders)[0]).headers} 
+                        tableData={cleanupData(ordersSelector.orders?.orders)} 
+                        columnWidths={columnWidths}
+                        columnDataStyles={{}}
+                        allFields={tableHeadersFields(cleanupData(ordersSelector.orders?.orders)[0]).fields}
+                        onSelectItems={()=>{}}
+                        tableOptions={tableOptions}
+                        expandedIndex={rowOpen || ''}
+                        expansion={<OrderExpansion orders={ordersSelector.orders?.orders} rowOpen={rowOpen} />}
+                      />
+                      :
+                      <EmptyState emptyStateText={`No orders have been created for this table yet`} emptyStateTitle={`No Orders Found`} />
+                    }
                   </div>
 
                   <div className='block xl:hidden'>
@@ -195,22 +204,6 @@ const TableDetails = () => {
                                 <div className='flex items-end justify-between gap-x-2.5 border-b p-5'>
                                     {/* <OrderSummary item={order} /> */}
                                     <div className='w-full flex items-center gap-x-2.5'>
-                                        <div className='w-15 flex items-center justify-center h-15'>
-                                            {order.source === 'ONLINE' && 
-                                            <Tooltip title="Online order" placement="top">
-                                                <div className='w-15 h-15 rounded-lg bg-green-400 bg-opacity-10 flex items-center justify-center'>
-                                                    <GlobeIcon className={`w-5 h-5 text-green-500`} />
-                                                </div>
-                                            </Tooltip>
-                                            }
-                                            {order.source === 'ONSITE' && 
-                                            <Tooltip title="On-site order" placement="top">
-                                                <div className='w-15 h-15 rounded-lg bg-gray-400 bg-opacity-20 flex items-center justify-center'>
-                                                    <StoreFrontIcon className={`w-5 h-5 text-gray-400`} />
-                                                </div>
-                                            </Tooltip>
-                                            }
-                                        </div>
                                         <div className='w-full'>
                                             <p className='font-medium text-gray-700 font-space-grotesk'>{order.alias}</p>
                                             <p className='text-sm mb-2.5 text-gray-500'>{order.items?.length || 0} items in order from {order.sourceMenu?.name}</p>
@@ -227,13 +220,13 @@ const TableDetails = () => {
                                 </div>
                             </Link>
                         ))}
-                    </div>
+                  </div>
                 </div>
 
             }
 
             </div>
-            <div className='w-full xl:w-3/12 p-5 border-2 rounded border-gray-200 xl:sticky top-5'>
+            <div className='w-full xl:w-3/12 p-5 border-2 rounded border-gray-200 xl:sticky top-10 z-99'>
               <h3 className='uppercase tracking-[0.5em] text-xs mb-2'>table qr code</h3>
               <p className='text-sm text-gray-500'>You can download ths qr code, print and place it around your physical store for your customers to scan and immediately access your price cards</p>
               {tableDetails.tableQrCode && tableDetails.tableQrCode !== '' ? 

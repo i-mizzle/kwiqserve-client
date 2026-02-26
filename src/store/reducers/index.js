@@ -11,10 +11,12 @@ import ordersReducer from "./ordersReducer";
 import transactionsReducer from "./transactionsReducer";
 import cartReducer from "./cartReducer";
 import usersReducer from "./usersReducer";
+import notificationReducer from "./notificationReducer";
 
 const rootReducer = combineReducers({
     success: successReducer,
     errors: errorReducer,
+    notification: notificationReducer,
     roles: rolesPermissionsReducer,
     auditLogs: auditLogsReducer,
     tables: tablesReducer,

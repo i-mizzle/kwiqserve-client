@@ -84,7 +84,7 @@ export const updateMenu = (id, payload) => async (dispatch) => {
     try{
         const headers = authHeader()
 
-        let url = `${baseUrl}/tables/${id}`
+        let url = `${baseUrl}/menus/${id}`
 
         dispatch( {
             type: UPDATING_MENU,
