@@ -27,6 +27,7 @@
     "react-popper": "^2.3.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.12.0",
+    "react-to-print": "^3.3.0",
     "redux": "^5.0.1",
     "redux-devtools-extension": "^2.13.9",
     "redux-persist": "^6.0.0",

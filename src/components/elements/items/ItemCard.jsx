@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import ChevronIcon from '../icons/ChevronIcon'
-import ModalLayout from '../../Layout/ModalLayout';
 import NumberField from '../form/NumberField';
 import FormButton from '../form/FormButton';
+import ModalDialog from '../../Layouts/ModalDialog';
 
 const ItemCard = ({item, addToOrder, itemStock, canAddItem}) => {
 
@@ -10,18 +10,18 @@ const ItemCard = ({item, addToOrder, itemStock, canAddItem}) => {
   const [price, setPrice] = useState(0);
   return (
     <>
-      <div className={`cursor-pointer w-full rounded-lg p-6 transition duration-200 bg-white hover:bg-opacity-70 hover:shadow-lg hover:shadow-green-500/10 border border-green-100`}> 
+      <div className={`cursor-pointer w-full rounded-lg p-6 transition duration-200 bg-white hover:bg-opacity-70 hover:shadow-lg hover:shadow-green-500/10 border border-blue-100 shadow-lg shadow-ss-pale-blue/10`}> 
           <div className="flex flex-col justify-between gap-y-6">
             <div>
-              <p className={`text font-medium text-gray-600`}>{item.displayName}</p>
+              <h3 className={`text-lg font-medium text-gray-600`}>{item.displayName}</h3>
               {item?.item?.barcode && item?.item?.barcode !== '' && <p className={`text-xs font-medium text-gray-600`}>Barcode: {`${item?.item?.barcode}`}</p>}
               <p className={`text-sm font-light mb-2 text-gray-600 capitalize flex items-center gap-x-1`}>
               {/* {unSlugify(item.section?.toLowerCase())} <ArrowNarrowRight className={`w-4 h-4 transform`} />  */}
               {/* {unSlugify(item.category.toLowerCase())} */}
               </p>
-              {item.fixedPricing && <p className={`font-medium text-gray-600`}>₦{(item.price).toLocaleString()}</p>}
+              {item.fixedPricing && <h3 className={`font-semibold text-gray-600`}>₦{(item.price).toLocaleString()}</h3>}
             </div>
-            <div className='xl:flex justify-between items-center'>
+            {/* <div className='xl:flex justify-between items-center'>
               <p className={`text-sm text-gray-600`}>{!item.item.noStock && <span>{itemStock}</span>} in stock</p>
               {canAddItem === true && <>
                 {itemStock > 0 || item.item.noStock === true ? 
@@ -39,13 +39,13 @@ const ItemCard = ({item, addToOrder, itemStock, canAddItem}) => {
                   <span className='text-gray-300 text-xs'>Out of stock</span>
                 } 
               </>}
-            </div>
+            </div> */}
         </div>
       </div>
 
-      <ModalLayout
-        isOpen={settingPrice} 
-        closeModal={()=>{setSettingPrice(false)}} 
+      <ModalDialog
+        shown={settingPrice} 
+        closeFunction={()=>{setSettingPrice(false)}} 
         dialogTitle={`Set price for ${item.displayName}`}
         maxWidthClass='max-w-md'
       >
@@ -70,7 +70,7 @@ const ItemCard = ({item, addToOrder, itemStock, canAddItem}) => {
           </div>
         </div>
         
-      </ModalLayout>
+      </ModalDialog>
     </>
   )
 }

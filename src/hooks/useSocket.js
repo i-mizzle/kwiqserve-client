@@ -79,7 +79,7 @@ export const useSocket = () => {
           // Test if we can receive events by emitting a ping
           setTimeout(() => {
             console.log('🏓 Testing connection - emitting ping');
-            socketRef.current.emit('ping', { test: true }, (pong) => {
+            socketRef.current?.emit('ping', { test: true }, (pong) => {
               console.log('🏓 Pong received:', pong);
             });
           }, 1000);

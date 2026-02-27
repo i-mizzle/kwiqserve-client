@@ -498,6 +498,8 @@ export const orderTotal = (orderDetails, storeSettings) => {
         vat = totalPrice * (storeSettings?.taxes?.rate)
     }
 
+    // console.log('________', totalPrice)
+
     return {total: totalPrice, vat: vat}
 }
 

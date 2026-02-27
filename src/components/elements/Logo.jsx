@@ -1,12 +1,12 @@
 import React from 'react'
 
 const Logo = ({
-  size=16, // font size
+  size=20, // font size
   color='#030A11'
 }) => {
   return (
     <div className='w-max'>
-        <h1 className='font-thin tracking-[0.5em]' style={{color: color, fontSize: `${size}px`}}>SCANSERVE</h1>
+        <h1 className='font-bold' style={{color: color, fontSize: `${size}px`}}>KWIQSERVE</h1>
     </div>
   )
 }

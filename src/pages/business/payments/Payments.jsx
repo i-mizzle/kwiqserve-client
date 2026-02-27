@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchUsers } from '../../../store/actions/usersActions'
 import { fetchOrders } from '../../../store/actions/ordersActions'
 import { fetchTransactions } from '../../../store/actions/transactionsActions'
+import EmptyState from '../../../components/elements/EmptyState'
 
 export const transactionColumnWidths = {
     transactionReference: 'w-2/12',
@@ -65,8 +66,8 @@ const Payments = () => {
     const TransactionLink = ({type, reference, index}) => {
         return (
             <div className='w-full flex items-center gap-x-2.5'>
-                <div className='w-10'>
-                    <div className={`w-10 h-10 rounded flex items-center justify-center ${type === 'inflow' ? 'bg-green-50' : 'bg-red-50'}`}>
+                <div className='w-6'>
+                    <div className={`w-6 h-6 rounded flex items-center justify-center ${type === 'inflow' ? 'bg-green-50' : 'bg-red-50'}`}>
                         <ArrowIcon className={`w-4 h-4 ${type === 'inflow' ? 'text-green-600 rotate-135' : 'text-red-600 -rotate-45'}`} />
                     </div>
                 </div>
@@ -304,22 +305,26 @@ const Payments = () => {
                                     </button>}
 
                                     <div className='hidden xl:block'>
-                                        <DataTable
-                                            tableHeaders={tableHeadersFields(cleanupData(transactionsState.transactions?.transactions)[0]).headers} 
-                                            tableData={cleanupData(transactionsState.transactions?.transactions)} 
-                                            columnWidths={transactionColumnWidths}
-                                            columnDataStyles={columnDataStyles}
-                                            allFields={tableHeadersFields(cleanupData(transactionsState.transactions?.transactions)[0]).fields}
-                                            onSelectItems={getSelectionCount}
-                                            tableOptions={tableOptions}
-                                            pagination={{
-                                                perPage, 
-                                                currentPage,
-                                                totalItems: transactionsState.transactions?.total,
-                                            }}
-                                            changePage={updateCurrentPage}
-                                            updatePerPage={updatePerPage}
-                                        /> 
+                                        {transactionsState.transactions?.transactions?.length > 0 ?
+                                            <DataTable
+                                                tableHeaders={tableHeadersFields(cleanupData(transactionsState.transactions?.transactions)[0]).headers} 
+                                                tableData={cleanupData(transactionsState.transactions?.transactions)} 
+                                                columnWidths={transactionColumnWidths}
+                                                columnDataStyles={columnDataStyles}
+                                                allFields={tableHeadersFields(cleanupData(transactionsState.transactions?.transactions)[0]).fields}
+                                                onSelectItems={getSelectionCount}
+                                                tableOptions={tableOptions}
+                                                pagination={{
+                                                    perPage, 
+                                                    currentPage,
+                                                    totalItems: transactionsState.transactions?.total,
+                                                }}
+                                                changePage={updateCurrentPage}
+                                                updatePerPage={updatePerPage}
+                                            /> 
+                                            :
+                                            <EmptyState emptyStateText={`You have not received any payments on this platform yet`} emptyStateTitle={`No Payments Found`} />
+                                        }
                                     </div>
 
                                     <div className='block xl:hidden pb-5'>

@@ -16,7 +16,7 @@ const OrderStatus = ({status}) => {
             </span>
         }
         {status === "PREPARING_ORDER" &&
-            <span className="px-2 py-1 rounded text-yellow-800 font-medium bg-yellow-400/10 text-xs">
+            <span className="px-2 py-1 rounded text-blue-800 font-medium bg-blue-600/10 text-xs">
                 {/* <Circle width={15} /> */}
                 Preparing order
             </span>
