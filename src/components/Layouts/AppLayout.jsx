@@ -28,7 +28,7 @@ const AppLayout = ({children, pageTitle}) => {
                         />
                     </div>
                     
-                    <div className={`mt-10 min-h-[50vh] h-inherit py-10 w-full px-8 lg:px-12 xl:px-32 relative`}>
+                    <div className={`mt-10 min-h-[50vh] h-inherit py-10 w-full px-8 lg:px-12 xl:px-32 2xl:px-44 relative`}>
                         <PendingOrdersFloater />
                         <main>{children}</main>
                     </div>

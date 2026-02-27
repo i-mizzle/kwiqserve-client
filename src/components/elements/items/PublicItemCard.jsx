@@ -14,6 +14,7 @@ const PublicItemCard = ({item, addToOrder, itemStock, hideStock, canAddItem, sto
     // const cartState = useSelector((state => state.cart))
     const [addedToCart, setAddedToCart] = useState(false)
     const [adding, setAdding] = useState(false)
+    const [quantity, setQuantity] = useState(1)
 
     const { tableId } = useParams()
     const addItemToCart = async () => {
@@ -22,7 +23,7 @@ const PublicItemCard = ({item, addToOrder, itemStock, hideStock, canAddItem, sto
             item: item.item,
             parentItem: item.parentItem._id,
             parentItemCategories: item.parentItemCategories.map(cat => cat),
-            quantity: 1,
+            quantity: quantity,
             price: item.price,
         }
 
@@ -41,6 +42,7 @@ const PublicItemCard = ({item, addToOrder, itemStock, hideStock, canAddItem, sto
             setAdding(false)
             setTimeout(() => {
                 setAddedToCart(false)
+                setQuantity(1)
             }, 1000)
         }
     }
@@ -158,6 +160,11 @@ const PublicItemCard = ({item, addToOrder, itemStock, hideStock, canAddItem, sto
                             </div>
 
                             {<h3 className={`font-bold text-lg text-green-600`}>₦{(item.price).toLocaleString()}</h3>}
+                        </div>
+                        <div className='flex items-center gap-x-2'>
+                            {<button onClick={()=>{setQuantity(quantity-1)}} disabled={quantity===1} className='rounded bg-ss-black disabled:bg-gray-300 disabled:border-gray-300 text-white text-2xl px-4 py-1.5 transition duration-200 border border-ss-black hover:bg-ss-dark-blue'>-</button>}
+                            <input readOnly className='px-4 text-center py-2 rounded border border-gray-400 focus:border-gray-600 transition w-full duration-200' value={quantity} />
+                            {<button onClick={()=>{setQuantity(quantity+1)}} className='rounded bg-ss-black disabled:bg-gray-300 disabled:border-gray-300 text-white text-2xl px-4 py-1.5 transition duration-200 border border-ss-black hover:bg-ss-dark-blue'>+</button>}
                         </div>
                         {!hideStock && <div className='flex justify-between items-center'>
                             

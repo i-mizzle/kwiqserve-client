@@ -86,12 +86,12 @@ const TableDetails = () => {
 
     const columnWidths = {
         // id: "w-full lg:w-1/12",
-        orderAlias: "w-full lg:w-4/12",
-        table: "w-full lg:w-2/12",
+        orderAlias: "w-full lg:w-5/12",
+        // table: "w-full lg:w-2/12",
         items: "w-full lg:w-1/12",
         status: "w-full lg:w-2/12",
         value: "w-full lg:w-2/12",
-        payment: "w-full lg:w-1/12",
+        payment: "w-full lg:w-2/12",
     }
 
     const cleanupData = (dataSet) => {
@@ -102,7 +102,7 @@ const TableDetails = () => {
         data.push(
             {
                 orderAlias: <OrderSummary item={item} />,
-                table: item.table?.name,
+                // table: item.table?.name,
                 items: `${item.items?.length || 0} items`,
                 status: <OrderStatus status={item.status} />,
                 value: <Currency amount={item.total || 0} vat={item.vat !== 0 && item.vat}/>,
@@ -138,7 +138,7 @@ const TableDetails = () => {
         <Loader />
         :
         <div className='w-full relative pt-12'>
-          <div className='w-full pb-6 px-3 xl:flex items-start gap-x-5'>
+          <div className='w-full 2xl:w-10/12 mx-auto pb-6 px-3 xl:flex items-start gap-x-5'>
             <div className='w-full xl:w-9/12'>
               <div className='w-full flex items-start gap-x-5 pb-12'>
                 <div className='w-1/2'>

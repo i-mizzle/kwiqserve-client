@@ -510,7 +510,7 @@ const OrderDetails = () => {
             {
                 <div className='min-h-screen h-inherit'>
 
-                    <div className='w-8/12 mx-auto flex flex-row gap-x-5'>
+                    <div className='w-full xl:w-10/12 2xl:w-8/12 mx-auto flex flex-row gap-x-5'>
                         <div className='w-full xl:w-5/12 pb-6 px-8 xl:px-12 pt-6'>
                             <div className='flex items-center gap-x-3'>
                                 {/* {newOrderDetails?.source === 'online' && <div className='flex items-center'>
@@ -544,7 +544,11 @@ const OrderDetails = () => {
                             </div>
 
                             {loaded && <div className='mt-5'>
+                                <label className='w-full block mb-1 text-[11px] tracking-[0.2em]'>ORDER REF</label>
+                                <h3 className='text-xl font-semibold mb-3 uppercase'>{newOrderDetails?.orderRef}</h3>
+                                
                                 <div className='rounded-md border bg-white border-gray-100 p-5 w-full '>
+
                                     <p className='font-medium text-gray-700 border-b w-full pb-2 mb-5 text-sm'>Customer</p>
 
                                     <label className='w-full block mb-1 text-[11px] tracking-[0.2em]'>NAME</label>
