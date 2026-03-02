@@ -204,7 +204,7 @@ const DataTable = ({
                                 ${data.selected ? 'bg-black bg-opacity-20' : ''}`}  
                                 onClick={()=>{performRowAction(dataIndex)}}
                             >
-                                <div className='px-4 py-6 flex flex-row items-center w-full bg-white shadow-lg shadow-ss-dark-blue/5'>
+                                <div className='px-1 py-4 flex flex-row items-center w-full bg-white shadow-lg shadow-ss-dark-blue/5'>
                                     {tableOptions.selectable ? <input type="checkbox" onChange={()=>toggleSelection(dataIndex)} checked={data.selected} className="mr-2" /> : <span className="inline-block mr-5" />}
                                     {tableHeaders.map((header, headerIndex) => (
                                         !header.forPopover && fieldIsSelected(header.columnDisplayName) &&                                  
@@ -236,7 +236,7 @@ const DataTable = ({
                                         </li>
                                     ))}
                                     {tableOptions.expandable && tableOptions.expandable === true && 
-                                        <ChevronIcon className={`absolute right-2 top-10 w-4 h-4 transform transition duration-200 ${expandedIndex === dataIndex.toString() ? 'text-blue-700 rotate-270' : 'rotate-180'}`} 
+                                        <ChevronIcon className={`absolute right-2 top-5 w-4 h-4 transform transition duration-200 ${expandedIndex === dataIndex.toString() ? 'text-blue-700 rotate-270' : 'rotate-180'}`} 
                                     />}
                                 </div>
                                 {/* Expansion */}

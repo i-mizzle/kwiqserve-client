@@ -18,7 +18,7 @@ const RecentOrders = () => {
   const [perPage] = useState(5);
 
   useEffect(() => {
-    dispatch(fetchOrders('', page, perPage))
+    dispatch(fetchOrders('paymentStatus=paid&&paymentMethod=cash_on_delivery,pos_on_delivery', page, perPage))
 
     return () => {
     

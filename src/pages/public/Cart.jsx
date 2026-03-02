@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
-import { baseUrl, businessDetails } from '../../utils'
+import { baseUrl, businessDetails, calculateFee } from '../../utils'
 import { ERROR } from '../../store/types'
 import { checkoutCart, fetchCart } from '../../store/actions/cartActions'
 import TableLayout from '../../components/Layouts/TableLayout'
@@ -479,11 +479,19 @@ const Cart = () => {
                     ))}
                       <div className='mb-4 mt-12 flex gap-x-2 justify-between'>
                         <p className="text-gray-500 text-sm">Subtotal:</p>
-                        <h3 className="uppercase text-ss-black text-xl font-semibold">N{totalAmount()?.total?.toLocaleString()}</h3>
+                        <h3 className="uppercase text-ss-black text-lg font-semibold">N{totalAmount()?.total?.toLocaleString()}</h3>
                       </div>
-                      <div className='mb-4 mt-2 flex gap-x-2 justify-between'>
+                      {/* {<div className='mb-4 mt-2 flex gap-x-2 justify-between'>
                         <p className="text-gray-500 text-sm">VAT:</p>
                         <h3 className="text-ss-black text-lg font-semibold">N{totalAmount()?.vat?.toLocaleString()}</h3>
+                      </div>} */}
+                      <div className='mb-4 mt-2 flex gap-x-2 justify-between'>
+                        <p className="text-gray-500 text-sm">Service Fees:</p>
+                        <h3 className="text-ss-black text-lg font-semibold">N{calculateFee(totalAmount()?.total)?.toLocaleString()}</h3>
+                      </div>
+                      <div className='mb-4 mt-8 flex gap-x-2 justify-between pt-4 border-t border-gray-300'>
+                        <p className="text-gray-500 text-sm">Total:</p>
+                        <h3 className="text-ss-black text-2xl font-bold">N{(totalAmount()?.total + calculateFee(totalAmount()?.total)).toLocaleString()}</h3>
                       </div>
                       
 
@@ -507,7 +515,9 @@ const Cart = () => {
                   
                   <div className='mb-4 mt-12 flex gap-x-2'>
                     <p className="text-gray-300">total:</p>
-                    <p className="text-green-500 text-2xl font-space-grotesk">N{(cartState?.order?.total + cartState?.order?.vat).toLocaleString() }<span className='text-[14px]'>({cartState?.order?.vat.toLocaleString()} VAT)</span></p>
+                    <p className="text-green-500 text-2xl font-space-grotesk">
+                      N{(cartState?.order?.total + cartState?.order?.vat).toLocaleString() }
+                      <span className='text-[14px]'>({cartState?.order?.vat.toLocaleString()} VAT)</span></p>
                   </div>
                   <Link to={`/storefront`} className='bg-green-500 bg-opacity-10 text-green-500 mt-8 p-5 text-center font-medium font-syne block w-full'>Return to store</Link>
                 </div>

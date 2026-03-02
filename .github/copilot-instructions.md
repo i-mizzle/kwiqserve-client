@@ -1,7 +1,7 @@
-# Scanserve Client - AI Coding Agent Instructions
+# Kwiqserve Client - AI Coding Agent Instructions
 
 ## Project Overview
-This is a React 19.2 + Vite 7 client application for Scanserve. The project uses modern React patterns with ES modules, TailwindCSS for styling, and React Router v6 for navigation.
+This is a React 19.2 + Vite 7 client application for Kwiqserve. The project uses modern React patterns with ES modules, TailwindCSS for styling, and React Router v6 for navigation.
 
 ## Tech Stack
 - **Framework**: React 19.2 with StrictMode enabled

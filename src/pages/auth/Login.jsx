@@ -146,7 +146,7 @@ const Login = () => {
     <section className='h-screen w-full bg-ss-pale-blue/50 flex items-start justify-center'>
       <div className='p-10 rounded-lg bg-white shadow-lg shadow-ss-black/5 mt-10 h-inherit w-[30%]'>
         <Logo />
-        <h3 className='text-2xl font-medium'>Welcome</h3>
+        <h3 className='text-xl font-medium mt-5'>Welcome</h3>
         <p className='text-ss-dark-gray text-sm mt-2'>Please provide your registered credentials below to log in to your business</p>
 
         <p className='text-ss-dark-gray text-sm mt-2'>Need to create an account? <Link to={`/signup`} className='font-medium text-sm font-outfit text-blue-600 cursor-pointer inline-block'>Click here to sign up</Link></p>

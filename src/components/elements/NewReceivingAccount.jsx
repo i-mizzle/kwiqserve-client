@@ -10,7 +10,7 @@ import FormButton from './form/FormButton'
 import InlinePreloader from './InlinePreloader'
 import { Switch } from '@headlessui/react'
 
-const NewReceivingAccount = ({close}) => {
+const NewReceivingAccount = ({close, reload}) => {
   const [loadingBanks, setLoadingBanks] = useState(true)
   const [banks, setBanks] = useState([])
 
@@ -103,6 +103,7 @@ const NewReceivingAccount = ({close}) => {
         type: SET_SUCCESS,
         payload: "New receiving account created successfully"
       })
+      reload()
       close()
     } catch (error) {
       console.log('error saving account: ', error)
@@ -122,7 +123,7 @@ const NewReceivingAccount = ({close}) => {
       <div className='w-full flex items-start justify-between gap-x-5 mt-4 p-3 bg-gray-100'>
         <div>
           <p className='font-family-bricolage-grotesque text-gray-600 font-[550]'>Preferred for Remittance</p>
-          <p className='text-[13px] text-gray-500'>Toggle this switch on if this is the account number preferred for remittances from ScanServe. If preferred, every payment made on this platform will be remitted to this account</p>
+          <p className='text-[13px] text-gray-500'>Toggle this switch on if this is the account number preferred for remittances from Kwiqserve. If preferred, every payment made on this platform will be remitted to this account</p>
         </div>
         <div className='w-15'>
           <Switch

@@ -511,3 +511,18 @@ const itemPriceMinusVat = (storeSettings, price) => {
 export const itemQuantityPriceMultiplier = (storeSettings, price) => {
     return storeSettings?.taxes && storeSettings?.taxes?.enabled ? itemPriceMinusVat(storeSettings, price) : price
 }
+
+/**
+ * Calculate fee amount based on payment amount
+ * Fee is 1.5% of the payment amount, capped at 1000
+ * @param paymentAmount - The total payment amount
+ * @returns The calculated fee amount
+ */
+export const calculateFee = (paymentAmount) => {
+  const feePercentage = 0.015; // 1.5%
+  const maxFee = 1000;
+  
+  const calculatedFee = paymentAmount * feePercentage;
+  
+  return Math.min(calculatedFee, maxFee);
+}

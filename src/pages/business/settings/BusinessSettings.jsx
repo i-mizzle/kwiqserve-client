@@ -20,6 +20,7 @@ const BusinessSettings = () => {
   const [validationErrors, setValidationErrors] = useState({})
   const dispatch = useDispatch()
   const [businessSettings, setBusinessSettings] = useState(null)
+  const [reload, setReload] = useState(0)
   useEffect(() => {
     const fetchBusinessDetails = async () => {
       try {
@@ -63,7 +64,7 @@ const BusinessSettings = () => {
     return () => {
       
     }
-  }, [])
+  }, [reload, dispatch])
   
   const [creatingAccount, setCreatingAccount] = useState(false)
   const [cityOptions, setCityOptions] = useState([])
@@ -270,7 +271,7 @@ const BusinessSettings = () => {
         // dialogIntro={`Create a category for store or sale items`}
         maxWidthClass='max-w-lg'
       >
-        <NewReceivingAccount close={()=>{setCreatingAccount(false)}} />
+        <NewReceivingAccount close={()=>{setCreatingAccount(false)}} reload={()=>{setReload(reload+1)}} />
       </ModalDialog>
     </>
   )

@@ -8,7 +8,7 @@ const LandingHeader = () => {
       <div className='w-max'>
         <Logo />
         <button className='flex text-ss-black text-xs item-center justify-between py-3 gap-x-4 font-medium mt-1 border-t border-gray-400'>
-          support@scanserve.cloud
+          support@kwiqserve.com
           <ArrowIcon className={`w-4 h-4`} />
         </button>
       </div>

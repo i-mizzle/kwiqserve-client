@@ -57,7 +57,7 @@ const Payments = () => {
 
     useEffect(() => {
         dispatch(fetchUsers())
-        dispatch(fetchOrders('paymentStatus=PAID', 0, 0))
+        dispatch(fetchOrders('paymentStatus=paid', 0, 0))
         setSearched(false)
         dispatch(fetchTransactions(filters, currentPage, perPage))
 

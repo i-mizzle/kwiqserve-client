@@ -229,7 +229,7 @@ const Signup = () => {
             </h3>
 
             <p className='text-ss-dark-gray'>
-              Scanserve lets your guests scan, order, and pay from their table — no queues, no shouting, no delays. You stay in control of menus, tables, and orders, while your staff focuses on great service.
+              Kwiqserve lets your guests scan, order, and pay from their table — no queues, no shouting, no delays. You stay in control of menus, tables, and orders, while your staff focuses on great service.
             </p>
           </div>
 
@@ -457,14 +457,14 @@ const Signup = () => {
               Welcome aboard! 🚀
             </h3>
             <h3 className='text-ss-dark-gray text-lg font-semibold'>
-              Your venue is now set up to serve guests smarter and faster with Scanserve.
+              Your venue is now set up to serve guests smarter and faster with Kwiqserve.
             </h3>
 
             <p className='mt-5 text-ss-black'>
               We've sent a confirmation email to (<span className="font-semibold">{userPayload.email || ''}</span>). Please click the link in that email to verify your address and activate your account. Once verified, you'll be able to log in and start setting up your tables and menus.
             </p>
             <p className='mt-2 text-gray-500'>
-              This step helps us keep Scanserve secure and spam-free.
+              This step helps us keep Kwiqserve secure and spam-free.
             </p>
 
             <div className='mt-6'>
