@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux'
 import { ERROR } from '../../../store/types'
 import RadioGroup from '../../../components/elements/form/RadioGroup'
 import EmptyState from '../../../components/elements/EmptyState'
+import NewPosDevice from '../../../components/elements/NewPosDevice'
 
 const BusinessSettings = () => {
   const [loading, setLoading] = useState(true)
@@ -81,6 +82,9 @@ const BusinessSettings = () => {
       description: 'Every payment made to your business through this platform will be settled to your preferred remittance account instantly. (Coming soon)'
     },
   ]
+
+  const [addingDevice, setAddingDevice] = useState(false)
+
   return (
     <>
       <div className="w-full">
@@ -227,7 +231,7 @@ const BusinessSettings = () => {
             
           </div>
 
-          <div className='w-10/12'>
+          <div className='w-8/12  pb-10 border-b border-gray-300 mb-5'>
             <h1 className='text-xl font-bold text-ss-dark-gray'>Collection Accounts</h1>
             <p className='text-gray-500 text-sm'>Below are accounts for business collections. you can create a new account by clicking on "Add new account" below.</p>
 
@@ -242,12 +246,47 @@ const BusinessSettings = () => {
                 <div className='grid grid-cols-2 gap-3'>
                   {businessSettings?.receivingAccounts?.map((account, accountIndex) => (
                     <div key={accountIndex} className='relative p-5 rounded bg-gray-50'>
-                      {account.preferredForRemittance && <span className='text-xs absolute top-3 right-3 text-green-600 bg-green-600/10 rounded px-2 py-1'>Preferred for Remittance</span>}
+                      {account.preferredForRemittance && <span className='text-xs absolute top-3 right-3 text-green-600 bg-green-600/10 rounded px-2 py-1'>Remittance Account</span>}
                       <h3 className='font-semibold text-ss-black text-lg mb-2 capitalize'>{account.account.accountName.toLowerCase()}</h3>
                       <div className='flex items-center gap-x-1'>
                         <p className='text-sm text-gray-600'>{account.account.accountNumber}</p>
                         <span className='w-1 h-1 rounded-full bg-ss-dark-gray' />
                         <p className='text-sm text-gray-600'>{account.account.bankName}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                :
+                <EmptyState 
+                  emptyStateTitle={`No accounts found`}
+                  emptyStateText={`No receiving accounts created for your business yet, click on "Add new account" above to add one`} 
+                /> 
+              }
+            </div>
+            
+          </div>
+
+          <div className='w-8/12 pb-10 border-b border-gray-300 mb-5'>
+            <h1 className='text-xl font-bold text-ss-dark-gray'>POS Devices</h1>
+            <p className='text-gray-500 text-sm'>Below are POS devices for business collections. The devices listed here will be presented to you (or your employees) at the point of receiving payments and they can select which device funds are paid into. You can create a new POS device by clicking on "Add new device" below.</p>
+
+            <button onClick={()=>{setAddingDevice(true)}} className='flex gap-x-2 items-center justify-center mt-5 bg-ss-dark-blue border border-ss-dark-blue px-4 py-3 rounded-lg text-white transition duration-200 w-max hover:bg-ss-black text-sm font-[550]'>
+              <PlusIcon className={`h-5 w-5`} />
+              Add a new device
+            </button>
+
+            <div className='mt-5'>
+              {businessSettings?.posDevices?.length > 0 ?
+              
+                <div className='grid grid-cols-2 gap-3'>
+                  {businessSettings?.posDevices?.map((device, deviceIndex) => (
+                    <div key={deviceIndex} className='relative p-5 rounded bg-gray-50'>
+                      {/* {account.preferredForRemittance && <span className='text-xs absolute top-3 right-3 text-green-600 bg-green-600/10 rounded px-2 py-1'>Remittance Account</span>} */}
+                      <h3 className='font-semibold text-ss-black text-lg mb-2 capitalize'>{device.deviceName}</h3>
+                      <div className='flex items-center gap-x-1'>
+                        <p className='text-sm text-gray-600'>{device.provider}</p>
+                        <span className='w-1 h-1 rounded-full bg-ss-dark-gray' />
+                        <p className='text-sm text-gray-600'>{device.serialNumber}</p>
                       </div>
                     </div>
                   ))}
@@ -272,6 +311,16 @@ const BusinessSettings = () => {
         maxWidthClass='max-w-lg'
       >
         <NewReceivingAccount close={()=>{setCreatingAccount(false)}} reload={()=>{setReload(reload+1)}} />
+      </ModalDialog>
+
+      <ModalDialog
+        shown={addingDevice} 
+        closeFunction={()=>{setAddingDevice(false)}} 
+        dialogTitle='Add a New POS Device'
+        // dialogIntro={`Create a category for store or sale items`}
+        maxWidthClass='max-w-lg'
+      >
+        <NewPosDevice close={()=>{setAddingDevice(false)}} reload={()=>{setReload(reload+1)}} />
       </ModalDialog>
     </>
   )

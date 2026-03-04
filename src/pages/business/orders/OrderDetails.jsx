@@ -9,7 +9,7 @@ import BookmarkIcon from '../../../components/elements/icons/BookmarkIcon'
 import SetOrderAlias from '../../../components/elements/orders/SetOrderAlias'
 // import db from '../../../db'
 import { useNavigate, useParams } from 'react-router-dom'
-import { authHeader, baseUrl, userDetails, unSlugify, orderTotal, itemQuantityPriceMultiplier, businessDetails } from '../../../utils'
+import { authHeader, baseUrl, userDetails, unSlugify, orderTotal, itemQuantityPriceMultiplier, businessDetails, calculateFee } from '../../../utils'
 // import { useReactToPrint } from 'react-to-print';
 // import Logo from '../../../assets/img/logo.png'
 import InlinePreloader from '../../../components/elements/InlinePreloader'
@@ -34,6 +34,7 @@ import { SET_SUCCESS } from '../../../store/types';
 import ConfirmationBox from '../../../components/Layouts/ConfirmationBox';
 import AppLayout from '../../../components/Layouts/AppLayout';
 import ModalDialog from '../../../components/Layouts/ModalDialog';
+import { fetchStoreSettings } from '../../../store/actions/settingsActions';
 
 
 const OrderDetails = () => {
@@ -120,7 +121,7 @@ const OrderDetails = () => {
                 dispatch(fetchCategories('type=sale')),
                 // dispatch(fetchItems('', 0, 0)),
                 dispatch(fetchOrders('status=in_progress', 0, 0)),
-                // dispatch(fetchStoreSettings())
+                dispatch(fetchStoreSettings())
             ])
             setLoaded(true)
         }
@@ -361,7 +362,10 @@ const OrderDetails = () => {
             const headers = authHeader()
             const store = await businessDetails()
             
-            const requestPayload = {...payment, ...{store: store._id}}
+            const requestPayload = {
+                ...payment, 
+                business: store._id
+            }
 
             await axios.post(`${baseUrl}/transactions`, requestPayload, { headers })
 
@@ -598,7 +602,7 @@ const OrderDetails = () => {
                                 {newOrderDetails?.items?.length > 0 ? <div className='w-full px-8 xl:px-5'>
                                     <h3 className='text-lg font-medium mb-4'>Items in this order</h3>
                                     {newOrderDetails.items && newOrderDetails.items.length > 0 && newOrderDetails.items.map((item, itemIndex) => (
-                                        <div key={itemIndex} className='flex flex-row gap-x-4 justify-between my-3 py-1 rounded border-b border-gray-300'>
+                                        <div key={itemIndex} className='flex flex-row gap-x-4 justify-between my-3 pt-1 pb-2 rounded border-b border-gray-300'>
                                             <div className='flex gap-x-2 items-start'>
                                                 {newOrderDetails?.paymentStatus !== 'PAID' && <button onClick={()=>{updateOrderQuantity(itemIndex, 'remove', item.quantity)}} className='mt-1 rounded bg-gray-200 text-gray-700 p-1 transition duration-200 border border-gray-700 hover:bg-gray-400'><CloseIcon className="w-3 h-3" /></button>}
                                                 <div>
@@ -607,9 +611,9 @@ const OrderDetails = () => {
                                                 </div>
                                             </div>
                                             <div className='flex items-center gap-x-2'>
-                                                {newOrderDetails?.paymentStatus !== 'paid' &&<button onClick={()=>{updateOrderQuantity(itemIndex, 'remove', 1)}}  className='rounded bg-blue-700 text-white text-xl px-3 py-1 transition duration-200 border border-blue-700 hover:bg-blue-800'>-</button>}
+                                                {/* {newOrderDetails?.paymentStatus !== 'paid' &&<button onClick={()=>{updateOrderQuantity(itemIndex, 'remove', 1)}}  className='rounded bg-blue-700 text-white text-xl px-3 py-1 transition duration-200 border border-blue-700 hover:bg-blue-800'>-</button>} */}
                                                 <input readOnly className='w-12.5 px-4 py-2 rounded border border-gray-400 focus:border-gray-600 transition duration-200' value={item.quantity} />
-                                                {newOrderDetails?.paymentStatus !== 'paid' &&<button onClick={()=>{updateOrderQuantity(itemIndex, 'add', 1)}} className='rounded bg-blue-700 text-white text-xl px-3 py-1 transition duration-200 border border-blue-700 hover:bg-blue-800'>+</button>}
+                                                {/* {newOrderDetails?.paymentStatus !== 'paid' &&<button onClick={()=>{updateOrderQuantity(itemIndex, 'add', 1)}} className='rounded bg-blue-700 text-white text-xl px-3 py-1 transition duration-200 border border-blue-700 hover:bg-blue-800'>+</button>} */}
                                             </div>
                                         </div>
                                     ))}
@@ -628,8 +632,6 @@ const OrderDetails = () => {
                                             </div>
                                         </div>
                                     }
-
-                                    
                                 </div>
                                 : 
                                 <p className='text-center px-8 text-gray-400'>Select some items from the left to begin a new order</p>
@@ -640,7 +642,7 @@ const OrderDetails = () => {
 
                                 <div className='w-full flex justify-between items-center p-2.5'>
                                     <div className='flex items-center gap-x-4'>
-                                        {newOrderDetails?.paymentStatus !== 'PAID' && <div className='flex items-center'>
+                                        {newOrderDetails?.paymentStatus !== 'paid' && <div className='flex items-center'>
                                             <button onClick={()=>{printBill()}} className='rounded-lg h-12.5 px-4 font-semibold flex items-center gap-x-2 justify-center bg-ss-pale-blue border-2 border-ss-dark-blue text-ss-dark-blue transition duration-200 hover:bg-blue-300 cursor-pointer'>
                                                 <PrinterIcon className={`w-6 h-6`} />
                                                 Print Receipt
@@ -656,21 +658,21 @@ const OrderDetails = () => {
                                     </div>
 
                                     {/* <h3 className='font-courier-prime text-5xl text-gray-600'>{orderTotal}</h3> */}
-                                    <h3 className='font-courier-prime text-3xl text-gray-600 pr-2.5'><span className='text-sm'>NGN </span>{orderTotal(newOrderDetails, settingsState?.settings)?.total?.toLocaleString()}</h3>
+                                    <h3 className='font-courier-prime text-3xl text-gray-600 pr-2.5'><span className='text-sm'>NGN </span>{(orderTotal(newOrderDetails, settingsState?.settings)?.total + calculateFee(orderTotal(newOrderDetails, settingsState?.settings)?.total))?.toLocaleString()}</h3>
                                 </div>
-                                {(!newOrderDetails?.paymentStatus || newOrderDetails?.paymentStatus === 'unpaid') && <div className='px-2.5 flex items-center gap-x-2.5'>
+                                {(!newOrderDetails?.paymentStatus || newOrderDetails?.paymentStatus === 'unpaid') && <div className='px-2.5 mt-5 flex items-center gap-x-2.5'>
                                     <Tooltip title="Park order for later" placement="top-start">
-                                        <button onClick={()=>{setSetOrderAlias(true)}} className='rounded-lg h-18.75 w-25 flex items-center gap-x-3 justify-center bg-green-400 text-green-800 font-light transition duration-200 hover:bg-green-800 hover:text-white'>
+                                        <button onClick={()=>{setSetOrderAlias(true)}} className='rounded-lg h-18.75 w-25 flex items-center gap-x-3 justify-center bg-gray-200 text-gray-400 font-light transition duration-200 hover:bg-gray-800 cursor-pointer hover:text-white'>
                                             <BookmarkIcon className={`w-6 h-6`} />
                                             {/* Receive payment &amp; close order  */}
                                         </button>
                                     </Tooltip>
-                                    <button onClick={()=>{startPayment()}} className='rounded-lg h-18.75 w-full flex items-center gap-x-3 justify-center bg-green-600 text-white font-light transition duration-200 hover:bg-green-700'>
+                                    <button onClick={()=>{startPayment()}} className='rounded-lg h-18.75 w-full flex cursor-pointer items-center gap-x-3 justify-center bg-ss-dark-blue text-white transition duration-200 hover:bg-ss-black font-semibold'>
                                         <CheckIconCircled className={`w-6 h-6`} />
                                         Receive payment &amp; close order 
                                     </button>
                                 </div>}
-                                {newOrderDetails?.paymentStatus === 'PAID' && <div className='flex items-center px-5'>
+                                {newOrderDetails?.paymentStatus === 'paid' && <div className='flex items-center px-5'>
                                     <button onClick={()=>{printReceipt()}} className='h-16.25 w-full flex items-center gap-x-3 justify-center bg-green-500 text-white font-semibold transition duration-200 hover:bg-green-800 rounded-lg'>
                                         <PrinterIcon className={`w-6 h-6`} />
                                        Print receipt 
@@ -762,7 +764,7 @@ const OrderDetails = () => {
             >
                 <ReceivePayment 
                     storeSettings={settingsState?.settings}
-                    paymentAmount={orderTotal(newOrderDetails, settingsState?.settings)?.total} 
+                    paymentAmount={orderTotal(newOrderDetails, settingsState?.settings)?.total + calculateFee(orderTotal(newOrderDetails, settingsState?.settings)?.total)} 
                     closeTransaction={()=>{setPaymentModalOpen(false)}} 
                     receivePayment={(payload)=>{createPayment(payload)}}
                 />

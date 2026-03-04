@@ -6,14 +6,12 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: true,
-    // port: 3002,
     strictPort: true,
-    allowedHosts: ['admin.diasporanz.com', 'excellers.lvh.me'],
+    allowedHosts: ['*.kwiqserve.com', 'excellers.lvh.me'],
   },
 
   preview: {
     host: true,
-    // port: 3002,
     strictPort: true,
   },
 })

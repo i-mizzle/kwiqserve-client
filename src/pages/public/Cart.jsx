@@ -119,15 +119,15 @@ const Cart = () => {
   const paymentOptions = [
     {
       label: 'Online (Card) Payment',
-      value: 'ONLINE'
+      value: 'online'
     },
     {
       label: 'Cash on Service',
-      value: 'CASH_ON_DELIVERY'
+      value: 'cash_on_delivery'
     },
     {
       label: 'POS on Service',
-      value: 'POS_ON_DELIVERY'
+      value: 'pos_on_delivery'
     },
   ]
 
@@ -255,9 +255,8 @@ const Cart = () => {
   const processOrder = () => {
 
     const payload = {
-      deliveryType: activeDeliveryOption,
       paymentMethod: activePaymentOption,
-      paymentStatus: 'PENDING',
+      paymentStatus: 'pending',
       sourceMenu: priceCard._id,
       table: tableId,
       business: businessDetails()._id,
@@ -309,7 +308,7 @@ const Cart = () => {
                   :
                   <div className='w-full text-center'>
                     <p className='text-sm text-gray-500'>You do not have any items in your bag yet. <Link
-                     to={`/storefront`} className="text-green-500 font-medium">Click here</Link> to go to the store.</p>
+                     to={`/tables/${tableId}`} className="text-green-500 font-medium">Click here</Link> to go to the store.</p>
                   </div>
                   }
                 </div>
@@ -508,18 +507,19 @@ const Cart = () => {
             <div className='w-full'>
               <div className='w-11/12 lg:w-8/12 xl:w-7/12 2xl:w-5/12 mx-auto p-8 bg-white'>
                 <div className=''>
-                  <h3 className='font-semibold font-space-grotesk'>Thank you</h3>
-                  <p className='mt-2 mb-2 pb-4 border-b border-gray-300'>Your order has been placed and is currently processed</p>
+                  <h3 className='font-semibold text-2xl'>Thank you</h3>
+                  <p className='mt-2 mb-2 pb-4 border-b border-gray-300'>Your order has been placed and is currently being processed</p>
 
                   {(activePaymentOption === 'CASH_ON_DELIVERY' || activePaymentOption === 'POS_ON_DELIVERY') && <p className='mt-2 mb-2 pb-4 border-b border-gray-300'>You will be required to pay the following total at delivery or pickup </p>}
                   
                   <div className='mb-4 mt-12 flex gap-x-2'>
                     <p className="text-gray-300">total:</p>
-                    <p className="text-green-500 text-2xl font-space-grotesk">
-                      N{(cartState?.order?.total + cartState?.order?.vat).toLocaleString() }
-                      <span className='text-[14px]'>({cartState?.order?.vat.toLocaleString()} VAT)</span></p>
+                    <p className="text-ss-dark-blue text-2xl font-family-bricolage-grotesque! font-semibold">
+                      N{(cartState?.order?.total + calculateFee(cartState.order.total)).toLocaleString() }
+                      {/* <span className='text-[14px]'>({cartState?.order?.vat.toLocaleString()} VAT)</span> */}
+                    </p>
                   </div>
-                  <Link to={`/storefront`} className='bg-green-500 bg-opacity-10 text-green-500 mt-8 p-5 text-center font-medium font-syne block w-full'>Return to store</Link>
+                  <Link to={`/tables/${tableId}`} className='bg-ss-dark-blue rounded-lg text-ss-pale-blue mt-8 p-5 text-center font-semibold font-syne block w-full'>Return to table menu</Link>
                 </div>
               </div>
             </div>

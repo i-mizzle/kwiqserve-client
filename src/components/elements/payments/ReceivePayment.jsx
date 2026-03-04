@@ -48,7 +48,7 @@ const ReceivePayment = ({storeSettings, paymentAmount, closeTransaction, receive
         }
 
         if(selectedChannel === 'transfer') {
-            payment.receivingChannel = storeSettings?.receivingAccounts?.accounts[selectedAccount]
+            payment.receivingChannel = storeSettings?.receivingAccounts[selectedAccount]?.account._id
         }
 
         receivePayment(payment)
@@ -56,7 +56,7 @@ const ReceivePayment = ({storeSettings, paymentAmount, closeTransaction, receive
     
     return (
         <div>
-            <div className="my-4 pb-2.5">
+            <div className="my-2">
                 <SelectField
                     selectOptions={paymentChannels}
                     inputLabel="Select payment channel"
@@ -65,17 +65,19 @@ const ReceivePayment = ({storeSettings, paymentAmount, closeTransaction, receive
                     imageField=""
                     preSelected=''
                     fieldId="payment-channel"
+                    inputPlaceholder={`Select Payment Channel`}
                     hasError={channelError}
                     returnFieldValue={(value) => {
                         setSelectedChannel(value.value)}}
                 />
             </div>
-            {selectedChannel === 'pos' && <div className="my-4 pb-2.5">
+            {selectedChannel === 'pos' && <div className="my-2">
                 <SelectField
                     selectOptions={storeSettings?.posDevices?.devices}
                     inputLabel="Select POS device"
                     titleField="deviceName"
                     displayImage={false}
+                    inputPlaceholder={`Select POS device`}
                     imageField=""
                     preSelected=''
                     fieldId="pos-device"
@@ -83,18 +85,18 @@ const ReceivePayment = ({storeSettings, paymentAmount, closeTransaction, receive
                     returnFieldValue={(value) => {setSelectedPosDevice(value)}}
                 />
             </div>}
-            {selectedChannel === 'transfer' && <div className="my-4 pb-2.5">
-                {storeSettings?.receivingAccounts?.accounts.map((account, accountIndex) => (
-                    <button key={accountIndex} onClick={()=>{setSelectedAccount(accountIndex)}} className={`p-3 border rounded my-2 text-left w-full block ${selectedAccount === accountIndex ? 'border-green-500' : 'border-gray-300'}`}>
-                        <p className='font-medium text-md text-green-500'>{account.accountName}</p>
-                        <p className="text-sm text-gray-600">{account.bank} - {account.accountNumber}<br /><span className="text-xs text-gray-400">{account.description}</span></p>
+            {selectedChannel === 'transfer' && <div className="my-2">
+                {storeSettings?.receivingAccounts?.map((account, accountIndex) => (
+                    <button key={accountIndex} onClick={()=>{setSelectedAccount(accountIndex)}} className={`p-3 cursor-pointer border rounded my-2 text-left w-full block ${selectedAccount === accountIndex ? 'border-ss-dark-blue' : 'border-gray-300'}`}>
+                        <p className='font-medium text-md text-ss-dark-blue capitalize'>{account.account.accountName.toLowerCase()}</p>
+                        <p className="text-sm text-gray-600">{account.account.bankName} - {account.account.accountNumber}<br /><span className="text-xs text-gray-400">{account.description}</span></p>
                     </button>
                 ))}
             </div>}
 
-            <div className="my-8">
+            <div className="mb-4">
                 <label className='font-medium text-sm mb-3 text-gray-400'>Order total</label>
-                <p className='text-4xl text-gray-600 font-courier-prime'>₦{paymentAmount.toLocaleString()}</p>
+                <h1 className='text-4xl font-semibold text-gray-600 font-courier-prime'>₦{paymentAmount.toLocaleString()}</h1>
             </div>
 
             <div className="w-full flex items-center my-2">
@@ -108,7 +110,7 @@ const ReceivePayment = ({storeSettings, paymentAmount, closeTransaction, receive
             <div className="mt-8 flex flex-row-reverse gap-x-4 pb-2.5">
                 <button
                     type="button"
-                    className="inline-flex justify-center px-4 py-4 text-xs font-medium bg-green-600 text-white border border-transparent rounded hover:bg-green-800 focus:outline-none transition duration-200"
+                    className="inline-flex justify-center px-4 py-4 text-xs font-medium bg-ss-dark-blue text-white border border-transparent rounded hover:bg-ss-black focus:outline-none transition duration-200"
                     onClick={()=>{doReceive()}}
                 >
                     Receive Payment & Close Order

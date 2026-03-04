@@ -21,7 +21,7 @@ const OrderStatus = ({status}) => {
                 Preparing order
             </span>
         }
-        {status === "pending" &&
+        {(status === "pending" || status === "PENDING") &&
             <span className="px-2 py-1 rounded text-yellow-800 font-medium bg-yellow-400/10 text-xs">
                 {/* <Circle width={15} /> */}
                 Pending
@@ -33,13 +33,13 @@ const OrderStatus = ({status}) => {
                 Out for delivery
             </span>
         }
-        {status === "DELIVERED" &&
+        {status === "delivered" || status === "DELIVERED" &&
             <span className="px-2 py-1 rounded text-green-600 font-medium bg-green-400/10 block text-xs">
                 {/* <CheckIcon /> */}
                 Delivered
             </span>
         }
-        {status === "COMPLETED" &&
+        {(status === "completed" || status === "COMPLETED") &&
             <span className="px-2 py-1 rounded text-green-600 font-medium bg-green-400/10 block text-xs">
                 {/* <CheckIcon /> */}
                 Completed
