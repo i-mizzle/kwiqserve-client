@@ -7,11 +7,11 @@ export default defineConfig({
   server: {
     host: true,
     strictPort: true,
-    allowedHosts: ['*.kwiqserve.com', 'excellers.lvh.me'],
+    allowedHosts: 'all',
   },
-
   preview: {
     host: true,
     strictPort: true,
+    allowedHosts: 'all'
   },
 })
