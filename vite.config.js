@@ -1,17 +1,12 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: true,
+    host: true,              // listen on all addresses
     strictPort: true,
-    allowedHosts: 'all',
-  },
-  preview: {
-    host: true,
-    strictPort: true,
-    allowedHosts: 'all'
+    port: 5173,
+    allowedHosts: ['.kwiqserve.com'], // allow all subdomains of kwiqserve.com
   },
 })
