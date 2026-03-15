@@ -55,7 +55,12 @@ const Cart = () => {
           "x-original-host": window && window.location.host 
         }
         setLoading(true)
-        const response = await axios.get(`${baseUrl}/tables/${tableId}`, headers)
+        const response = await axios.get(`${baseUrl}/tables/${tableId}`, { headers })
+
+        if (response.data.data?.business && typeof response.data.data.business === 'object') {
+          localStorage.setItem('currentBusiness', JSON.stringify(response.data.data.business))
+        }
+
         // setTableDetails(response.data.data)
         fetchTableMenu(response.data.data.menu)
         // setLoading(false)
@@ -199,7 +204,7 @@ const Cart = () => {
     return errors
   }
 
-  const storeId = businessDetails()._id
+  const storeId = businessDetails()?._id
 
   const checkout = async () => {
     if (Object.values(validateForm()).includes(true)) {
@@ -259,7 +264,7 @@ const Cart = () => {
       paymentStatus: 'pending',
       sourceMenu: priceCard._id,
       table: tableId,
-      business: businessDetails()._id,
+      business: businessDetails()?._id || storeId,
       orderBy: userDetails,
       total: totalAmount().total + totalAmount().vat
     }

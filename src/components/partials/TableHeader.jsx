@@ -7,7 +7,7 @@ import BagIcon from '../elements/icons/BagIcon'
 import InlinePreloader from '../elements/InlinePreloader'
 
 const TableHeader = () => {
-    const business = businessDetails()
+    const business = businessDetails() || {}
     const cartSelector = useSelector((state => state.cart))
     const dispatch = useDispatch()
     const { tableId } = useParams()
@@ -22,7 +22,7 @@ const TableHeader = () => {
     return (
         <header className='px-4 lg:px-24 xl:px-32 2xl:px-44 w-full flex items-center justify-between py-5 fixed bg-white z-99'>
             <div className='flex items-center gap-x[10px] w-2/3 gap-x-5'>
-                <h1 className='text-lg xl:text-xl font-family-bricolage-grotesque! font-bold'>{business.name}</h1>
+                <h1 className='text-lg xl:text-xl font-family-bricolage-grotesque! font-bold'>{business?.name || 'Kwiqserve'}</h1>
             </div>
             
             {cartSelector?.fetchingCart ? <InlinePreloader /> : <Link to={`/tables/${tableId}/cart`} className='w-10 h-10 rounded-full bg-ss-pale-blue flex items-center justify-center relative'>

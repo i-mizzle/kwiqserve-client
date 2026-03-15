@@ -11,6 +11,7 @@ import { Link, useParams } from 'react-router-dom'
 import Loader from '../../components/elements/Loader'
 import PublicItemCard from '../../components/elements/items/PublicItemCard'
 import EmptyState from '../../components/elements/EmptyState'
+import InlinePreloader from '../../components/elements/InlinePreloader'
 import CloseIcon from '../../components/elements/icons/CloseIcon'
 import ArrowIcon from '../../components/elements/icons/ArrowIcon'
 
@@ -24,12 +25,10 @@ const PublicTable = () => {
   const cartSelector = useSelector((state => state.cart))
   
   useEffect(() => {
-    dispatch(fetchCategories('', 0, 0))
-
     const fetchTableMenu = async (menuId) => {
       try {
         const headers = {
-          "x-original-host": window && window.location.host 
+          'x-original-host': typeof window !== 'undefined' ? window.location.host : ''
         }
         setLoading(true)
         const response = await axios.get(`${baseUrl}/menus/${menuId}?expand=items.parentItem`, {headers})
@@ -48,11 +47,17 @@ const PublicTable = () => {
     const fetchTableDetails = async () => {
       try {
         const headers = {
-          "x-original-host": window && window.location.host 
+          'x-original-host': typeof window !== 'undefined' ? window.location.host : ''
         }
         setLoading(true)
-        const response = await axios.get(`${baseUrl}/tables/${tableId}`, headers)
+        const response = await axios.get(`${baseUrl}/tables/${tableId}`, { headers })
         setTableDetails(response.data.data)
+
+        if (response.data.data?.business && typeof response.data.data.business === 'object') {
+          localStorage.setItem('currentBusiness', JSON.stringify(response.data.data.business))
+        }
+
+        dispatch(fetchCategories('', 0, 0))
         fetchTableMenu(response.data.data.menu)
         // setLoading(false)
       } catch (error) {
@@ -140,7 +145,7 @@ const PublicTable = () => {
         <p className='text-[13px] text-gray-600'>Choose a category below to filter items</p>
         
         <div className='w-full mt-5'>
-          {categoriesSelector.fetchingCategories ? 
+          {categoriesSelector.loadingCategories ? 
             <div className='w-full h-50 flex items-center justify-center'>
               <InlinePreloader />
             </div>
