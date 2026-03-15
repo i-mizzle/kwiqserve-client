@@ -2,12 +2,34 @@ import axios from "axios"
 import { authHeader, baseUrl, businessDetails } from "../../utils"
 import { CREATE_CATEGORY, CREATING_CATEGORY, DELETE_CATEGORY, DELETING_CATEGORY, GET_CATEGORIES, GETTING_CATEGORIES, SET_SUCCESS, CATEGORIES_ERROR, UPDATE_CATEGORY, UPDATING_CATEGORY } from "../types"
 
-export const fetchCategories = (filterString, page, perPage) => async (dispatch) => {    
+const resolveBusinessId = (businessOrId) => {
+    if (!businessOrId) {
+        return null
+    }
+
+    if (typeof businessOrId === 'string') {
+        return businessOrId
+    }
+
+    return businessOrId?._id || businessOrId?.id || null
+}
+
+export const fetchCategories = (filterString, page, perPage, businessId) => async (dispatch) => {
     try{
         const headers = authHeader()
         const business = businessDetails()
+        const resolvedBusinessId = resolveBusinessId(businessId) || resolveBusinessId(business)
 
-        let url = `${baseUrl}/categories/${business._id}`
+        dispatch( {
+            type: GETTING_CATEGORIES,
+            payload: true
+        })
+
+        if (!resolvedBusinessId) {
+            throw new Error('Business ID not available for fetching categories')
+        }
+
+        let url = `${baseUrl}/categories/${resolvedBusinessId}`
 
         if(filterString && filterString !== '') {
             url += `${url.includes('?') ? '&' : '?'}${filterString}`
@@ -21,11 +43,6 @@ export const fetchCategories = (filterString, page, perPage) => async (dispatch)
             url += `${url.includes('?') ? '&' : '?'}perPage=${perPage}`
         }
 
-        dispatch( {
-            type: GETTING_CATEGORIES,
-            payload: true
-        })
-
         const response = await axios.get(url, { headers })
         // console.log('categories fetched => ', response.data.data)
 
@@ -38,7 +55,7 @@ export const fetchCategories = (filterString, page, perPage) => async (dispatch)
     catch(error){
         dispatch( {
             type: CATEGORIES_ERROR,
-            error
+            payload: error
         })
     }
 }
@@ -70,7 +87,7 @@ export const createCategory = (payload) => async (dispatch) => {
     catch(error){
         dispatch( {
             type: CATEGORIES_ERROR,
-            error
+            payload: error
         })
     }
 }
@@ -109,7 +126,7 @@ export const updateCategory = (id, payload) => async (dispatch) => {
     catch(error){
         dispatch( {
             type: CATEGORIES_ERROR,
-            error
+            payload: error
         })
     }
 }
@@ -148,7 +165,7 @@ export const deleteCategories = (id) => async (dispatch) => {
     catch(error){
         dispatch( {
             type: CATEGORIES_ERROR,
-            error
+            payload: error
         })
     }
 }

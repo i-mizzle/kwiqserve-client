@@ -2,10 +2,26 @@ import axios from "axios"
 import { authHeader, baseUrl, businessDetails, clientId} from "../../utils"
 import { CART_ERROR, CHECKING_OUT, CHECKOUT, FETCHING_CART, FETCH_CART, SENDING_TO_CART, SEND_TO_CART, SET_SUCCESS } from "../types"
 
-const businessId = businessDetails()?._id
+const resolveBusinessId = (businessOrId) => {
+    if (!businessOrId) {
+        return null
+    }
+
+    if (typeof businessOrId === 'string') {
+        return businessOrId
+    }
+
+    return businessOrId?._id || businessOrId?.id || null
+}
+
 export const sendToCart = (payload) => async (dispatch) => {    
     try{
         const headers = authHeader()
+        const businessId = resolveBusinessId(payload?.business) || resolveBusinessId(businessDetails())
+
+        if (!businessId) {
+            throw new Error('Business ID not available for cart operations')
+        }
 
         dispatch({
             type: SENDING_TO_CART,
@@ -34,7 +50,7 @@ export const sendToCart = (payload) => async (dispatch) => {
         console.log('send to cart error: ', error)
         dispatch({
             type: CART_ERROR,
-            error
+            payload: error
         })
         return { success: false, error }
     }
@@ -43,6 +59,11 @@ export const sendToCart = (payload) => async (dispatch) => {
 export const deductFromCart = (payload) => async (dispatch) => {    
     try{
         const headers = authHeader()
+        const businessId = resolveBusinessId(payload?.business) || resolveBusinessId(businessDetails())
+
+        if (!businessId) {
+            throw new Error('Business ID not available for cart operations')
+        }
 
         dispatch({
             type: SENDING_TO_CART,
@@ -61,7 +82,7 @@ export const deductFromCart = (payload) => async (dispatch) => {
         console.log('deduction error: ', error)
         dispatch({
             type: CART_ERROR,
-            error
+            payload: error
         })
     }
 }
@@ -70,6 +91,11 @@ export const fetchCart = (filterString) => async (dispatch) => {
     try{
         const headers = authHeader()
         const client = clientId()
+        const businessId = resolveBusinessId(businessDetails())
+
+        if (!businessId) {
+            throw new Error('Business ID not available for cart fetch')
+        }
 
         let url = `${baseUrl}/shopping-carts/${businessId}/${client}?expand=items.item,items.parentItem,items.parentItemCategory&checkoutStatus=pending`
         if(filterString && filterString !== '') {
@@ -91,10 +117,10 @@ export const fetchCart = (filterString) => async (dispatch) => {
     }
     catch(error){
         console.log('fetch cart error: ', error)
-        if(error.response.data.errorCode !== 'not-found'){
+        if(error?.response?.data?.errorCode !== 'not-found'){
             dispatch({
                 type: CART_ERROR,
-                error
+                payload: error
             })
         } else {
             dispatch({
@@ -127,10 +153,10 @@ export const checkoutCart = (cartId, payload) => async (dispatch) => {
     }
     catch(error){
         console.log('fetch cart error: ', error)
-        if(error.response.data.errorCode !== 'not-found'){
+        if(error?.response?.data?.errorCode !== 'not-found'){
             dispatch({
                 type: CART_ERROR,
-                error
+                payload: error
             })
         } else {
             dispatch({

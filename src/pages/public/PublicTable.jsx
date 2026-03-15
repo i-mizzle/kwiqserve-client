@@ -52,12 +52,18 @@ const PublicTable = () => {
         setLoading(true)
         const response = await axios.get(`${baseUrl}/tables/${tableId}`, { headers })
         setTableDetails(response.data.data)
+        const business = response.data.data?.business
+        const resolvedBusinessId = typeof business === 'object' ? business?._id : business
 
-        if (response.data.data?.business && typeof response.data.data.business === 'object') {
-          localStorage.setItem('currentBusiness', JSON.stringify(response.data.data.business))
+        if (business && typeof business === 'object') {
+          try {
+            localStorage.setItem('currentBusiness', JSON.stringify(business))
+          } catch {
+            // Ignore storage failures on restricted mobile browsers.
+          }
         }
 
-        dispatch(fetchCategories('', 0, 0))
+        dispatch(fetchCategories('', 0, 0, resolvedBusinessId))
         fetchTableMenu(response.data.data.menu)
         // setLoading(false)
       } catch (error) {
@@ -109,6 +115,7 @@ const PublicTable = () => {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const categoryContainerRef = useRef(null);
+  const resolvedBusinessId = typeof tableDetails?.business === 'object' ? tableDetails?.business?._id : tableDetails?.business
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
@@ -197,6 +204,7 @@ const PublicTable = () => {
                     hideStock={false}
                     storeSettings={null}
                     currentPage={`storeFront`}
+                    businessId={resolvedBusinessId}
                   />
                 ))}
               

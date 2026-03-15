@@ -82,27 +82,67 @@ export const formatPhone = (phone) => {
     return formatted
 }
 
-export const clientId = () => {
-    const client = JSON.parse(localStorage.getItem('clientId'));
-    if (!client || client === '') {
-        const newClient = nanoid(25)
-        localStorage.setItem("clientId", JSON.stringify(newClient));
-        return newClient
-    } else {
-      return client;
+const safeParseStorageItem = (value) => {
+    if (!value) {
+        return null
+    }
+
+    try {
+        return JSON.parse(value)
+    } catch {
+        return null
     }
 }
 
+const getStorageValue = (key) => {
+    if (typeof window === 'undefined') {
+        return null
+    }
+
+    try {
+        return window.localStorage.getItem(key)
+    } catch {
+        return null
+    }
+}
+
+const setStorageValue = (key, value) => {
+    if (typeof window === 'undefined') {
+        return false
+    }
+
+    try {
+        window.localStorage.setItem(key, value)
+        return true
+    } catch {
+        return false
+    }
+}
+
+export const clientId = () => {
+    const client = safeParseStorageItem(getStorageValue('clientId'))
+
+    if (client && client !== '') {
+      return client
+    }
+
+    const newClient = nanoid(25)
+    setStorageValue('clientId', JSON.stringify(newClient))
+    return newClient
+}
+
 export const authHeader = () => {
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = safeParseStorageItem(getStorageValue('user'))
+    const host = typeof window !== 'undefined' ? window.location.host : ''
+
     if (user && user.authToken) {
         return {
-            Authorization: 'Bearer ' + user.authToken, 
-            "x-original-host": window && window.location.host 
-        };
-    } else {
-      return {};
+            Authorization: 'Bearer ' + user.authToken,
+            'x-original-host': host
+        }
     }
+
+    return host ? { 'x-original-host': host } : {}
 }
 
 export const hasPermissions = (requiredPermissions) => {
@@ -118,8 +158,7 @@ export const hasPermissions = (requiredPermissions) => {
 }
 
 export const businessDetails = () => {
-    const business = JSON.parse(localStorage.getItem('currentBusiness'));
-    return business
+    return safeParseStorageItem(getStorageValue('currentBusiness'))
 }
 
 // export const storeDetails = () => {
@@ -128,13 +167,11 @@ export const businessDetails = () => {
 // }
 
 export const userDetails = () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    return user
+    return safeParseStorageItem(getStorageValue('user'))
 }
 
 export const storeSubscription = () => {
-    const subscription = JSON.parse(localStorage.getItem('activeSubscription'));
-    return subscription
+    return safeParseStorageItem(getStorageValue('activeSubscription'))
 }
 
 export const parseFilters = (filtersArray) => {

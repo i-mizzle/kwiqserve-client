@@ -9,7 +9,7 @@ import CheckIcon from '../icons/CheckIcon'
 import InlinePreloader from '../InlinePreloader'
 import { useParams } from 'react-router-dom'
 
-const PublicItemCard = ({item, addToOrder, itemStock, hideStock, canAddItem, storeSettings, currentPage}) => {
+const PublicItemCard = ({item, addToOrder, itemStock, hideStock, canAddItem, storeSettings, currentPage, businessId}) => {
     const dispatch = useDispatch()
     // const cartState = useSelector((state => state.cart))
     const [addedToCart, setAddedToCart] = useState(false)
@@ -18,11 +18,13 @@ const PublicItemCard = ({item, addToOrder, itemStock, hideStock, canAddItem, sto
 
     const { tableId } = useParams()
     const addItemToCart = async () => {
+        const resolvedBusinessId = businessId || businessDetails()?._id
+
         const newCartItem = {
             displayName: item.displayName,
             item: item.item,
-            parentItem: item.parentItem._id,
-            parentItemCategories: item.parentItemCategories.map(cat => cat),
+            parentItem: item?.parentItem?._id,
+            parentItemCategories: Array.isArray(item?.parentItemCategories) ? item.parentItemCategories.map(cat => cat) : [],
             quantity: quantity,
             price: item.price,
         }
@@ -30,7 +32,8 @@ const PublicItemCard = ({item, addToOrder, itemStock, hideStock, canAddItem, sto
         const requestPayload = {
             clientId: clientId(),
             item: newCartItem,
-            table: tableId
+            table: tableId,
+            business: resolvedBusinessId
         }
 
         setAdding(true)
@@ -44,6 +47,8 @@ const PublicItemCard = ({item, addToOrder, itemStock, hideStock, canAddItem, sto
                 setAddedToCart(false)
                 setQuantity(1)
             }, 1000)
+        } else {
+            setAdding(false)
         }
     }
 
