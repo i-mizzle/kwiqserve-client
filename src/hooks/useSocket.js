@@ -21,11 +21,20 @@ const playNotificationSound = () => {
   }
 };
 
-export const useSocket = () => {
+export const useSocket = ({ enabled = true } = {}) => {
   const socketRef = useRef(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (!enabled) {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+      window.__socket = null;
+      return;
+    }
+
     try {
       const business = businessDetails();
       const user = JSON.parse(localStorage.getItem('user'));
@@ -152,6 +161,7 @@ export const useSocket = () => {
         socketRef.current.disconnect();
         socketRef.current = null;
       }
+      window.__socket = null;
     };
-  }, [dispatch]);
+  }, [dispatch, enabled]);
 };

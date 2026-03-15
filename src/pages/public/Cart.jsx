@@ -211,7 +211,7 @@ const Cart = () => {
       });
       return
     }
-    if(activePaymentOption === 'ONLINE') {
+    if(activePaymentOption === 'online') {
       initiatePayment()
     } else {
       processOrder()
