@@ -15,7 +15,7 @@ const ItemInBag = ({item, smallPhotos=false}) => {
     const addItemToCart = async () => {
         const newCartItem = {
             displayName: item.displayName,
-            item: item.item,
+            item: item.item._id,
             parentItem: item.parentItem._id,
             parentItemCategories: item.parentItemCategories.map(cat => cat),
             quantity: 1,
@@ -28,13 +28,16 @@ const ItemInBag = ({item, smallPhotos=false}) => {
             table: tableId
         }
 
-        setAdding(true)
+        console.log('adding: ', requestPayload)
+
+
+        // setAdding(true)
 
         const result = await dispatch(sendToCart(requestPayload))
 
         if (result?.success) {
             setAddedToCart(true)
-            setAdding(false)
+            // setAdding(false)
             setTimeout(() => {
                 setAddedToCart(false)
             }, 1000)
@@ -44,7 +47,7 @@ const ItemInBag = ({item, smallPhotos=false}) => {
     const deductItemFromCart = async () => {
         const requestPayload = {
             clientId: clientId(),
-            item: item._id,
+            item: item.item._id,
             quantity: 1
         }
     
@@ -55,7 +58,7 @@ const ItemInBag = ({item, smallPhotos=false}) => {
         const requestPayload = {
             clientId: clientId(),
             item: item.item._id,
-            quantity: item.quantity
+            quantity: item.quantity,
         }
     
        dispatch(deductFromCart(requestPayload))
@@ -94,7 +97,7 @@ const ItemInBag = ({item, smallPhotos=false}) => {
                         <PlusIcon className='w-5 h-5 text-ss-black' />
                     </button>
                     <p className='font-thin text-lg'>{cartState?.cart?.items[itemInCart()]?.quantity}</p>
-                    <button  onClick={()=>deductItemFromCart()} className='flex items-center gap-x-2 text-xs p-2 rounded bg-ss-pale-blue border border-ss-dark-blue/20'>
+                    <button onClick={()=>deductItemFromCart()} className='flex items-center gap-x-2 text-xs p-2 rounded bg-ss-pale-blue border border-ss-dark-blue/20'>
                         <MinusIcon className='w-5 h-5 text-ss-black' />
                     </button>
                 </div> 
