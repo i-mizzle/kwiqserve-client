@@ -21,7 +21,7 @@ const Orders = () => {
     const ordersState = useSelector((state => state.orders))
     const [currentPage, setCurrentPage] = useState(1);
     const [perPage, setPerPage] = useState(50);
-    const [filters, setFilters] = useState('paymentStatus=paid&&paymentMethod=cash_on_delivery,pos_on_delivery');
+    const [filters, setFilters] = useState('paymentStatus=paid&paymentMethod=cash_on_delivery,pos_on_delivery');
 
     useEffect(() => {
         const fetchData = async () => {

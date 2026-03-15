@@ -211,7 +211,7 @@ export const parseNigerianStates = () => {
 export const stateCities = (state)  => {
     const states = StatesLgas
     const cities = states.find(st => st.stateSlug === slugify(state))
-    return cities.lgas
+    return cities?.lgas || []
 }
 
 export const generateCode = (length, isNumeric) => {

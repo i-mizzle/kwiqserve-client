@@ -7,6 +7,6 @@ export default defineConfig({
     host: true,              // listen on all addresses
     strictPort: true,
     port: 5173,
-    allowedHosts: ['.kwiqserve.com'], // allow all subdomains of kwiqserve.com
+    allowedHosts: ['.kwiqserve.com', '.lvh.me'], // allow all subdomains of kwiqserve.com
   },
 })

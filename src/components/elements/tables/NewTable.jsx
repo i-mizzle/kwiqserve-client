@@ -15,6 +15,7 @@ const NewTable = ({close}) => {
     useEffect(() => {
       
         dispatch(fetchMenus('', 0, 0))
+    
         return () => {
             
         }
@@ -130,7 +131,8 @@ const NewTable = ({close}) => {
             <div className="mt-8 flex flex-row-reverse gap-x-4">
                 <button
                     type="button"
-                    className="inline-flex justify-center px-5 py-4 text-sm font-medium bg-ss-dark-blue text-white border border-transparent transition duration-200 rounded-lg hover:bg-ss-black focus:outline-none"
+                    disabled={menusSelector?.menus?.menus?.length === 0 || tablesSelector.creatingTable}
+                    className="inline-flex justify-center px-5 py-4 text-sm font-medium bg-ss-dark-blue disabled:bg-ss-dark-gray disabled:cursor-not-allowed text-white border border-transparent transition duration-200 rounded-lg hover:bg-ss-black focus:outline-none"
                     onClick={()=>{pushTable()}}
                 >
                     {tablesSelector.creatingTable ? <InlinePreloader /> : 'Create table'}

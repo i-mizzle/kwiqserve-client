@@ -33,7 +33,7 @@ const BusinessSettings = () => {
         setCityOptions(stateCities(response.data.data.state))
         fetchBusinessSettings()
       } catch (error) {
-        console.log('error fetching user profile: ', error)
+        console.log('error fetching business profile: ', error)
         dispatch({
           type: ERROR,
           error
@@ -48,10 +48,10 @@ const BusinessSettings = () => {
 
         setLoading(true)
         const response = await axios.get(`${baseUrl}/settings?expand=receivingAccounts.account`, {headers})
-        setBusinessSettings(response.data.data)
+        setBusinessSettings(response.data.data || null)
         setLoading(false)
       } catch (error) {
-        console.log('error fetching user profile: ', error)
+        console.log('error fetching business settings: ', error)
         dispatch({
           type: ERROR,
           error
