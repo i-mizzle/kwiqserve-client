@@ -79,7 +79,7 @@ const PendingOrdersFloater = () => {
         {pendingOrdersCount > 0 && <Link
             to={`/business/orders`} 
             ref={componentRef} 
-            className={`pending-orders-floater fixed top-20 z-998 rounded-full py-3 px-6 right-4 bg-green-500 border border-white shadow-xl shadow-green-500/20 ${isHighlighted ? 'highlight-pulse' : ''}`}
+            className={`pending-orders-floater fixed top-20 z-90 rounded-full py-3 px-6 right-4 bg-green-500 border border-white shadow-xl shadow-green-500/20 ${isHighlighted ? 'highlight-pulse' : ''}`}
         >
             <h3 className='text-white text-sm font-bold'>{pendingOrdersCount} pending order(s)</h3>
         </Link>}

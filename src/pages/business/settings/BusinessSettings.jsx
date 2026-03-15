@@ -52,10 +52,10 @@ const BusinessSettings = () => {
         setLoading(false)
       } catch (error) {
         console.log('error fetching business settings: ', error)
-        dispatch({
-          type: ERROR,
-          error
-        })
+        // dispatch({
+        //   type: ERROR,
+        //   error
+        // })
         setLoading(false)
       }
     }

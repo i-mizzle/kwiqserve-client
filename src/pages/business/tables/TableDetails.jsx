@@ -226,7 +226,7 @@ const TableDetails = () => {
             }
 
             </div>
-            <div className='w-full xl:w-3/12 p-5 border-2 rounded border-gray-200 xl:sticky top-10 z-99'>
+            <div className='w-full xl:w-3/12 p-5 border-2 rounded border-gray-200 xl:sticky top-10 z-1'>
               <h3 className='uppercase tracking-[0.5em] text-xs mb-2'>table qr code</h3>
               <p className='text-sm text-gray-500'>You can download ths qr code, print and place it around your physical store for your customers to scan and immediately access your price cards</p>
               {tableDetails.tableQrCode && tableDetails.tableQrCode !== '' ? 

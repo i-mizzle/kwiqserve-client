@@ -1,16 +1,38 @@
 import React from 'react'
 import Logo from '../elements/Logo'
 import UserMenu from './UserMenu'
-import { userDetails } from '../../utils'
-import { Link, useLocation } from 'react-router-dom'
+import { authHeader, baseUrl, userDetails } from '../../utils'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { ERROR } from '../../store/types'
+import { useDispatch } from 'react-redux'
+import axios from 'axios'
 
 const AdminHeader = ({businessDetails}) => {
   const location = useLocation()
+  const navigate = useNavigate()
   
   const getLinkClassName = (path) => {
     const isActive = location.pathname.includes(path)
     return `text-[15px]  ${isActive ? 'font-bold text-ss-dark-blue' : 'font-[400] text-gray-600'}`
   }
+
+  const dispatch = useDispatch()
+
+  const invalidateSession = async() => {
+    try {
+        const headers = authHeader()
+
+        await axios.delete(`${baseUrl}/auth/sessions`, {headers})
+        localStorage.removeItem('user')
+        navigate('/')
+      } catch (error) {
+        console.log('error fetching business settings: ', error)
+        dispatch({
+          type: ERROR,
+          error
+        })
+      }
+  } 
 
   return (
     <header className='lg:px-12 xl:px-32 flex items-center justify-between py-2 bg-gray-50'>

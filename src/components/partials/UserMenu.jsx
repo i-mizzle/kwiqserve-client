@@ -32,7 +32,7 @@ const UserMenu = ({businessDetails, userDetails, logOut}) => {
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items className="absolute right-0 w-75 xl:w-56 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black/5 focus:outline-none">
-          <div className='xl:hidden w-full p-5 bg-gray-100'>
+          <div className='xl:hidden w-full p-5 bg-gray-100 z-99'>
             <p className='text-sm'>{userDetails.name}</p>
             <p className='text-sm font-space-grotesk font-[550] mt-1.25'>{businessDetails?.name}</p>
           </div>
