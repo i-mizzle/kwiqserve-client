@@ -17,7 +17,7 @@ const PendingOrdersFloater = () => {
         const fetchPendingOrders = async () => {
             try {
                 const headers = authHeader()
-                const response = await axios.get(`${baseUrl}/orders?status=pending&page=0&perPage=0`, {headers})
+                const response = await axios.get(`${baseUrl}/orders?status=pending&paymentStatus=paid&paymentMethod=cash_on_delivery,pos_on_delivery&page=0&perPage=0`, {headers})
                 setPendingOrdersCount(response.data.data.total)
             } catch (error) {
                 console.log(error)
