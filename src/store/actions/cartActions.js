@@ -1,6 +1,6 @@
 import axios from "axios"
 import { authHeader, baseUrl, businessDetails, clientId} from "../../utils"
-import { CART_ERROR, CHECKING_OUT, CHECKOUT, FETCHING_CART, FETCH_CART, SENDING_TO_CART, SEND_TO_CART, SET_SUCCESS } from "../types"
+import { CART_ERROR, CHECKING_OUT, CHECKOUT, DEDUCTING_FROM_CART, DEDUCT_FROM_CART, FETCHING_CART, FETCH_CART, SENDING_TO_CART, SEND_TO_CART, SET_SUCCESS } from "../types"
 
 const resolveBusinessId = (businessOrId) => {
     if (!businessOrId) {
@@ -66,16 +66,18 @@ export const deductFromCart = (payload) => async (dispatch) => {
         }
 
         dispatch({
-            type: SENDING_TO_CART,
+            type: DEDUCTING_FROM_CART,
             payload: true
         })
 
         const response = await axios.post(`${baseUrl}/shopping-carts/deduct/${businessId}`, {...payload, ...{business: businessId}}, { headers })
         
         dispatch({
-            type: SEND_TO_CART,
+            type: DEDUCT_FROM_CART,
             payload: response.data.data
         })
+
+        return { success: true }
         
     }
     catch(error){
@@ -84,6 +86,8 @@ export const deductFromCart = (payload) => async (dispatch) => {
             type: CART_ERROR,
             payload: error
         })
+
+        return { success: false, error }
     }
 }
 
@@ -94,7 +98,12 @@ export const fetchCart = (filterString) => async (dispatch) => {
         const businessId = resolveBusinessId(businessDetails())
 
         if (!businessId) {
-            throw new Error('Business ID not available for cart fetch')
+            dispatch({
+                type: FETCHING_CART,
+                payload: false
+            })
+
+            return { success: false, skipped: true }
         }
 
         let url = `${baseUrl}/shopping-carts/${businessId}/${client}?expand=items.item,items.parentItem,items.parentItemCategory&checkoutStatus=pending`

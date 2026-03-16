@@ -13,11 +13,15 @@ const TableHeader = () => {
     const { tableId } = useParams()
 
     useEffect(() => {
+        if (!business?._id) {
+            return
+        }
+
         dispatch(fetchCart())
         return () => {
         
         };
-    }, [dispatch]);
+    }, [business?._id, dispatch]);
 
     return (
         <header className='px-4 lg:px-24 xl:px-32 2xl:px-44 w-full flex items-center justify-between py-5 fixed bg-white z-99'>

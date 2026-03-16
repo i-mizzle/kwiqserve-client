@@ -61,6 +61,8 @@ const Cart = () => {
           localStorage.setItem('currentBusiness', JSON.stringify(response.data.data.business))
         }
 
+        dispatch(fetchCart())
+
         // setTableDetails(response.data.data)
         fetchTableMenu(response.data.data.menu)
         // setLoading(false)
@@ -76,7 +78,6 @@ const Cart = () => {
     } 
 
     fetchTableDetails()
-    dispatch(fetchCart())
 
     // const fetchStoreSettings = async () => {    
     //   try{
