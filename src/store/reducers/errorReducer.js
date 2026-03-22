@@ -9,7 +9,7 @@ export function errorReducer(state = initialState, action){
 
     if(error){
         return {
-            error: error.response.data
+            error: error
         }
     }
 

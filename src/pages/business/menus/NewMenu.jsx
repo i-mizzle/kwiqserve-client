@@ -11,9 +11,10 @@ import EmptyState from '../../../components/elements/EmptyState'
 import { useDispatch, useSelector } from 'react-redux'
 import { clearCreatedMenu, createMenu, fetchMenus } from '../../../store/actions/menusActions'
 import { fetchItems } from '../../../store/actions/itemsActions'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { SET_SUCCESS } from '../../../store/types'
 import Loader from '../../../components/elements/Loader'
+import ArrowNarrowRight from '../../../components/elements/icons/ArrowNarrowRight'
 
 const NewMenu = () => {
   const menuItem = {
@@ -274,11 +275,15 @@ const NewMenu = () => {
               </div>
           </div>
           :
-          <div className='w-6/12 mx-auto pt-12'>
+          <div className='w-6/12 mx-auto pt-12 text-cente'>
             <EmptyState 
-                emptyStateText={`You need items created for your business before you can create menus. Please navigate to items in the header to create some items first.`} 
+                emptyStateText={`You need items created for your business before you can create menus. Please navigate to items (or use shortcut below) in the header to create some items first.`} 
                 emptyStateTitle={`No items found`} 
             />
+            <Link to={`/business/items/new-item`} className='flex items-center justify-center w-max mx-auto mt-1 gap-x-2 text-sm font-medium text-blue-700'>
+              Create an item
+              <ArrowNarrowRight className={`w-5 h-5`} />
+            </Link>
           </div>
           }
         </div>

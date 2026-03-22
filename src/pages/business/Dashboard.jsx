@@ -1,17 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import AppLayout from '../../components/Layouts/AppLayout'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../../components/elements/Loader'
 import { SET_SUCCESS } from '../../store/types'
 import { authHeader, baseUrl } from '../../utils'
 import axios from 'axios'
+import ModalDialog from '../../components/Layouts/ModalDialog'
+import AccountSetupReminder from '../../components/elements/AccountSetupReminder'
 
 const Dashboard = () => {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState(null)
+  const [showSetupReminder, setShowSetupReminder] = useState(false)
   const [summaryRange, setSummaryRange] = useState('day')
   const [channelRange, setChannelRange] = useState('day')
+
+  const settingsSelector = useSelector(state => state.settings)
+          
+  if(!settingsSelector.fetchingSettings && settingsSelector.settings === null && (!localStorage.getItem('hideSetupReminder') || localStorage.getItem('hideSetupReminder') === 'no')) {
+    setTimeout(() => {
+      setShowSetupReminder(true)
+    }, 3000);
+  }
   
   useEffect(() => {
     
@@ -148,225 +159,240 @@ const Dashboard = () => {
   )
   
   return (
-    <AppLayout pageTitle="Dashboard">
-        <div className='w-11/12 mx-auto mt-6'>
-          {loading ? 
-            <Loader />
-            :
-            <div className='min-h-screen h-inherit'>
-              <div className='flex items-center justify-between mb-6'>
-                <div>
-                  <h1 className='text-2xl sm:text-3xl font-bold text-ss-dark-gray'>Business dashboard</h1>
-                  <p className='text-gray-500 text-sm'>Track sales performance, orders, and payment activity.</p>
-                </div>
-              </div>
-              
-              <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5'>
-                <div className='bg-white rounded-lg border border-gray-100 p-4 sm:p-5'>
-                  <p className='text-xs uppercase tracking-wide text-gray-400'>Today</p>
-                  <h3 className='text-2xl font-semibold text-ss-dark-gray mt-2'>{viewStats?.metrics?.todayOrdersCount || 0} orders</h3>
-                  <p className='text-sm text-gray-500 mt-1'>Value</p>
-                  <h3 className='text-lg font-medium text-gray-700'>{formatCurrency(viewStats?.metrics?.todayOrdersValue)}</h3>
-                  <div className='mt-3'>
-                    <ChangeBadge value={viewStats?.metrics?.percentageDailyChange} label="vs yesterday" />
+    <>
+      <AppLayout pageTitle="Dashboard">
+          <div className='w-11/12 mx-auto mt-6'>
+            {loading ? 
+              <Loader />
+              :
+              <div className='min-h-screen h-inherit'>
+                <div className='flex items-center justify-between mb-6'>
+                  <div>
+                    <h1 className='text-2xl sm:text-3xl font-bold text-ss-dark-gray'>Business dashboard</h1>
+                    <p className='text-gray-500 text-sm'>Track sales performance, orders, and payment activity.</p>
                   </div>
                 </div>
                 
-                <div className='bg-white rounded-lg border border-gray-100 p-4 sm:p-5'>
-                  <p className='text-xs uppercase tracking-wide text-gray-400'>This week</p>
-                  <h3 className='text-2xl font-semibold text-ss-dark-gray mt-2'>{viewStats?.metrics?.thisWeekOrdersCount || 0} orders</h3>
-                  <p className='text-sm text-gray-500 mt-1'>Value</p>
-                  <h3 className='text-lg font-medium text-gray-700'>{formatCurrency(viewStats?.metrics?.thisWeekOrdersValue)}</h3>
-                  <div className='mt-3'>
-                    <ChangeBadge value={viewStats?.metrics?.percentageWeeklyChange} label="vs last week" />
+                <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5'>
+                  <div className='bg-white rounded-lg border border-gray-100 p-4 sm:p-5'>
+                    <p className='text-xs uppercase tracking-wide text-gray-400'>Today</p>
+                    <h3 className='text-2xl font-semibold text-ss-dark-gray mt-2'>{viewStats?.metrics?.todayOrdersCount || 0} orders</h3>
+                    <p className='text-sm text-gray-500 mt-1'>Value</p>
+                    <h3 className='text-lg font-medium text-gray-700'>{formatCurrency(viewStats?.metrics?.todayOrdersValue)}</h3>
+                    <div className='mt-3'>
+                      <ChangeBadge value={viewStats?.metrics?.percentageDailyChange} label="vs yesterday" />
+                    </div>
+                  </div>
+                  
+                  <div className='bg-white rounded-lg border border-gray-100 p-4 sm:p-5'>
+                    <p className='text-xs uppercase tracking-wide text-gray-400'>This week</p>
+                    <h3 className='text-2xl font-semibold text-ss-dark-gray mt-2'>{viewStats?.metrics?.thisWeekOrdersCount || 0} orders</h3>
+                    <p className='text-sm text-gray-500 mt-1'>Value</p>
+                    <h3 className='text-lg font-medium text-gray-700'>{formatCurrency(viewStats?.metrics?.thisWeekOrdersValue)}</h3>
+                    <div className='mt-3'>
+                      <ChangeBadge value={viewStats?.metrics?.percentageWeeklyChange} label="vs last week" />
+                    </div>
+                  </div>
+                  
+                  <div className='bg-white rounded-lg border border-gray-100 p-4 sm:p-5'>
+                    <p className='text-xs uppercase tracking-wide text-gray-400'>This month</p>
+                    <h3 className='text-2xl font-semibold text-ss-dark-gray mt-2'>{viewStats?.metrics?.thisMonthOrdersCount || 0} orders</h3>
+                    <p className='text-sm text-gray-500 mt-1'>Value</p>
+                    <h3 className='text-lg font-medium text-gray-700'>{formatCurrency(viewStats?.metrics?.thisMonthOrdersValue)}</h3>
+                    <div className='mt-3'>
+                      <ChangeBadge value={viewStats?.metrics?.percentageMonthlyChange} label="vs last month" />
+                    </div>
                   </div>
                 </div>
                 
-                <div className='bg-white rounded-lg border border-gray-100 p-4 sm:p-5'>
-                  <p className='text-xs uppercase tracking-wide text-gray-400'>This month</p>
-                  <h3 className='text-2xl font-semibold text-ss-dark-gray mt-2'>{viewStats?.metrics?.thisMonthOrdersCount || 0} orders</h3>
-                  <p className='text-sm text-gray-500 mt-1'>Value</p>
-                  <h3 className='text-lg font-medium text-gray-700'>{formatCurrency(viewStats?.metrics?.thisMonthOrdersValue)}</h3>
-                  <div className='mt-3'>
-                    <ChangeBadge value={viewStats?.metrics?.percentageMonthlyChange} label="vs last month" />
+                <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5 mt-6'>
+                  <div className='bg-white rounded-lg border border-gray-100 p-4 sm:p-5'>
+                    <p className='text-sm text-gray-500'>Closed unpaid orders</p>
+                    <h3 className='text-2xl font-semibold text-ss-dark-gray mt-2'>{viewStats?.metrics?.closedUnpaidOrdersCount || 0}</h3>
+                    <p className='text-sm text-gray-500 mt-1'>Value</p>
+                    <h3 className='text-lg font-medium text-gray-700'>{formatCurrency(viewStats?.metrics?.closedUnpaidOrdersValue)}</h3>
+                  </div>
+                  
+                  <div className='bg-white rounded-lg border border-gray-100 p-4 sm:p-5'>
+                    <p className='text-sm text-gray-500'>Unpaid orders</p>
+                    <h3 className='text-2xl font-semibold text-ss-dark-gray mt-2'>{viewStats?.metrics?.unpaidOrdersCount || 0}</h3>
+                    <p className='text-sm text-gray-500 mt-1'>Total unpaid value</p>
+                    <h3 className='text-lg font-medium text-gray-700'>{formatCurrency(viewStats?.metrics?.unpaidOrdersValue)}</h3>
+                  </div>
+                  
+                  <div className='bg-white rounded-lg border border-gray-100 p-4 sm:p-5'>
+                    <p className='text-sm text-gray-500'>Year to date</p>
+                    <h3 className='text-2xl font-semibold text-ss-dark-gray mt-2'>{formatCurrency(viewStats?.metrics?.currentYearOrdersValue)}</h3>
+                    <p className='text-xs text-gray-400 mt-1'>Total paid order value</p>
                   </div>
                 </div>
-              </div>
-              
-              <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5 mt-6'>
-                <div className='bg-white rounded-lg border border-gray-100 p-4 sm:p-5'>
-                  <p className='text-sm text-gray-500'>Closed unpaid orders</p>
-                  <h3 className='text-2xl font-semibold text-ss-dark-gray mt-2'>{viewStats?.metrics?.closedUnpaidOrdersCount || 0}</h3>
-                  <p className='text-sm text-gray-500 mt-1'>Value</p>
-                  <h3 className='text-lg font-medium text-gray-700'>{formatCurrency(viewStats?.metrics?.closedUnpaidOrdersValue)}</h3>
-                </div>
                 
-                <div className='bg-white rounded-lg border border-gray-100 p-4 sm:p-5'>
-                  <p className='text-sm text-gray-500'>Unpaid orders</p>
-                  <h3 className='text-2xl font-semibold text-ss-dark-gray mt-2'>{viewStats?.metrics?.unpaidOrdersCount || 0}</h3>
-                  <p className='text-sm text-gray-500 mt-1'>Total unpaid value</p>
-                  <h3 className='text-lg font-medium text-gray-700'>{formatCurrency(viewStats?.metrics?.unpaidOrdersValue)}</h3>
-                </div>
-                
-                <div className='bg-white rounded-lg border border-gray-100 p-4 sm:p-5'>
-                  <p className='text-sm text-gray-500'>Year to date</p>
-                  <h3 className='text-2xl font-semibold text-ss-dark-gray mt-2'>{formatCurrency(viewStats?.metrics?.currentYearOrdersValue)}</h3>
-                  <p className='text-xs text-gray-400 mt-1'>Total paid order value</p>
-                </div>
-              </div>
-              
-              <div className='grid grid-cols-1 xl:grid-cols-3 gap-6 mt-8'>
-                <div className='xl:col-span-2 bg-white rounded-lg border border-gray-100 p-4 sm:p-6'>
-                  <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4'>
-                    <div className='flex items-center gap-x-2'>
-                      <BarChartIcon />
-                      <div>
-                        <h2 className='text-lg font-semibold text-ss-dark-gray'>Transactions summary</h2>
-                        <p className='text-sm text-gray-500'>Total amounts grouped by day, week, or month.</p>
+                <div className='grid grid-cols-1 xl:grid-cols-3 gap-6 mt-8'>
+                  <div className='xl:col-span-2 bg-white rounded-lg border border-gray-100 p-4 sm:p-6'>
+                    <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4'>
+                      <div className='flex items-center gap-x-2'>
+                        <BarChartIcon />
+                        <div>
+                          <h2 className='text-lg font-semibold text-ss-dark-gray'>Transactions summary</h2>
+                          <p className='text-sm text-gray-500'>Total amounts grouped by day, week, or month.</p>
+                        </div>
+                      </div>
+                      <div className='flex items-center gap-x-2 bg-gray-100 rounded-lg p-1 w-max'>
+                        {['day', 'week', 'month'].map((range) => (
+                          <button
+                            key={range}
+                            onClick={() => setSummaryRange(range)}
+                            className={`px-3 py-1.5 text-xs rounded-md transition duration-200 ${summaryRange === range ? 'bg-ss-dark-blue text-white' : 'text-gray-600 hover:bg-white'}`}
+                          >
+                            {range}
+                          </button>
+                        ))}
                       </div>
                     </div>
-                    <div className='flex items-center gap-x-2 bg-gray-100 rounded-lg p-1 w-max'>
+                    
+                    <div className='space-y-4'>
+                      {summaryData?.map((item, index) => (
+                        <div key={index} className='flex flex-col gap-y-2'>
+                          <div className='flex flex-wrap items-center justify-between gap-3 text-sm text-gray-600'>
+                            <span>{item.day || item.week || item.month}</span>
+                            <div className='flex items-center gap-x-3'>
+                              <Sparkline value={item.percentage} index={index} />
+                              <span className='font-medium text-gray-700'>{formatCurrency(item.amount)}</span>
+                            </div>
+                          </div>
+                          <div className='w-full h-2 bg-gray-100 rounded-full'>
+                            <div
+                              className='h-2 rounded-full bg-ss-dark-blue'
+                              style={{ width: `${Math.min(100, getPercentage(item.percentage))}%` }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                      
+                      {(!summaryData || summaryData?.length === 0) && (
+                        <div className='py-6 text-center text-sm text-gray-400'>No transactions summary yet.</div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className='bg-white rounded-lg border border-gray-100 p-4 sm:p-6'>
+                    <div className='flex items-center justify-between mb-4'>
+                      <div>
+                        <h2 className='text-lg font-semibold text-ss-dark-gray'>Transactions by channel</h2>
+                        <p className='text-sm text-gray-500'>Channel split for the selected period.</p>
+                      </div>
+                    </div>
+                    
+                    <div className='flex items-center gap-x-2 bg-gray-100 rounded-lg p-1 w-max mb-5'>
                       {['day', 'week', 'month'].map((range) => (
                         <button
                           key={range}
-                          onClick={() => setSummaryRange(range)}
-                          className={`px-3 py-1.5 text-xs rounded-md transition duration-200 ${summaryRange === range ? 'bg-ss-dark-blue text-white' : 'text-gray-600 hover:bg-white'}`}
+                          onClick={() => setChannelRange(range)}
+                          className={`px-3 py-1.5 text-xs rounded-md transition duration-200 ${channelRange === range ? 'bg-ss-dark-blue text-white' : 'text-gray-600 hover:bg-white'}`}
                         >
                           {range}
                         </button>
                       ))}
                     </div>
-                  </div>
-                  
-                  <div className='space-y-4'>
-                    {summaryData?.map((item, index) => (
-                      <div key={index} className='flex flex-col gap-y-2'>
-                        <div className='flex flex-wrap items-center justify-between gap-3 text-sm text-gray-600'>
-                          <span>{item.day || item.week || item.month}</span>
-                          <div className='flex items-center gap-x-3'>
-                            <Sparkline value={item.percentage} index={index} />
-                            <span className='font-medium text-gray-700'>{formatCurrency(item.amount)}</span>
-                          </div>
-                        </div>
-                        <div className='w-full h-2 bg-gray-100 rounded-full'>
-                          <div
-                            className='h-2 rounded-full bg-ss-dark-blue'
-                            style={{ width: `${Math.min(100, getPercentage(item.percentage))}%` }}
-                          />
-                        </div>
-                      </div>
-                    ))}
                     
-                    {(!summaryData || summaryData?.length === 0) && (
-                      <div className='py-6 text-center text-sm text-gray-400'>No transactions summary yet.</div>
-                    )}
-                  </div>
-                </div>
-                
-                <div className='bg-white rounded-lg border border-gray-100 p-4 sm:p-6'>
-                  <div className='flex items-center justify-between mb-4'>
-                    <div>
-                      <h2 className='text-lg font-semibold text-ss-dark-gray'>Transactions by channel</h2>
-                      <p className='text-sm text-gray-500'>Channel split for the selected period.</p>
-                    </div>
-                  </div>
-                  
-                  <div className='flex items-center gap-x-2 bg-gray-100 rounded-lg p-1 w-max mb-5'>
-                    {['day', 'week', 'month'].map((range) => (
-                      <button
-                        key={range}
-                        onClick={() => setChannelRange(range)}
-                        className={`px-3 py-1.5 text-xs rounded-md transition duration-200 ${channelRange === range ? 'bg-ss-dark-blue text-white' : 'text-gray-600 hover:bg-white'}`}
-                      >
-                        {range}
-                      </button>
-                    ))}
-                  </div>
-                  
-                  <div className='space-y-3'>
-                    {Object.entries(channelData || {}).map(([channel, amount]) => (
-                      <div key={channel} className='flex items-center justify-between text-sm text-gray-600'>
-                        <span className='capitalize'>{channel.replace('_', ' ')}</span>
-                        <h3 className='font-medium text-gray-700'>{formatCurrency(amount.amount)}</h3>
-                      </div>
-                    ))}
-                    
-                    {Object.keys(channelData || {}).length === 0 && (
-                      <div className='py-6 text-center text-sm text-gray-400'>No channel data yet.</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              
-              <div className='grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8'>
-                <div className='bg-white rounded-lg border border-gray-100 p-4 sm:p-6'>
-                  <div className='flex items-center justify-between mb-4'>
-                    <div>
-                      <h2 className='text-lg font-semibold text-ss-dark-gray'>Most sold item</h2>
-                      <p className='text-sm text-gray-500'>Top performing item for the current period.</p>
-                    </div>
-                  </div>
-                  
-                  <div className='flex flex-col sm:flex-row sm:items-center gap-4'>
-                    <div className='w-20 h-20 rounded-lg bg-gray-100 overflow-hidden flex items-center justify-center'>
-                      {viewStats?.metrics?.mostSoldItem?.image ? (
-                        <img src={viewStats?.metrics?.mostSoldItem?.image} alt={viewStats?.metrics?.mostSoldItem?.name || 'Most sold'} className='w-full h-full object-cover' />
-                      ) : (
-                        <span className='text-xs text-gray-400'>No image</span>
+                    <div className='space-y-3'>
+                      {Object.entries(channelData || {}).map(([channel, amount]) => (
+                        <div key={channel} className='flex items-center justify-between text-sm text-gray-600'>
+                          <span className='capitalize'>{channel.replace('_', ' ')}</span>
+                          <h3 className='font-medium text-gray-700'>{formatCurrency(amount.amount)}</h3>
+                        </div>
+                      ))}
+                      
+                      {Object.keys(channelData || {}).length === 0 && (
+                        <div className='py-6 text-center text-sm text-gray-400'>No channel data yet.</div>
                       )}
                     </div>
-                    <div>
-                      <p className='text-lg font-semibold text-ss-dark-gray'>
-                        {viewStats?.metrics?.mostSoldItem?.name || 'No item yet'}
-                      </p>
-                      <p className='text-sm text-gray-500'>
-                        {viewStats?.metrics?.mostSoldItem?.quantity || 0} sold
-                      </p>
-                      <p className='text-sm text-gray-700 mt-1'>
-                        {formatCurrency(viewStats?.metrics?.mostSoldItem?.salesValue)} total sales
-                      </p>
-                    </div>
                   </div>
                 </div>
                 
-                <div className='bg-white rounded-lg border border-gray-100 p-4 sm:p-6'>
-                  <div className='flex items-center justify-between mb-4'>
-                    <div>
-                      <h2 className='text-lg font-semibold text-ss-dark-gray'>Sold items</h2>
-                      <p className='text-sm text-gray-500'>Latest items that recorded sales.</p>
+                <div className='grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8'>
+                  <div className='bg-white rounded-lg border border-gray-100 p-4 sm:p-6'>
+                    <div className='flex items-center justify-between mb-4'>
+                      <div>
+                        <h2 className='text-lg font-semibold text-ss-dark-gray'>Most sold item</h2>
+                        <p className='text-sm text-gray-500'>Top performing item for the current period.</p>
+                      </div>
+                    </div>
+                    
+                    <div className='flex flex-col sm:flex-row sm:items-center gap-4'>
+                      <div className='w-20 h-20 rounded-lg bg-gray-100 overflow-hidden flex items-center justify-center'>
+                        {viewStats?.metrics?.mostSoldItem?.image ? (
+                          <img src={viewStats?.metrics?.mostSoldItem?.image} alt={viewStats?.metrics?.mostSoldItem?.name || 'Most sold'} className='w-full h-full object-cover' />
+                        ) : (
+                          <span className='text-xs text-gray-400'>No image</span>
+                        )}
+                      </div>
+                      <div>
+                        <p className='text-lg font-semibold text-ss-dark-gray'>
+                          {viewStats?.metrics?.mostSoldItem?.name || 'No item yet'}
+                        </p>
+                        <p className='text-sm text-gray-500'>
+                          {viewStats?.metrics?.mostSoldItem?.quantity || 0} sold
+                        </p>
+                        <p className='text-sm text-gray-700 mt-1'>
+                          {formatCurrency(viewStats?.metrics?.mostSoldItem?.salesValue)} total sales
+                        </p>
+                      </div>
                     </div>
                   </div>
                   
-                  <div className='space-y-3'>
-                    {viewStats?.metrics?.soldItems?.length > 0 ? (
-                      viewStats.metrics.soldItems.map((item, index) => (
-                        <div key={index} className='flex items-center justify-between text-sm text-gray-600'>
-                          <div className='flex items-center gap-x-3'>
-                            <div className='w-10 h-10 rounded-lg bg-gray-100 overflow-hidden flex items-center justify-center'>
-                              {item?.image ? (
-                                <img src={item.image} alt={item?.name} className='w-full h-full object-cover' />
-                              ) : (
-                                <span className='text-[10px] text-gray-400'>No image</span>
-                              )}
+                  <div className='bg-white rounded-lg border border-gray-100 p-4 sm:p-6'>
+                    <div className='flex items-center justify-between mb-4'>
+                      <div>
+                        <h2 className='text-lg font-semibold text-ss-dark-gray'>Sold items</h2>
+                        <p className='text-sm text-gray-500'>Latest items that recorded sales.</p>
+                      </div>
+                    </div>
+                    
+                    <div className='space-y-3'>
+                      {viewStats?.metrics?.soldItems?.length > 0 ? (
+                        viewStats.metrics.soldItems.map((item, index) => (
+                          <div key={index} className='flex items-center justify-between text-sm text-gray-600'>
+                            <div className='flex items-center gap-x-3'>
+                              <div className='w-10 h-10 rounded-lg bg-gray-100 overflow-hidden flex items-center justify-center'>
+                                {item?.image ? (
+                                  <img src={item.image} alt={item?.name} className='w-full h-full object-cover' />
+                                ) : (
+                                  <span className='text-[10px] text-gray-400'>No image</span>
+                                )}
+                              </div>
+                              <div>
+                                <p className='text-gray-700 font-medium'>{item?.name || 'Unnamed item'}</p>
+                                <p className='text-xs text-gray-400'>{item?.quantity || 0} sold</p>
+                              </div>
                             </div>
-                            <div>
-                              <p className='text-gray-700 font-medium'>{item?.name || 'Unnamed item'}</p>
-                              <p className='text-xs text-gray-400'>{item?.quantity || 0} sold</p>
-                            </div>
+                            <span className='font-medium text-gray-700'>{formatCurrency(item?.salesValue)}</span>
                           </div>
-                          <span className='font-medium text-gray-700'>{formatCurrency(item?.salesValue)}</span>
-                        </div>
-                      ))
-                    ) : (
-                      <div className='py-6 text-center text-sm text-gray-400'>No items sold yet.</div>
-                    )}
+                        ))
+                      ) : (
+                        <div className='py-6 text-center text-sm text-gray-400'>No items sold yet.</div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          }
-        </div>
-    </AppLayout>
+            }
+          </div>
+      </AppLayout>
+
+      <ModalDialog
+        shown={showSetupReminder} 
+        closeFunction={()=>{
+          setShowSetupReminder(false)
+          localStorage.setItem('hideSetupReminder', 'yes')
+        }} 
+        dialogTitle='Complete your business setup'
+        // dialogIntro={`Create a category for store or sale items`}
+        maxWidthClass='max-w-lg'
+      >   
+        <AccountSetupReminder />
+      </ModalDialog>
+    </>
   )
 }
 

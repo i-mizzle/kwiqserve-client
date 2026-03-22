@@ -10,7 +10,7 @@ import FormButton from './form/FormButton'
 import InlinePreloader from './InlinePreloader'
 import { Switch } from '@headlessui/react'
 
-const NewReceivingAccount = ({close, reload}) => {
+const NewReceivingAccount = ({close, reload, preferred}) => {
   const [loadingBanks, setLoadingBanks] = useState(true)
   const [banks, setBanks] = useState([])
 
@@ -18,7 +18,7 @@ const NewReceivingAccount = ({close, reload}) => {
   const [selectedBank, setSelectedBank] = useState(null)
   const [accountNumber, setAccountNumber] = useState(null)
   const [validatedAccount, setValidatedAccount] = useState(null)
-  const [preferredForRemittance, setPreferredForRemittance] = useState(false)
+  const [preferredForRemittance, setPreferredForRemittance] = useState(preferred || false)
 
   const [processing, setProcessing] = useState(false)
   const dispatch = useDispatch()

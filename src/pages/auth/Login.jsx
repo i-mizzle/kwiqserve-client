@@ -8,6 +8,8 @@ import { ERROR } from '../../store/types'
 import { baseUrl } from '../../utils'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
+import InlinePreloader from '../../components/elements/InlinePreloader'
+import { fetchStoreSettings } from '../../store/actions/settingsActions'
 
 const Login = () => {
   const [validationErrors, setValidationErrors] = useState({})
@@ -19,6 +21,7 @@ const Login = () => {
   const [ searchParams, setSearchParams ] = useSearchParams();
   const dispatch = useDispatch()
   const [storeError, setStoreError] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if(searchParams.get('expiredToken') && searchParams.get('expiredToken') === 'true') {
@@ -33,7 +36,11 @@ const Login = () => {
         }
 
         const response = await axios.get(`${baseUrl}/business`, {headers})
+        // if(response.data.data){
         localStorage.setItem("currentBusiness", JSON.stringify(response.data.data));
+
+        setLoading(false)
+
 
         // const subscriptionResponse = await axios.get(`${baseUrl}/current-subscription`, {headers})
         // localStorage.setItem("activeSubscription", JSON.stringify(subscriptionResponse.data.data))
@@ -45,6 +52,7 @@ const Login = () => {
           error
         })
         setStoreError(true)
+        setLoading(false)
       }
     };
   
@@ -90,7 +98,9 @@ const Login = () => {
       setProcessing(true)
 
       const response = await axios.post(`${baseUrl}/auth/sessions`, payload, {headers})
+      localStorage.setItem('hideSetupReminder', 'no')
       const authToken = response.data.data.accessToken
+      dispatch(fetchStoreSettings())
       getUserDetails(authToken)
     } catch (error) {
       setError(error.response.data.message)
@@ -134,10 +144,10 @@ const Login = () => {
         console.error('Error fetching and setting user details:', error);
         // setCreating(false)
         // setError(error.response.data.message)
-        dispatch({
-          type: ERROR,
-          error
-        })
+        // dispatch({
+        //   type: ERROR,
+        //   error
+        // })
         setProcessing(false)
     }
   }
@@ -146,42 +156,60 @@ const Login = () => {
     <section className='h-screen w-full bg-ss-pale-blue/50 flex items-start justify-center'>
       <div className='p-10 rounded-lg bg-white shadow-lg shadow-ss-black/5 mt-10 h-inherit w-[30%]'>
         <Logo />
-        <h3 className='text-xl font-medium mt-5'>Welcome</h3>
-        <p className='text-ss-dark-gray text-sm mt-2'>Please provide your registered credentials below to log in to your business</p>
+        {loading ? 
+          <div className='flex flex-col items-center justify-center p-10'>
+            <InlinePreloader />
+            <p className='text-ss-dark-gray text-sm mt-4'>Loading your business...</p>
+          </div>
+          :
+          <>
+            {storeError ? 
+              <div className='w-full p-10 bg-gray-50'>
+                <h3 className='text-xl font-medium mb-3'>Store Error</h3>
+                <p className='text-sm text-ss-dark-gray'>THee was an error fetching your store. please confirm you have entered the correct store domain in the url or contact support (<a href='mailto:support@kwiqserve.com' className='font-medium'>support@kwiqserve.com</a>) fo assistance.</p>
+              </div>
+            : 
+              <>
+                <h3 className='text-xl font-medium mt-5'>Welcome</h3>
+                <p className='text-ss-dark-gray text-sm mt-2'>Please provide your registered credentials below to log in to your business</p>
 
-        <p className='text-ss-dark-gray text-sm mt-2'>Need to create an account? <Link to={`/signup`} className='font-medium text-sm font-outfit text-blue-600 cursor-pointer inline-block'>Click here to sign up</Link></p>
+                <p className='text-ss-dark-gray text-sm mt-2'>Need to create an account? <Link to={`/signup`} className='font-medium text-sm font-outfit text-blue-600 cursor-pointer inline-block'>Click here to sign up</Link></p>
 
-        <div className='mt-5 w-full pt-5 border-t border-gray-300'>
-          <TextField 
-            requiredField={true}
-            inputLabel="Email or username" 
-            inputPlaceholder="Your registered username or email address"
-            fieldId={`email`} 
-            hasError={validationErrors.username} 
-            returnFieldValue={(value)=>{setAuthPayload({...authPayload, username: value})}}
-            preloadValue="" 
-            disabled={false} 
-          />
-        </div>
+                <div className='mt-5 w-full pt-5 border-t border-gray-300'>
+                  <TextField 
+                    requiredField={true}
+                    inputLabel="Email or username" 
+                    inputPlaceholder="Your registered username or email address"
+                    fieldId={`email`} 
+                    hasError={validationErrors.username} 
+                    returnFieldValue={(value)=>{setAuthPayload({...authPayload, username: value})}}
+                    preloadValue="" 
+                    disabled={false} 
+                  />
+                </div>
 
-        <div className='mt-2 w-full'>
-          <PasswordField
-            requiredField={true}
-            inputLabel="Password" 
-            inputPlaceholder="Your password"
-            fieldId={`password`} 
-            hasError={validationErrors.password} 
-            returnFieldValue={(value)=>{setAuthPayload({...authPayload, password: value})}}
-            preloadValue="" 
-            disabled={false} 
-          />
-        </div>
+                <div className='mt-2 w-full'>
+                  <PasswordField
+                    requiredField={true}
+                    inputLabel="Password" 
+                    inputPlaceholder="Your password"
+                    fieldId={`password`} 
+                    hasError={validationErrors.password} 
+                    returnFieldValue={(value)=>{setAuthPayload({...authPayload, password: value})}}
+                    preloadValue="" 
+                    disabled={false} 
+                  />
+                </div>
 
-        <p className='text-ss-dark-gray text-sm mt-5'>Forgot your password? <Link to={``} className='font-medium text-sm font-outfit text-blue-600 cursor-pointer inline-block'>Click here to create a new one</Link></p>
+                <p className='text-ss-dark-gray text-sm mt-5'>Forgot your password? <Link to={``} className='font-medium text-sm font-outfit text-blue-600 cursor-pointer inline-block'>Click here to create a new one</Link></p>
 
-        <div className='mt-5 w-full'>
-          <FormButton buttonAction={()=>{createSession()}} buttonLabel={`Log in to your business`} processing={processing} />
-        </div>
+                <div className='mt-5 w-full'>
+                  <FormButton buttonAction={()=>{createSession()}} buttonLabel={`Log in to your business`} processing={processing} />
+                </div>
+              </>}
+          </>
+        }
+
       </div>
     </section>
   )

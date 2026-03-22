@@ -15,6 +15,7 @@ import MultipleNewTables from '../../../components/elements/tables/MultipleNewTa
 import SquaresIcon from '../../../components/elements/icons/SquaresIcon';
 import SquaresStackedIcon from '../../../components/elements/icons/SquaresStackedIcon';
 import Pagination from '../../../components/elements/Pagination';
+import AccountSetupReminder from '../../../components/elements/AccountSetupReminder';
 
 const Tables = () => {
     const [page, setPage] = useState(1)
@@ -24,6 +25,8 @@ const Tables = () => {
     const tablesSelector = useSelector(state => state.tables)
     const [refresh, setRefresh] = useState(0)
     const [searched, setSearched] = useState(false)
+    const settingsSelector = useSelector(state => state.settings)
+    
     useEffect(() => {
         setSearched(false)
         dispatch(fetchTables(``, page, perPage))
@@ -40,6 +43,21 @@ const Tables = () => {
 
     const [creatingTable, setCreatingTable] = useState(false)
     const [creatingMultipleTables, setCreatingMultipleTables] = useState(false)
+    const [showSetupReminder, setShowSetupReminder] = useState(false)
+    
+    const toggleNewTables = (type) => {
+        if(!settingsSelector.fetchingSettings && settingsSelector.settings === null) {
+            setShowSetupReminder(true)
+            return
+        }
+
+        if(type === 'single') {
+            setCreatingTable(true)
+        } else {
+            setCreatingMultipleTables(true)
+        }
+
+    }
     return (
         <>
             <AppLayout>
@@ -53,11 +71,11 @@ const Tables = () => {
                                 </div>
                                 <div className='flex flex-row-reverse gap-x-2'>
 
-                                    <button onClick={()=>{setCreatingTable(true)}} className='flex w-max gap-x-2 items-center justify-center mt-5 lg:mt-0 bg-ss-dark-blue border border-ss-dark-blue px-4 py-3 rounded-lg text-white transition duration-200 hover:bg-ss-black cursor-pointer font-[550]'>
+                                    <button onClick={()=>{toggleNewTables('single')}} className='flex w-max gap-x-2 items-center justify-center mt-5 lg:mt-0 bg-ss-dark-blue border border-ss-dark-blue px-4 py-3 rounded-lg text-white transition duration-200 hover:bg-ss-black cursor-pointer font-[550]'>
                                         <PlusIcon className={`h-5 w-5`} />
                                         Create a Table
                                     </button>
-                                    <button onClick={()=>{setCreatingMultipleTables(true)}} className='flex w-max gap-x-2 items-center justify-center mt-5 lg:mt-0 bg-ss-pale-blue border border-ss-dark-blue px-4 py-3 rounded-lg transition duration-200 hover:bg-blue-200 cursor-pointer font-[550] text-ss-dark-blue'>
+                                    <button onClick={()=>{toggleNewTables('multiple')}} className='flex w-max gap-x-2 items-center justify-center mt-5 lg:mt-0 bg-ss-pale-blue border border-ss-dark-blue px-4 py-3 rounded-lg transition duration-200 hover:bg-blue-200 cursor-pointer font-[550] text-ss-dark-blue'>
                                         <SquaresStackedIcon className={`h-5 w-5`} />
                                         Create Multiple Tables
                                     </button>
@@ -157,6 +175,17 @@ const Tables = () => {
                 maxWidthClass='max-w-lg'
             >   
                 <MultipleNewTables />
+            </ModalDialog>
+
+            <ModalDialog
+                shown={showSetupReminder} 
+                closeFunction={()=>{
+                    setShowSetupReminder(false)
+                }} 
+                dialogTitle='Complete your business setup'
+                maxWidthClass='max-w-lg'
+            >   
+                <AccountSetupReminder />
             </ModalDialog>
         </>
     )

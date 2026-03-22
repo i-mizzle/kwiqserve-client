@@ -53,7 +53,7 @@ const Payments = () => {
     const usersState = useSelector((state => state.users))
     const ordersState = useSelector((state => state.orders))
 
-    const [filters, setFilters] = useState('');
+    const [filters, setFilters] = useState('status=successful');
 
     useEffect(() => {
         dispatch(fetchUsers())

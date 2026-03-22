@@ -10,10 +10,13 @@ import FormButton from '../../../components/elements/form/FormButton'
 import AutocompleteSelect from '../../../components/elements/form/AutocompleteSelect'
 import SelectField from '../../../components/elements/form/SelectField'
 import { useDispatch } from 'react-redux'
-import { ERROR } from '../../../store/types'
+import { ERROR, SET_SUCCESS } from '../../../store/types'
 import RadioGroup from '../../../components/elements/form/RadioGroup'
 import EmptyState from '../../../components/elements/EmptyState'
 import NewPosDevice from '../../../components/elements/NewPosDevice'
+import { useSearchParams } from 'react-router-dom'
+import TrashIcon from '../../../components/elements/icons/TrashIcon'
+import ConfirmationBox from '../../../components/Layouts/ConfirmationBox'
 
 const BusinessSettings = () => {
   const [loading, setLoading] = useState(true)
@@ -22,6 +25,7 @@ const BusinessSettings = () => {
   const dispatch = useDispatch()
   const [businessSettings, setBusinessSettings] = useState(null)
   const [reload, setReload] = useState(0)
+  const [searchParams, setSearchParams] = useSearchParams()
   useEffect(() => {
     const fetchBusinessDetails = async () => {
       try {
@@ -77,13 +81,105 @@ const BusinessSettings = () => {
       description: 'Payments made to your business through this platform will be sent to your preferred remittance account number on the next working day.'
     },
     {
-      label: 'Instant Settlement',
+      label: 'Instant Settlement (unavailable)',
       value: 'instant',
       description: 'Every payment made to your business through this platform will be settled to your preferred remittance account instantly. (Coming soon)'
     },
   ]
 
   const [addingDevice, setAddingDevice] = useState(false)
+  const [newAccountPreferredForRemittance, setNewAccountPreferredForRemittance] = useState(false)
+  
+  useEffect(() => {
+    const shouldAddRemittance = searchParams.get('addRemittance') === 'true'
+    const shouldAddPOS = searchParams.get('addPOS') === 'true'
+
+    if (shouldAddRemittance) {
+      setCreatingAccount(true)
+      setNewAccountPreferredForRemittance(true)
+    }
+
+    if (shouldAddPOS) {
+      setAddingDevice(true)
+    }
+  }, [searchParams])
+
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [accountForDeletion, setAccountForDeletion] = useState(null)
+  const [deleteAccountConfirmationMessage, setDeleteAccountConfirmationMessage] = useState(null)
+
+  const doDeleteAccount = async (account) => {
+      setDeleteAccountConfirmationMessage(`You are about to delete the account selected ${account.account.accountName} (${account.account.accountNumber} - ${account.account.bankName}). This action cannot be reversed. Please confirm.`)
+      setAccountForDeletion(account._id)
+      setTimeout(() => {
+          setShowDeleteConfirmation(true)
+      }, 100);
+  }
+
+  const deleteAccount = async () => {
+    if(!accountForDeletion){
+      return
+    }
+    try {
+      const headers = authHeader()
+
+      await axios.delete(`${baseUrl}/settings/receiving-accounts/${accountForDeletion}`, {headers})
+      dispatch({
+        type: SET_SUCCESS,
+        payload: "Receiving account deleted successfully"
+      })
+      setReload(reload+1)
+      setShowDeleteConfirmation(false)
+      setDeleteAccountConfirmationMessage(null)
+      setTimeout(() => {
+        setAccountForDeletion(null)
+      }, 100);
+    } catch (error) {
+      console.log('error deleting account: ', error)
+      dispatch({
+        type: ERROR,
+        error
+      })
+    }
+  }
+
+  const [deviceForDeletion, setDeviceForDeletion] = useState(null)
+  const [deleteDeviceConfirmationMessage, setDeleteDeviceConfirmationMessage] = useState(null)
+
+  const doDeleteDevice = async (device) => {
+      setDeleteDeviceConfirmationMessage(`You are about to delete the POS device ${device.deviceName}. This action cannot be reversed. Please confirm.`)
+      setDeviceForDeletion(device._id)
+      setTimeout(() => {
+        setShowDeleteConfirmation(true)
+      }, 100);
+  }
+
+  const deletePosDevice = async () => {
+    console.log('device for deletion: ', deviceForDeletion)
+    if(!deviceForDeletion){
+      return
+    }
+    try {
+      const headers = authHeader()
+      await axios.delete(`${baseUrl}/settings/pos-devices/${deviceForDeletion}`, {headers})
+      dispatch({
+        type: SET_SUCCESS,
+        payload: "POS device deleted successfully"
+      })
+      setReload(reload+1)
+      setDeleteDeviceConfirmationMessage(null)
+      setShowDeleteConfirmation(false)
+      setTimeout(() => {
+        setDeviceForDeletion(null)
+      }, 100);
+    } catch (error) {
+      console.log('error deleting device: ', error)
+      dispatch({
+        type: ERROR,
+        error
+      })
+    }
+  }
 
   return (
     <>
@@ -245,13 +341,21 @@ const BusinessSettings = () => {
               
                 <div className='grid grid-cols-2 gap-3'>
                   {businessSettings?.receivingAccounts?.map((account, accountIndex) => (
-                    <div key={accountIndex} className='relative p-5 rounded bg-gray-50'>
+                    <div key={accountIndex} className='relative rounded bg-gray-50'>
                       {account.preferredForRemittance && <span className='text-xs absolute top-3 right-3 text-green-600 bg-green-600/10 rounded px-2 py-1'>Remittance Account</span>}
-                      <h3 className='font-semibold text-ss-black text-lg mb-2 capitalize'>{account.account.accountName.toLowerCase()}</h3>
-                      <div className='flex items-center gap-x-1'>
-                        <p className='text-sm text-gray-600'>{account.account.accountNumber}</p>
-                        <span className='w-1 h-1 rounded-full bg-ss-dark-gray' />
-                        <p className='text-sm text-gray-600'>{account.account.bankName}</p>
+                      <div className='p-5 border-b border-ss-light-gray'>
+                        <h3 className='font-semibold text-ss-black text-lg mb-2 capitalize'>{account.account.accountName.toLowerCase()}</h3>
+                        <div className='flex items-center gap-x-1'>
+                          <p className='text-sm text-gray-600'>{account.account.accountNumber}</p>
+                          <span className='w-1 h-1 rounded-full bg-ss-dark-gray' />
+                          <p className='text-sm text-gray-600'>{account.account.bankName}</p>
+                        </div>
+                      </div>
+                      <div className='px-3 py-3 flex flex-row-reverse'>
+                        <button onClick={()=>{doDeleteAccount(account)}} className='font-medium cursor-pointer transition duration-200 text-gray-500 hover:text-red-600 hover:bg-red-50 flex items-center gap-x-2 px-2 py-1 rounded text-xs'>
+                          <TrashIcon className={`w-4 h-4`} />
+                          Delete Account
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -280,13 +384,21 @@ const BusinessSettings = () => {
               
                 <div className='grid grid-cols-2 gap-3'>
                   {businessSettings?.posDevices?.map((device, deviceIndex) => (
-                    <div key={deviceIndex} className='relative p-5 rounded bg-gray-50'>
+                    <div key={deviceIndex} className='relative rounded bg-gray-50'>
                       {/* {account.preferredForRemittance && <span className='text-xs absolute top-3 right-3 text-green-600 bg-green-600/10 rounded px-2 py-1'>Remittance Account</span>} */}
-                      <h3 className='font-semibold text-ss-black text-lg mb-2 capitalize'>{device.deviceName}</h3>
-                      <div className='flex items-center gap-x-1'>
-                        <p className='text-sm text-gray-600'>{device.provider}</p>
-                        <span className='w-1 h-1 rounded-full bg-ss-dark-gray' />
-                        <p className='text-sm text-gray-600'>{device.serialNumber}</p>
+                      <div className='p-5 border-b border-ss-light-gray'>
+                        <h3 className='font-semibold text-ss-black text-lg mb-2 capitalize'>{device.deviceName}</h3>
+                        <div className='flex items-center gap-x-1'>
+                          <p className='text-sm text-gray-600'>{device.provider}</p>
+                          <span className='w-1 h-1 rounded-full bg-ss-dark-gray' />
+                          <p className='text-sm text-gray-600'>{device.serialNumber}</p>
+                        </div>
+                      </div>
+                      <div className='px-3 py-3 flex flex-row-reverse'>
+                        <button onClick={()=>{doDeleteDevice(device)}} className='font-medium cursor-pointer transition duration-200 text-gray-500 hover:text-red-600 hover:bg-red-50 flex items-center gap-x-2 px-2 py-1 rounded text-xs'>
+                          <TrashIcon className={`w-4 h-4`} />
+                          Delete Device
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -305,23 +417,50 @@ const BusinessSettings = () => {
 
       <ModalDialog
         shown={creatingAccount} 
-        closeFunction={()=>{setCreatingAccount(false)}} 
+        closeFunction={()=>{
+          setCreatingAccount(false)
+          setNewAccountPreferredForRemittance(false)
+          setSearchParams({})
+        }} 
         dialogTitle='Create a New Receiving Account'
         // dialogIntro={`Create a category for store or sale items`}
         maxWidthClass='max-w-lg'
       >
-        <NewReceivingAccount close={()=>{setCreatingAccount(false)}} reload={()=>{setReload(reload+1)}} />
+        <NewReceivingAccount 
+          close={()=>{setCreatingAccount(false)}} 
+          reload={()=>{setReload(reload+1)}} 
+          preferred={newAccountPreferredForRemittance}
+        />
       </ModalDialog>
+
+      {deleteAccountConfirmationMessage && <ConfirmationBox
+        isOpen={showDeleteConfirmation} 
+        closeModal={()=>{setShowDeleteConfirmation(false)}} 
+        confirmButtonAction={()=>{deleteAccount()}}                          
+      >
+          <p>{deleteAccountConfirmationMessage}</p>
+      </ConfirmationBox>}
 
       <ModalDialog
         shown={addingDevice} 
-        closeFunction={()=>{setAddingDevice(false)}} 
+        closeFunction={()=>{
+          setAddingDevice(false)
+          setSearchParams({})
+        }} 
         dialogTitle='Add a New POS Device'
         // dialogIntro={`Create a category for store or sale items`}
         maxWidthClass='max-w-lg'
       >
         <NewPosDevice close={()=>{setAddingDevice(false)}} reload={()=>{setReload(reload+1)}} />
       </ModalDialog>
+
+      {deleteDeviceConfirmationMessage && <ConfirmationBox
+        isOpen={showDeleteConfirmation} 
+        closeModal={()=>{setShowDeleteConfirmation(false)}} 
+        confirmButtonAction={()=>{deletePosDevice()}}                          
+      >
+          <p>{deleteDeviceConfirmationMessage}</p>
+      </ConfirmationBox>}
     </>
   )
 }

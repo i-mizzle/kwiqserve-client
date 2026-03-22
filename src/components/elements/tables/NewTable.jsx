@@ -6,6 +6,8 @@ import { fetchMenus } from '../../../store/actions/menusActions'
 import InlinePreloader from '../InlinePreloader'
 import { ERROR } from '../../../store/types'
 import { createTable } from '../../../store/actions/tablesActions'
+import { Link } from 'react-router-dom'
+import ArrowNarrowRight from '../icons/ArrowNarrowRight'
 
 const NewTable = ({close}) => {
     const tablesSelector = useSelector(state => state.tables)
@@ -119,9 +121,13 @@ const NewTable = ({close}) => {
                             setTablePayload({...tablePayload, menu: value._id});
                         }}
                     /> :
-                        <div className='my-2 bg-gray-50 p-5 rounded'>
+                        <div className='my-4 bg-red-50/50 border border-red-600/20 p-4 rounded'>
                             <p className='font-[550] text-ss-dark-gray font-family-bricolage-grotesque text-sm mb-1'>No Menus Found</p>
-                            <p className='text-xs text-gray-500'>Please create a menu to add it to a table. Navigate to "Menus" in the header above and click on "Create new menu" to get started.</p>
+                            <p className='text-[13px] text-ss-black'>Please create a menu to add it to a table. Navigate to "Menus" in the header above (or use the shortcut below) and click on "Create new menu" to get started.</p>
+                            <Link to={`/business/menus/new-menu`} className='flex items-center mt-1 gap-x-2 text-sm font-medium text-blue-700'>
+                                Create a menu
+                                <ArrowNarrowRight className={`w-5 h-5`} />
+                            </Link>
                         </div>
                     }
                 </>

@@ -51,10 +51,10 @@ export const fetchStoreSettings = () => async (dispatch) => {
     }
     catch(error){
         console.log(error)
-        dispatch({
-            type: SETTINGS_ERROR,
-            error
-        })
+        // dispatch({
+        //     type: SETTINGS_ERROR,
+        //     error
+        // })
     }
 }
 
