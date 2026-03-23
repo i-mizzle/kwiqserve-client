@@ -251,7 +251,7 @@ const Dashboard = () => {
                     </div>
                     
                     <div className='space-y-4'>
-                      {summaryData?.map((item, index) => (
+                      {summaryData?.reverse()?.map((item, index) => (
                         <div key={index} className='flex flex-col gap-y-2'>
                           <div className='flex flex-wrap items-center justify-between gap-3 text-sm text-gray-600'>
                             <span>{item.day || item.week || item.month}</span>

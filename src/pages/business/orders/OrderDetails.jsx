@@ -162,12 +162,7 @@ const OrderDetails = () => {
             dispatch(fetchOrders('', 1, 50))
         }
 
-        if ((printing || billPrinting) && promiseResolveRef.current) {
-            console.log("DOM ready. Resolving promise...");
-            promiseResolveRef.current();
-        }
-
-    }, [refresh, ordersState.createdOrder, ordersState.updatedOrder, ordersState.deletedOrder, orderId, dispatch, navigate, printing, billPrinting]);
+    }, [refresh, ordersState.createdOrder, ordersState.updatedOrder, ordersState.deletedOrder, orderId, dispatch, navigate]);
 
     const order = {
         alias: "",
@@ -386,7 +381,7 @@ const OrderDetails = () => {
     }
 
     const componentRef = useRef()
-    const promiseResolveRef = useRef();
+    const PRINT_PREP_DELAY_MS = 80;
 
     // const handlePrint = useReactToPrint({
     //     content: () => componentRef.current,
@@ -406,25 +401,21 @@ const OrderDetails = () => {
     // });
 
     const handlePrint = useReactToPrint({
-        content: () => componentRef.current,
+        contentRef: componentRef,
         bodyClass: 'print-class',
-        documentTitle: `${businessDetails()} RECEIPT`,
+        documentTitle: `${store?.name || 'STORE'} RECEIPT`,
         removeAfterPrint: true,
-        onBeforePrint: () => {
-            return new Promise((resolve) => {
-                console.log("Preparing to print receipt...");
-                promiseResolveRef.current = resolve;
-                setPrinting(true);
-            });
-        },
         onAfterPrint: () => {
             console.log("Printing completed.");
-            promiseResolveRef.current = null;
             setPrinting(false);
             setPaymentModalOpen(false);
             setRefresh(refresh + 1);
             setActiveMenu(null);
             setNewOrderDetails(order);
+        },
+        onPrintError: (errorLocation, error) => {
+            console.error(`Receipt print failed at ${errorLocation}:`, error);
+            setPrinting(false);
         },
     });
 
@@ -446,46 +437,36 @@ const OrderDetails = () => {
         //     setActiveItems(activeMenu.items)
         // }
 
-        content: () => componentRef.current,
+        contentRef: componentRef,
         bodyClass: 'print-class',
-        documentTitle: <span className='uppercase'>`{store?.name} BILL`</span>,
+        documentTitle: `${store?.name || 'STORE'} BILL`,
         removeAfterPrint: true,
-        onBeforePrint: () => {
-            return new Promise((resolve) => {
-                console.log("Preparing to print bill...");
-                promiseResolveRef.current = resolve;
-                setBillPrinting(true);
-            });
-        },
         onAfterPrint: () => {
             console.log("Printing completed.");
-            promiseResolveRef.current = null;
             setBillPrinting(false)
             setActiveItems(activeMenu.items)
+        },
+        onPrintError: (errorLocation, error) => {
+            console.error(`Bill print failed at ${errorLocation}:`, error);
+            setBillPrinting(false)
         },
     });
 
     const printReceipt = () => {
-        if (componentRef.current) {
-            setPrinting(true);
-            setTimeout(() => {
-                handlePrint();
-            }, 1000);
-        } else {
-            console.error("Nothing to print. componentRef is null.");
-        }
+        console.log("Preparing to print receipt...");
+        setPrinting(true);
+        setTimeout(() => {
+            handlePrint();
+        }, PRINT_PREP_DELAY_MS);
     }
    
     const printBill = async () => {
         await parkOrder(`Printed bill - ${(new Date()).getTime()}`, true)
-        if (componentRef.current) {
-            setPrinting(true);
-            setTimeout(() => {
-                handleBillPrint();
-            }, 1000);
-        } else {
-            console.error("Nothing to print. componentRef is null.");
-        }
+        console.log("Preparing to print bill...");
+        setBillPrinting(true);
+        setTimeout(() => {
+            handleBillPrint();
+        }, PRINT_PREP_DELAY_MS);
     }
 
     const [searching] = useState(false);
@@ -568,6 +549,7 @@ const OrderDetails = () => {
                                     <p className='font-medium text-gray-700 border-b w-full pb-2 mb-2 text-sm'>Table</p>
 
                                     <h3 className='text-lg mb-1'>{newOrderDetails?.table?.name}</h3>
+                                    <p className='text-[11px] mb-2 tracking-[0.5em] uppercase text-gray-600'>{newOrderDetails?.table?.code}</p>
                                     <p className='text-sm text-gray-600'>{newOrderDetails?.table?.description}</p>
                                     
                                 </div>
@@ -686,11 +668,11 @@ const OrderDetails = () => {
                         </div>
                     </div>
 
-                    {(printing || billPrinting) && <div className='' ref={componentRef}>
+                    <div className='p-3' ref={componentRef} style={{ display: printing || billPrinting ? 'block' : 'none' }}>
                         <div style={{marginBottom: '10px', fontFamily: 'Outfit, sans-serif'}}>
                         
                             <div>
-                                <h3 style={{fontSize: '12px', lineHeight: '12px', marginBottom: '1px', fontWeight: 500}}>Elevana - {store?.name}</h3>
+                                <h3 style={{fontSize: '12px', lineHeight: '12px', marginBottom: '1px', fontWeight: 500}}>Kwiqserve - {store?.name}</h3>
                                 <p style={{fontSize: '8px', marginBottom: '10px'}}>
                                 {store?.address}, {store?.city}, {store?.state}.
                                 </p>
@@ -727,7 +709,7 @@ const OrderDetails = () => {
                         {/* <h3 className='text-[10px] text-black'><span className='text-sm'>₦</span>{orderTotal(newOrderDetails, settingsState.settings).total.toLocaleString()}</h3> */}
                         {printing && <p style={{fontSize: '8px', marginBottom: '10px'}}>Thanks for your patronage</p>}
 
-                    </div>}
+                    </div>
                 </div>
             }
             </AppLayout>

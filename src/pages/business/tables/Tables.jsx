@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import AppLayout from '../../../components/Layouts/AppLayout'
-import { clearCreatedTable, fetchTables } from '../../../store/actions/tablesActions';
+import { clearCreatedTable, clearDeletedTable, deleteTable, fetchTables } from '../../../store/actions/tablesActions';
 import { useDispatch, useSelector } from 'react-redux';
 import SearchField from '../../../components/elements/SearchField';
 import PlusIcon from '../../../components/elements/icons/PlusIcon';
@@ -16,6 +16,8 @@ import SquaresIcon from '../../../components/elements/icons/SquaresIcon';
 import SquaresStackedIcon from '../../../components/elements/icons/SquaresStackedIcon';
 import Pagination from '../../../components/elements/Pagination';
 import AccountSetupReminder from '../../../components/elements/AccountSetupReminder';
+import { fetchStoreSettings } from '../../../store/actions/settingsActions';
+import ConfirmationBox from '../../../components/Layouts/ConfirmationBox';
 
 const Tables = () => {
     const [page, setPage] = useState(1)
@@ -29,6 +31,7 @@ const Tables = () => {
     
     useEffect(() => {
         setSearched(false)
+        dispatch(fetchStoreSettings())
         dispatch(fetchTables(``, page, perPage))
         
         if(tablesSelector.createdTable && tablesSelector.createdTable !== null) {
@@ -36,17 +39,34 @@ const Tables = () => {
             setCreatingMultipleTables(false)
             dispatch(clearCreatedTable())
         }
+
+        if(tablesSelector.deletedTable && tablesSelector.deletedTable !== null) {
+            dispatch(clearDeletedTable())
+            setShowDeleteConfirmation(false)
+            setTimeout(() => {
+                setTableToDelete(null)
+                setTableDeleteConfirmationMessage(null)
+            }, 100);
+        }
         return () => {
             
         };
-    }, [dispatch, refresh, page, perPage, tablesSelector.createdTable]);
+    }, [dispatch, refresh, page, perPage, tablesSelector.createdTable, tablesSelector.deletedTable]);
 
     const [creatingTable, setCreatingTable] = useState(false)
     const [creatingMultipleTables, setCreatingMultipleTables] = useState(false)
     const [showSetupReminder, setShowSetupReminder] = useState(false)
     
     const toggleNewTables = (type) => {
-        if(!settingsSelector.fetchingSettings && settingsSelector.settings === null) {
+        if (settingsSelector.fetchingSettings) {
+            return
+        }
+
+        const hasReceivingAccounts = Array.isArray(settingsSelector.settings?.receivingAccounts) && settingsSelector.settings.receivingAccounts.length > 0
+        const hasPosDevices = Array.isArray(settingsSelector.settings?.posDevices) && settingsSelector.settings.posDevices.length > 0
+        const setupIncomplete = !settingsSelector.settings || !hasReceivingAccounts || !hasPosDevices
+
+        if (setupIncomplete) {
             setShowSetupReminder(true)
             return
         }
@@ -58,6 +78,18 @@ const Tables = () => {
         }
 
     }
+
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+    const [tableToDelete, setTableToDelete] = useState(null)
+    const [tableDeleteConfirmationMessage, setTableDeleteConfirmationMessage] = useState(null)
+    const doDeleteTable = async (table) => {
+      setTableDeleteConfirmationMessage(`You are about to delete the table, ${table.name} (${table.code}) from your business. This action cannot be reversed. Please confirm.`)
+      setTableToDelete(table._id)
+      setTimeout(() => {
+        setShowDeleteConfirmation(true)
+      }, 100);
+    }
+
     return (
         <>
             <AppLayout>
@@ -117,7 +149,7 @@ const Tables = () => {
                                                     <ArrowNarrowRight className={`w-4 h-4`} />
                                                 </Link>
 
-                                                <button className='p-1 bg-transparent rounded hover:bg-red-500/10 text-ss-dark-gray hover:text-red-600 transition duration-200 cursor-pointer'>
+                                                <button onClick={()=>{doDeleteTable(table)}} className='p-1 bg-transparent rounded hover:bg-red-500/10 text-ss-dark-gray hover:text-red-600 transition duration-200 cursor-pointer'>
                                                     <TrashIcon className={`w-4.5 h-4.5`} />
                                                 </button>
                                             </div>
@@ -164,7 +196,7 @@ const Tables = () => {
                 // dialogIntro={`Create a category for store or sale items`}
                 maxWidthClass='max-w-lg'
             >   
-                <NewTable />
+                <NewTable close={()=>setCreatingTable(false)} />
             </ModalDialog>
 
              <ModalDialog
@@ -174,7 +206,7 @@ const Tables = () => {
                 // dialogIntro={`Create a category for store or sale items`}
                 maxWidthClass='max-w-lg'
             >   
-                <MultipleNewTables />
+                <MultipleNewTables close={()=>setCreatingTable(false)} />
             </ModalDialog>
 
             <ModalDialog
@@ -187,6 +219,14 @@ const Tables = () => {
             >   
                 <AccountSetupReminder />
             </ModalDialog>
+
+            {tableDeleteConfirmationMessage && <ConfirmationBox
+                isOpen={showDeleteConfirmation} 
+                closeModal={()=>{setShowDeleteConfirmation(false)}} 
+                confirmButtonAction={()=>{dispatch(deleteTable(tableToDelete))}}                          
+            >
+                <p>{tableDeleteConfirmationMessage}</p>
+            </ConfirmationBox>}
         </>
     )
 }

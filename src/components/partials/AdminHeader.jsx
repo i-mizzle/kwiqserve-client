@@ -36,7 +36,9 @@ const AdminHeader = ({businessDetails}) => {
 
   return (
     <header className='lg:px-12 xl:px-32 flex items-center justify-between py-2 bg-gray-50'>
-        <Logo />
+        <Link to={`/business/dashboard`}>
+          <Logo />
+        </Link>
 
         <div className='w-full px-8 flex items-center gap-x-5'>
           <Link to={`/business/dashboard`} className={`${getLinkClassName('/business/dashboard')} flex items-center justify-center gap-x-2`}>

@@ -41,6 +41,7 @@ export default function(state = initialState, action){
             ...state,
             updatingSettings: false,
             fetchingSettings: false,
+            settings: null,
             settingsError: action.payload 
         }
         default: return state
