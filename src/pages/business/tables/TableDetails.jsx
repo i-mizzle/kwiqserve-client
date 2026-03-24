@@ -16,10 +16,13 @@ import OrderSummary from '../../../components/elements/orders/OrderSummary'
 import OrderStatus from '../../../components/elements/orders/OrderStatus'
 import OrderPaymentStatus from '../../../components/elements/orders/OrderPaymentStatus'
 import EmptyState from '../../../components/elements/EmptyState'
+import ClipboardIcon from '../../../components/elements/icons/ClipboardIcon'
+import ClipboardDocumentCheckIcon from '../../../components/elements/icons/ClipboardDocumentCheckIcon'
 
 const TableDetails = () => {
   const [tableDetails, setTableDetails] = useState({})
   const [loading, setLoading] = useState(true)
+  const [urlCopied, setUrlCopied] = useState(false)
 
   const dispatch = useDispatch()
   const ordersSelector = useSelector(state => state.orders)
@@ -130,6 +133,39 @@ const TableDetails = () => {
     clickableRows: true,
     rowAction: (value)=>{toggleRowOpen(value)}
   }
+
+  const handleCopyTableUrl = async () => {
+    if (!tableDetails.tableUrl) return
+
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(tableDetails.tableUrl)
+      } else {
+        const textArea = document.createElement('textarea')
+        textArea.value = tableDetails.tableUrl
+        textArea.setAttribute('readonly', '')
+        textArea.style.position = 'fixed'
+        textArea.style.top = '-9999px'
+        document.body.appendChild(textArea)
+        textArea.focus()
+        textArea.select()
+
+        const copied = document.execCommand('copy')
+        document.body.removeChild(textArea)
+
+        if (!copied) {
+          throw new Error('Fallback copy failed')
+        }
+      }
+
+      setUrlCopied(true)
+      setTimeout(() => {
+        setUrlCopied(false)
+      }, 2000)
+    } catch (error) {
+      console.error('Error copying table URL:', error)
+    }
+  }
   
   
   return (
@@ -227,8 +263,32 @@ const TableDetails = () => {
 
             </div>
             <div className='w-full xl:w-3/12 p-5 border-2 rounded border-gray-200 xl:sticky top-10 z-1'>
+              <h3 className='uppercase tracking-[0.5em] text-xs mb-1'>table url</h3>
+              <div className='mb-5'>
+                <p className='text-sm text-green-600 break-all whitespace-normal'>{tableDetails.tableUrl}</p>
+                <button
+                  type='button'
+                  onClick={handleCopyTableUrl}
+                  className='mt-2 inline-flex items-center cursor-pointer gap-x-1.5 text-xs text-ss-dark-blue hover:text-ss-black transition duration-200'
+                  disabled={!tableDetails.tableUrl}
+                >
+                  {urlCopied ? (
+                    <>
+                      <ClipboardDocumentCheckIcon className='w-4 h-4' />
+                      Copied
+                    </>
+                  ) : (
+                    <>
+                      <ClipboardIcon className='w-4 h-4' />
+                      Copy URL
+                    </>
+                  )}
+                </button>
+              </div>
+              
               <h3 className='uppercase tracking-[0.5em] text-xs mb-2'>table qr code</h3>
               <p className='text-sm text-gray-500'>You can download ths qr code, print and place it around your physical store for your customers to scan and immediately access your price cards</p>
+
               {tableDetails.tableQrCode && tableDetails.tableQrCode !== '' ? 
               <div className='w-full my-5'>
                   <img alt='' src={tableDetails.tableQrCode} className='max-w-full mx-auto w-full'/>
