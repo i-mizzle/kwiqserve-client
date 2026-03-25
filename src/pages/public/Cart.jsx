@@ -335,11 +335,12 @@ const Cart = () => {
                           <TextField
                             inputType="text" 
                             fieldId={`name`}
-                            inputLabel="Full name" 
-                            inputPlaceholder={`Your full name`}
+                            inputLabel="Name" 
+                            inputPlaceholder={`Your name`}
                             preloadValue={''}
                             hasError={validationErrors?.name} 
                             returnFieldValue={(value)=>{setUserDetails({...userDetails, ...{name: value}})}}
+                            helperText={`How our servers can refer to you`}
                           />
                         </div>
                       </div>
@@ -525,7 +526,12 @@ const Cart = () => {
                       {/* <span className='text-[14px]'>({cartState?.order?.vat.toLocaleString()} VAT)</span> */}
                     </p>
                   </div>
-                  <Link to={`/tables/${tableId}`} className='bg-ss-dark-blue rounded-lg text-ss-pale-blue mt-8 p-5 text-center font-semibold font-syne block w-full'>Return to table menu</Link>
+                  <Link to={`/customer-order/${cartState?.order?.orderRef}`} className='flex items-center justify-center mt-4 gap-x-2 mx-auto p-3 rounded border border-ss-dark-blue/50 bg-ss-pale-blue/50 text-ss-dark-blue text-sm font-semibold transition duration-200'>
+                      See Order Details
+                      <ArrowIcon className={`w-4 h-4`} />
+                  </Link>
+
+                  <Link to={`/tables/${tableId}`} className='bg-ss-dark-blue rounded-lg text-ss-pale-blue mt-8 p-3 text-center font-semibold block w-full'>Return to table menu</Link>
                 </div>
               </div>
             </div>

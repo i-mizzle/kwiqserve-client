@@ -71,9 +71,9 @@ const ReceivePayment = ({storeSettings, paymentAmount, closeTransaction, receive
                         setSelectedChannel(value.value)}}
                 />
             </div>
-            {selectedChannel === 'pos' && <div className="my-2">
+            {selectedChannel === 'pos' && storeSettings?.posDevices?.length > 0 &&  <div className="my-2">
                 <SelectField
-                    selectOptions={storeSettings?.posDevices?.devices}
+                    selectOptions={storeSettings?.posDevices}
                     inputLabel="Select POS device"
                     titleField="deviceName"
                     displayImage={false}
@@ -84,6 +84,9 @@ const ReceivePayment = ({storeSettings, paymentAmount, closeTransaction, receive
                     hasError={channelError}
                     returnFieldValue={(value) => {setSelectedPosDevice(value)}}
                 />
+            </div>}
+            {selectedChannel === 'pos' && storeSettings?.posDevices?.length === 0 &&  <div className="my-2 p-3 bg-red-50 border border-red-400 rounded">
+                <p className='text-xs text-red-600'>You do not have any POS devices registered. Please navigate to business settings and register a POS device to collect payments using POS.</p>
             </div>}
             {selectedChannel === 'transfer' && <div className="my-2">
                 {storeSettings?.receivingAccounts?.map((account, accountIndex) => (

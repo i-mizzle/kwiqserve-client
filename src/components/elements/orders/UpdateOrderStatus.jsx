@@ -69,7 +69,7 @@ const UpdateOrderStatus = ({orderId, cancel, currentStatus}) => {
 
             <button
                 type="button"
-                className="inline-flex justify-center px-4 py-3 text-xs font-medium bg-transparent border border-transparent rounded hover:bg-opacity-50 hover:bg-mms-red hover:text-white focus:outline-none"
+                className="inline-flex justify-center cursor-pointer px-4 py-3 text-xs font-medium bg-transparent border border-transparent rounded hover:bg-opacity-50 hover:bg-mms-red hover:text-ss-dark-gray focus:outline-none"
                 onClick={cancel}
             >
                 Close

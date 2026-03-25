@@ -147,8 +147,9 @@ const OrderDetails = () => {
                 payload: 'Order updated successfully!'
             })
             dispatch(clearUpdatedOrder())
-            dispatch(fetchOrders('status=pending', 0, 0))
+            // dispatch(fetchOrders('status=pending', 0, 0))
             dispatch(fetchMenus())
+            setUpdatingOrderStatus(false)
         }
 
         if(ordersState.deletedOrder !== null){
@@ -672,19 +673,24 @@ const OrderDetails = () => {
                         <div style={{marginBottom: '10px', fontFamily: 'Outfit, sans-serif'}}>
                         
                             <div>
-                                <h3 style={{fontSize: '12px', lineHeight: '12px', marginBottom: '1px', fontWeight: 500}}>Kwiqserve - {store?.name}</h3>
+                                <h3 style={{fontSize: '12px', lineHeight: '12px', marginBottom: '1px', fontWeight: 500}}>{store?.name}</h3>
                                 <p style={{fontSize: '8px', marginBottom: '10px'}}>
                                 {store?.address}, {store?.city}, {store?.state}.
                                 </p>
                             </div>
+
+                            <h3 style={{fontSize: '10px', marginBottom: '4px', fontWeight: 500}}>Bill - {new Date().toDateString()}</h3>
+
+                            <p style={{fontSize: '8px', marginBottom: '1px'}}>Table: {newOrderDetails?.table?.name} ({newOrderDetails?.table?.code})</p>                        
+                            <p style={{fontSize: '8px', marginBottom: '1px'}}>Processed by: {userDetails()?.name}</p>
+                            <p style={{fontSize: '8px', marginBottom: '4px'}}>Customer: {newOrderDetails?.customer?.name}, {newOrderDetails?.customer?.email}, {newOrderDetails?.customer?.phone}</p>
                         </div>
-                        <br />
-                        <h3 style={{fontSize: '10px', marginBottom: '10px', fontWeight: 500}}>Bill - {new Date().toDateString()}</h3>
+                        {/* <br /> */}
                         <hr />
 
                         {newOrderDetails.items && newOrderDetails.items.length > 0 && newOrderDetails.items.map((item, itemIndex) => (
-                            <div key={itemIndex} style={{margin: '0px 10px'}}>
-                                <p style={{fontSize: '8px'}}>(x{item.quantity}) {item.displayName.split(') ')[1]} - ₦{(item.quantity * itemQuantityPriceMultiplier(settingsState?.settings, item.price)).toFixed(2).toLocaleString()}</p>
+                            <div key={itemIndex} style={{margin: '2px 1px'}}>
+                                <p style={{fontSize: '8px'}}>(x{item.quantity}) {item.displayName} - ₦{(item.quantity * itemQuantityPriceMultiplier(settingsState?.settings, item.price)).toFixed(2).toLocaleString()}</p>
                             </div>
                         ))}
                         {settingsState?.settings?.taxes && settingsState?.settings?.taxes?.enabled && <div className='flex flex-row gap-x-4 justify-between my-3 py-1 rounded'>
@@ -700,14 +706,16 @@ const OrderDetails = () => {
                             </div>
                         </div>}
 
-                        <p style={{fontSize: '8px', marginBottom: '10px'}}>Total: <span className='font-[550] text-[10px]'>₦{orderTotal(newOrderDetails, settingsState.settings).total.toLocaleString()}</span></p>
+                        <p style={{fontSize: '8px', marginBottom: '10px', marginTop: '5px'}}>Total: <span className='font-[550] text-[10px]'>₦{orderTotal(newOrderDetails, settingsState.settings).total.toLocaleString()}</span></p>
                         
                         <hr />
                         
-                        {printing && <p style={{fontSize: '8px'}}>Payment channel: {paymentDetails?.channel}</p>}
-                        <p style={{fontSize: '8px', marginBottom: '10px'}}>Processed by: {userDetails()?.name}</p>
+                        {printing && <p style={{fontSize: '8px', marginBottom: '5px'}}>Payment channel: {paymentDetails?.channel}</p>}
+                        
                         {/* <h3 className='text-[10px] text-black'><span className='text-sm'>₦</span>{orderTotal(newOrderDetails, settingsState.settings).total.toLocaleString()}</h3> */}
                         {printing && <p style={{fontSize: '8px', marginBottom: '10px'}}>Thanks for your patronage</p>}
+                        <hr style={{marginTop:'5px', marginBottom:'5px'}} />
+                        {printing && <p style={{fontSize: '8px', marginBottom: '10px'}}>Powered by Kwiqserve (kwiqserve.com) </p>}
 
                     </div>
                 </div>

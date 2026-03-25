@@ -110,7 +110,7 @@ const Orders = () => {
             linkType: 'text',
             link: 'is',
             type: 'binary',
-            options: ['IN_PROGRESS', 'COMPLETED', 'PREPARING_ORDER', 'OUT_FOR_DELIVERY', 'DELIVERED', 'CANCELLED'],
+            options: ['pending', 'in_progress', 'completed', 'preparing_order', 'out_for_delivery', 'delivered', 'cancelled'],
             valueLabel: 'status',
             value: "",
             displayValue: ""
