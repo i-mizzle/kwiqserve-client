@@ -40,7 +40,7 @@ const UserMenu = ({businessDetails, userDetails, logOut}) => {
             {hasPermissions(['*', 'business.*', 'business.users.*', 'business.users.read']) && 
               <Menu.Item>
               {({ active }) => (
-                <Link to="/user/users"
+                <Link to="/business/users"
                 className={`${
                   active ? 'bg-gray-200 text-white' : 'text-gray-900'
                 } group xl:hidden flex rounded-md items-center w-full px-2 py-2 my-2 text-sm`}
@@ -48,11 +48,11 @@ const UserMenu = ({businessDetails, userDetails, logOut}) => {
                   User Management
                 </Link>
               )}
-            </Menu.Item>
-            }
+            </Menu.Item>}
+            
             <Menu.Item>
               {({ active }) => (
-                <Link to="/user/menu"
+                <Link to="/business/menus"
                 className={`${
                   active ? 'bg-gray-200 text-white' : 'text-gray-900'
                 } group xl:hidden flex rounded-md items-center w-full px-2 py-2 my-2 text-sm`}
@@ -64,18 +64,7 @@ const UserMenu = ({businessDetails, userDetails, logOut}) => {
             
             <Menu.Item>
               {({ active }) => (
-                <Link to="/user/orders"
-                className={`${
-                  active ? 'bg-gray-200 text-white' : 'text-gray-900'
-                } group xl:hidden flex rounded-md items-center w-full px-2 py-2 my-2 text-sm`}
-              >
-                  Orders
-                </Link>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <Link to="/user/transactions"
+                <Link to="/business/payments"
                 className={`${
                   active ? 'bg-gray-200 text-white' : 'text-gray-900'
                 } group flex xl:hidden rounded-md items-center w-full px-2 py-2 my-2 text-sm`}
@@ -84,6 +73,7 @@ const UserMenu = ({businessDetails, userDetails, logOut}) => {
                 </Link>
               )}
             </Menu.Item>
+
             <Menu.Item>
               {({ active }) => (
                 <Link to="/business/settings"
@@ -96,9 +86,10 @@ const UserMenu = ({businessDetails, userDetails, logOut}) => {
                 </Link>
               )}
             </Menu.Item>
-            {hasPermissions(['*', 'store.*']) && <Menu.Item>
+
+            {hasPermissions(['*', 'business.*']) && <Menu.Item>
               {({ active }) => (
-                <Link to="/user/store"
+                <Link to="/business/settings/business-settings"
                 className={`${
                   active ? 'bg-gray-200 text-white' : 'text-gray-900'
                 } group flex rounded-md items-center w-full px-2 py-2 my-2 text-sm`}
@@ -107,19 +98,6 @@ const UserMenu = ({businessDetails, userDetails, logOut}) => {
                 </Link>
               )}
             </Menu.Item>}
-
-            <Menu.Item>
-              {({ active }) => (
-                <Link to={`/user/dashboard/getting-started`} 
-                className={`${
-                  active ? 'bg-gray-200 text-gray-800' : 'text-gray-900'
-                } group flex rounded-md items-center gap-x-1.25 w-full px-2 py-2 my-2 text-sm`}
-                >
-                  <img src={Roadmap} alt='' className='w-5' />
-                  Getting Started
-                </Link>
-              )}
-            </Menu.Item>
 
             <Menu.Item>
               {({ active }) => (
