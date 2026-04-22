@@ -349,7 +349,7 @@ const ItemDetails = () => {
   return (
     <AppLayout>
       {loaded ? <>
-            {<div className='min-h-screen h-inherit p-5'>
+            {<div className='min-h-screen h-inherit xl:p-5'>
                 
                 
                 <div className={`w-full flex flex-row-reverse`}>
@@ -366,7 +366,7 @@ const ItemDetails = () => {
                 </div>
 
                 <div className='mx-auto xl:flex items-start gap-x-5'>
-                    <div className={`w-full bg-white xl:w-6/12 p-6.25 xl:p-10 rounded mt-2.5 mx-auto`}>
+                    <div className={`w-full bg-white xl:w-6/12 lg:p-6.25 xl:p-10 rounded mt-2.5 mx-auto`}>
                         {<div className='w-full mt-6'>
                             {itemDetails.coverImage && !changingImage && 
                             <div className='relative w-full'>
@@ -614,7 +614,7 @@ const ItemDetails = () => {
                         </div>
             
                         <div className='my-8 w-full'>
-                            <FormButton buttonLabel="Save updates to sale item" buttonAction={()=>{updateSaleItem()}} processing={updating} /> 
+                            <FormButton buttonLabel="Save updates" buttonAction={()=>{updateSaleItem()}} processing={updating} /> 
                         </div>
                         </>}
             

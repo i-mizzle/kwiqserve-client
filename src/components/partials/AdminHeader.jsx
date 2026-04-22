@@ -35,12 +35,12 @@ const AdminHeader = ({businessDetails}) => {
   } 
 
   return (
-    <header className='lg:px-12 xl:px-32 flex items-center justify-between py-2 bg-gray-50'>
+    <header className='px-4 lg:px-12 xl:px-32 flex items-center justify-between py-2 bg-gray-50'>
         <Link to={`/business/dashboard`}>
           <Logo />
         </Link>
 
-        <div className='w-full px-8 flex items-center gap-x-5'>
+        <div className='w-full hidden px-8 lg:flex items-center gap-x-5'>
           <Link to={`/business/dashboard`} className={`${getLinkClassName('/business/dashboard')} flex items-center justify-center gap-x-2`}>
             {location.pathname.includes('/business/dashboard') && <span className='rounded-full bg-ss-dark-blue w-1 h-1 inline-block' />} Dashboard
           </Link>

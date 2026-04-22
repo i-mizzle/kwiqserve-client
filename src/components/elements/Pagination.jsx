@@ -42,7 +42,7 @@ const Pagination = ({pagination, changePage, updatePerPage}) => {
   return (
     <div className='w-full flex flex-row items-center justify-between py-10'>
         <div className='flex flex-row items-center gap-x-2'>
-            <button onClick={()=>{firstPage()}} className='rounded bg-gray-50 bg-opacity-10 text-gray-600 text-xs py-2 px-2 transition duration-200 hover:bg-opacity-20'>
+            <button onClick={()=>{firstPage()}} className='rounded hidden lg:inline-block bg-gray-50 bg-opacity-10 text-gray-600 text-xs py-2 px-2 transition duration-200 hover:bg-opacity-20'>
                 First page
             </button>
             <button onClick={()=>{previousPage()}} className='rounded bg-gray-50 bg-opacity-10 text-gray-600 text-xs py-2 px-2 transition duration-200 hover:bg-opacity-20'>
@@ -57,7 +57,7 @@ const Pagination = ({pagination, changePage, updatePerPage}) => {
         </div>
         
         <div className='flex flex-row items-center gap-x-2'>
-            <div className='flex flex-row gap-x-2 items-center mr-3'>
+            <div className='xl:flex flex-row gap-x-2 items-center mr-3  hidden'>
                 <p className='text-secondary text-xs'>Items per page:</p>
                 <select value={pagination.perPage} onChange={(e)=>{changePerPage(e.target.value)}} className='text-xs px-2 py-2 border rounded border-gray-300 border-opacity-20 w-18.75 focus:border-blue-700 bg-transparent text-primary focus:outline-none'>
                     {perPageOptions.map((option, optionIndex)=>(
@@ -68,7 +68,7 @@ const Pagination = ({pagination, changePage, updatePerPage}) => {
             <button onClick={()=>{nextPage()}} className='rounded bg-gray-50 bg-opacity-5 text-gray-600 text-xs py-2 px-2 transition duration-200 hover:bg-opacity-20'>
                 Next page
             </button>
-            <button onClick={()=>{lastPage()}} className='rounded bg-gray-50 bg-opacity-5 text-gray-600 text-xs py-2 px-2 transition duration-200 hover:bg-opacity-20'>
+            <button onClick={()=>{lastPage()}} className='rounded hidden lg:inline-block bg-gray-50 bg-opacity-5 text-gray-600 text-xs py-2 px-2 transition duration-200 hover:bg-opacity-20'>
                 Last page
             </button>
         </div>

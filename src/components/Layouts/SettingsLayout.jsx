@@ -6,8 +6,8 @@ const SettingsLayout = ({children}) => {
     const location = useLocation()
     return (
         <AppLayout>
-            <div className='flex items-start gap-x-5 relative'>
-                <div className='w-62.5 px-5 sticky top-15'>
+            <div className='xl:flex items-start gap-x-5 relative'>
+                <div className='hidden xl:block w-62.5 px-5 sticky top-15'>
                     <Link to={`/business/settings/profile`} className={`px-3 py-2 text-[15px] transition duration-200 font-medium font-family-bricolage-grotesque! text-md text-ss-black hover:text-ss-dark-blue! hover:bg-gray-50 rounded mb-1 w-full flex items-center justify-between ${location.pathname === `/business/settings/profile` ? 'font-bold bg-ss-pale-blue/50' : 'font-medium'}`}>
                         Profile 
                         {location.pathname === `/business/settings/profile` && <span className='w-1.5 h-1.5 rounded-full bg-ss-black' />}

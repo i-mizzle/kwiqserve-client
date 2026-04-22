@@ -13,6 +13,9 @@ import OrderStatus from '../../../components/elements/orders/OrderStatus'
 import OrderPaymentStatus from '../../../components/elements/orders/OrderPaymentStatus'
 import Currency from '../../../components/elements/Currency'
 import EmptyState from '../../../components/elements/EmptyState'
+import Tooltip from '@mui/material/Tooltip'
+import GlobeIcon from '../../../components/elements/icons/GlobeIcon'
+import StoreFrontIcon from '../../../components/elements/icons/StoreFrontIcon'
 
 const Orders = () => {
         const usersState = useSelector((state => state.users))
@@ -245,22 +248,22 @@ const Orders = () => {
 
                                     <div className='block xl:hidden'>
                                         {ordersState.orders?.orders?.map((order, orderIndex) => (
-                                            <Link to={`single/${order._id}`} key={orderIndex} className='w-full block relative mb-5 gap-x-2.5 bg-white my-2.5 rounded-lg shadow-xl shadow-green-500/5'>
+                                            <Link to={`/business/orders/order/${order._id}`} key={orderIndex} className='w-full block relative mb-5 gap-x-2.5 bg-white my-2.5 rounded-lg shadow-xl shadow-green-500/5'>
                                                 
                                                 <div className='flex items-end justify-between gap-x-2.5 border-b p-5'>
                                                     {/* <OrderSummary item={order} /> */}
-                                                    <div className='w-full flex items-center gap-x-2.5'>
-                                                        <div className='w-15 flex items-center justify-center h-15'>
-                                                            {order.source === 'ONLINE' && 
+                                                    <div className='w-full flex items-start gap-x-2.5'>
+                                                        <div className='w-10 flex items-center justify-center h-15'>
+                                                            {order.source === 'online' && 
                                                             <Tooltip title="Online order" placement="top">
-                                                                <div className='w-15 h-15 rounded-lg bg-green-400 bg-opacity-10 flex items-center justify-center'>
+                                                                <div className='w-10 h-10 rounded-lg bg-green-400/10 flex items-center justify-center'>
                                                                     <GlobeIcon className={`w-5 h-5 text-green-500`} />
                                                                 </div>
                                                             </Tooltip>
                                                             }
-                                                            {order.source === 'ONSITE' && 
+                                                            {order.source === 'onsite' && 
                                                             <Tooltip title="On-site order" placement="top">
-                                                                <div className='w-15 h-15 rounded-lg bg-gray-400 bg-opacity-20 flex items-center justify-center'>
+                                                                <div className='w-10 h-10 rounded-lg bg-gray/20 flex items-center justify-center'>
                                                                     <StoreFrontIcon className={`w-5 h-5 text-gray-400`} />
                                                                 </div>
                                                             </Tooltip>

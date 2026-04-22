@@ -51,7 +51,7 @@ const Profile = () => {
           <Loader />
         : 
         <>
-          <div className='w-8/12 pb-10 border-b border-gray-300 mb-5'>
+          <div className='w-full xl:w-8/12 pb-10 border-b border-gray-300 mb-5'>
             <h1 className='text-3xl font-bold text-ss-dark-gray'>User Profile</h1>
             <p className='text-gray-500 text-sm'>Please see details of your user account below. You can change any details you need to and click on "Update Profile" to save updates.</p>
 

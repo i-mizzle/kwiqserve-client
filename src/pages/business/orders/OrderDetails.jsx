@@ -496,8 +496,8 @@ const OrderDetails = () => {
             {
                 <div className='min-h-screen h-inherit'>
 
-                    <div className='w-full xl:w-10/12 2xl:w-8/12 mx-auto flex flex-row gap-x-5'>
-                        <div className='w-full xl:w-5/12 pb-6 px-8 xl:px-12 pt-6'>
+                    <div className='w-full xl:w-10/12 2xl:w-8/12 mx-auto lg:flex flex-row gap-x-5'>
+                        <div className='w-full xl:w-5/12 pb-6 lg:px-8 xl:px-12 pt-6'>
                             <div className='flex items-center gap-x-3'>
                                 {/* {newOrderDetails?.source === 'online' && <div className='flex items-center'>
                                     
@@ -569,7 +569,7 @@ const OrderDetails = () => {
 
                         <div className='w-full xl:w-7/12 bg-white h-screen py-5'>
 
-                            {newOrderDetails?.paymentStatus !== 'PAID' && <div className='w-full flex flex-row-reverse justify-between items-start p-4'>
+                            {newOrderDetails?.paymentStatus !== 'PAID' && <div className='w-full flex flex-row-reverse justify-between items-start xl:p-4'>
                                 <div className='flex items-center gap-x-2'>
                                     <button onClick={()=>{setUpdatingOrderStatus(true)}} className='w-max font-semibold flex items-center gap-x-3 justify-center bg-ss-dark-blue text-white transition duration-200 hover:bg-ss-black px-4 py-3 rounded-lg'>
                                         {/* <PrinterIcon className={`w-6 h-6`} /> */}
@@ -581,7 +581,7 @@ const OrderDetails = () => {
                                 </div>
                             </div>}
 
-                            <div className='relative w-full'>
+                            <div className='relative w-full mt-5'>
                                 {newOrderDetails?.items?.length > 0 ? <div className='w-full px-8 xl:px-5'>
                                     <h3 className='text-lg font-medium mb-4'>Items in this order</h3>
                                     {newOrderDetails.items && newOrderDetails.items.length > 0 && newOrderDetails.items.map((item, itemIndex) => (

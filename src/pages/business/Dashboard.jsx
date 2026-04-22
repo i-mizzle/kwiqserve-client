@@ -7,6 +7,7 @@ import { authHeader, baseUrl } from '../../utils'
 import axios from 'axios'
 import ModalDialog from '../../components/Layouts/ModalDialog'
 import AccountSetupReminder from '../../components/elements/AccountSetupReminder'
+import { fetchStoreSettings } from '../../store/actions/settingsActions'
 
 const Dashboard = () => {
   const dispatch = useDispatch()
@@ -25,7 +26,7 @@ const Dashboard = () => {
   }
   
   useEffect(() => {
-    
+    dispatch(fetchStoreSettings())
     const fetchDashboardStats = async () => {
       try {
         const headers = authHeader()
@@ -48,62 +49,6 @@ const Dashboard = () => {
 
   const formatCurrency = (value) => `₦${(value || 0).toLocaleString()}`
   const getPercentage = (value) => Number(value || 0)
-
-  // const placeholderStats = {
-  //   metrics: {
-  //     todayOrdersCount: 12,
-  //     todayOrdersValue: 184000,
-  //     thisWeekOrdersCount: 86,
-  //     thisWeekOrdersValue: 942500,
-  //     thisMonthOrdersCount: 318,
-  //     thisMonthOrdersValue: 4287500,
-  //     soldItems: [
-  //       { name: 'Jollof bowl', quantity: 42, salesValue: 210000, image: '' },
-  //       { name: 'Chicken wrap', quantity: 28, salesValue: 168000, image: '' },
-  //       { name: 'Berry smoothie', quantity: 19, salesValue: 95000, image: '' }
-  //     ],
-  //     mostSoldItem: {
-  //       name: 'Jollof bowl',
-  //       quantity: 42,
-  //       salesValue: 210000,
-  //       image: ''
-  //     },
-  //     closedUnpaidOrdersCount: 4,
-  //     closedUnpaidOrdersValue: 56000,
-  //     unpaidOrdersValue: 142000,
-  //     currentYearOrdersValue: 18450000,
-  //     unpaidOrdersCount: 11,
-  //     percentageDailyChange: 8.2,
-  //     percentageWeeklyChange: -3.4,
-  //     percentageMonthlyChange: 12.6
-  //   },
-  //   transactionsSummary: {
-  //     daySummary: [
-  //       { day: 'Sunday, 2/18/2026', amount: 42000, percentage: '15.0' },
-  //       { day: 'Monday, 2/19/2026', amount: 68000, percentage: '24.0' },
-  //       { day: 'Tuesday, 2/20/2026', amount: 52000, percentage: '18.0' },
-  //       { day: 'Wednesday, 2/21/2026', amount: 74000, percentage: '26.0' },
-  //       { day: 'Thursday, 2/22/2026', amount: 28000, percentage: '10.0' },
-  //       { day: 'Friday, 2/23/2026', amount: 32000, percentage: '12.0' },
-  //       { day: 'Saturday, 2/24/2026', amount: 58000, percentage: '20.0' }
-  //     ],
-  //     weekSummary: [
-  //       { week: '1/20/2026', amount: 210000, percentage: '40.0' },
-  //       { week: '1/27/2026', amount: 178000, percentage: '34.0' },
-  //       { week: '2/3/2026', amount: 134000, percentage: '26.0' }
-  //     ],
-  //     monthSummary: [
-  //       { month: 'Dec', amount: 325000, percentage: '28.0' },
-  //       { month: 'Jan', amount: 412000, percentage: '36.0' },
-  //       { month: 'Feb', amount: 408000, percentage: '36.0' }
-  //     ]
-  //   },
-  //   transactionsByChannel: {
-  //     currentDay: { cash: 28000, pos: 41000, transfer: 15000 },
-  //     currentWeek: { cash: 112000, pos: 230000, transfer: 98000 },
-  //     currentMonth: { cash: 498000, pos: 1240000, transfer: 620000 }
-  //   }
-  // }
 
   const viewStats = stats
 
@@ -161,7 +106,7 @@ const Dashboard = () => {
   return (
     <>
       <AppLayout pageTitle="Dashboard">
-          <div className='w-11/12 mx-auto mt-6'>
+          <div className='w-full xl:w-11/12 mx-auto mt-6'>
             {loading ? 
               <Loader />
               :
@@ -173,7 +118,7 @@ const Dashboard = () => {
                   </div>
                 </div>
                 
-                <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5'>
+                <div className='grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5'>
                   <div className='bg-white rounded-lg border border-gray-100 p-4 sm:p-5'>
                     <p className='text-xs uppercase tracking-wide text-gray-400'>Today</p>
                     <h3 className='text-2xl font-semibold text-ss-dark-gray mt-2'>{viewStats?.metrics?.todayOrdersCount || 0} orders</h3>
@@ -200,12 +145,12 @@ const Dashboard = () => {
                     <p className='text-sm text-gray-500 mt-1'>Value</p>
                     <h3 className='text-lg font-medium text-gray-700'>{formatCurrency(viewStats?.metrics?.thisMonthOrdersValue)}</h3>
                     <div className='mt-3'>
-                      <ChangeBadge value={viewStats?.metrics?.percentageMonthlyChange} label="vs last month" />
+                      <ChangeBadge value={viewStats?.metrics?.percentageMonthlyChange} label="vs last " />
                     </div>
                   </div>
                 </div>
                 
-                <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5 mt-6'>
+                <div className='grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 mt-6'>
                   <div className='bg-white rounded-lg border border-gray-100 p-4 sm:p-5'>
                     <p className='text-sm text-gray-500'>Closed unpaid orders</p>
                     <h3 className='text-2xl font-semibold text-ss-dark-gray mt-2'>{viewStats?.metrics?.closedUnpaidOrdersCount || 0}</h3>
@@ -320,7 +265,7 @@ const Dashboard = () => {
                     </div>
                     
                     <div className='flex flex-col sm:flex-row sm:items-center gap-4'>
-                      <div className='w-20 h-20 rounded-lg bg-gray-100 overflow-hidden flex items-center justify-center'>
+                      <div className='w-40 lg:w-20 h-40 lg:h-20 rounded-lg bg-gray-100 overflow-hidden flex items-center justify-center'>
                         {viewStats?.metrics?.mostSoldItem?.image ? (
                           <img src={viewStats?.metrics?.mostSoldItem?.image} alt={viewStats?.metrics?.mostSoldItem?.name || 'Most sold'} className='w-full h-full object-cover' />
                         ) : (

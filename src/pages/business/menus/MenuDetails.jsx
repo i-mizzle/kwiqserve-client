@@ -287,7 +287,7 @@ const MenuDetails = () => {
                             </div>
                           </div>
 
-                          <div className='w-[92%] flex items-start justify-between gap-x-5 mt-4 p-3 bg-gray-100'>
+                          <div className='w-full xl:w-[92%] lg:flex items-start justify-between gap-x-5 mt-4 p-3 bg-gray-100'>
                             <div>
                               <p className='font-family-bricolage-grotesque text-gray-600 font-[550]'>Item in stock</p>
                               <p className='text-sm text-gray-500'>Toggle this switch on if this item currently in stock</p>

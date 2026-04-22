@@ -360,10 +360,11 @@ export const StatesLgas =[
         ]
     },
     {
-        "state": "Abuja",
+        "state": "Abuja (FCT)",
         "stateSlug": "abuja",
         "lgas": [
             "Abuja",
+            "AMAC",
             "Kwali",
             "Kuje",
             "Gwagwalada",

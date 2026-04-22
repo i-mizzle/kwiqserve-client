@@ -47,9 +47,9 @@ const Menus = () => {
     <AppLayout>
       <div className='min-h-screen h-inherit'>
           <div className='w-full lg:flex flex-row gap-x-8'>
-              <div className='w-full pb-6 px-3 xl:px-12 mt-4 mx-auto'>
+              <div className='w-full pb-6 lg:px-3 xl:px-12 mt-4 mx-auto'>
                 <div className='lg:flex justify-between items-center mt-4 mb-4'>
-                  <div className='w-6/12'>
+                  <div className='w-full xl:w-6/12'>
                     <h1 className='text-3xl font-bold text-ss-dark-gray'>Menus</h1>
                     <p className='text-gray-500 text-sm'>Create and manage menus for your menu items. Click on a price card to view details or create a new one by clicking "Create a Menu"</p>
                   </div>

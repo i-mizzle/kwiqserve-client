@@ -176,8 +176,8 @@ const TableDetails = () => {
         <div className='w-full relative pt-12'>
           <div className='w-full 2xl:w-10/12 mx-auto pb-6 px-3 xl:flex items-start gap-x-5'>
             <div className='w-full xl:w-9/12'>
-              <div className='w-full flex items-start gap-x-5 pb-12'>
-                <div className='w-1/2'>
+              <div className='w-full lg:flex items-start gap-x-5 pb-12'>
+                <div className='w-full xl:w-1/2'>
                   <h3 className='font-medium text-xl'>{tableDetails.name}</h3>
                   <h3 className='uppercase tracking-[0.5em] text-sm mb-2'>{tableDetails.code}</h3>
                   <div className='h-12.5'>
@@ -194,7 +194,7 @@ const TableDetails = () => {
 
                   </div>
                 </div>
-                <div className='w-1/2'>
+                <div className='w-full xl:w-1/2 mt-40 xl:mt-0'>
                   <h3 className='uppercase tracking-[0.5em] text-xs mb-1'>table revenue today</h3>
                   <h1 className='text-3xl font-bold mb-1 pb-1 border-b border-gray-300'>N{tableDetails.orders.today.total.toLocaleString()}</h1>
                   <p className='text-gray-500 text-sm'>From {tableDetails.orders.today.count.toLocaleString()} Orders</p>

@@ -201,7 +201,7 @@ const UserDetails = () => {
             :
                 <>
                     {administratorDetails !== null ? 
-                    <div className='w-8/12 min-h-screen h-inherit'>
+                    <div className='w-full xl:w-8/12 min-h-screen h-inherit'>
                         <div className={`w-full flex flex-row-reverse`}>
                             {userId !== userDetails()._id && <button onClick={()=>{doDeleteUser()}} className={`text-red-600 text-sm flex gap-x-2 hover:text-red-800`}>
                                 <TrashIcon className={`w-5 h-5`} />

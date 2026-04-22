@@ -95,19 +95,18 @@ const Tables = () => {
             <AppLayout>
                 <div className='min-h-screen h-inherit'>
                     <div className='w-full lg:flex flex-row gap-x-8'>
-                        <div className='w-full pb-6 px-3 xl:px-12 mt-4 mx-auto'>
+                        <div className='w-full pb-6 lg:px-3 xl:px-12 mt-4 mx-auto'>
                             <div className='lg:flex justify-between items-center mt-4 mb-4'>
-                                <div className='w-6/12'>
+                                <div className='w-full xl:w-6/12'>
                                     <h1 className='text-3xl font-bold text-ss-dark-gray'>Tables</h1>
                                     <p className='text-gray-500 text-sm'>Create and manage menus for your menu items. Click on a price card to view details or create a new one by clicking "Create a Menu"</p>
                                 </div>
-                                <div className='flex flex-row-reverse gap-x-2'>
-
-                                    <button onClick={()=>{toggleNewTables('single')}} className='flex w-max gap-x-2 items-center justify-center mt-5 lg:mt-0 bg-ss-dark-blue border border-ss-dark-blue px-4 py-3 rounded-lg text-white transition duration-200 hover:bg-ss-black cursor-pointer font-[550]'>
+                                <div className='xl:flex flex-row-reverse gap-x-2'>
+                                    <button onClick={()=>{toggleNewTables('single')}} className='flex xl:w-max mb-4 w-full gap-x-2 items-center justify-center mt-5 lg:mt-0 bg-ss-dark-blue border border-ss-dark-blue px-4 py-3 rounded-lg text-white transition duration-200 hover:bg-ss-black cursor-pointer font-[550]'>
                                         <PlusIcon className={`h-5 w-5`} />
                                         Create a Table
                                     </button>
-                                    <button onClick={()=>{toggleNewTables('multiple')}} className='flex w-max gap-x-2 items-center justify-center mt-5 lg:mt-0 bg-ss-pale-blue border border-ss-dark-blue px-4 py-3 rounded-lg transition duration-200 hover:bg-blue-200 cursor-pointer font-[550] text-ss-dark-blue'>
+                                    <button onClick={()=>{toggleNewTables('multiple')}} className='flex xl:w-max w-full gap-x-2 items-center justify-center mt-5 lg:mt-0 bg-ss-pale-blue border border-ss-dark-blue px-4 py-3 rounded-lg transition duration-200 hover:bg-blue-200 cursor-pointer font-[550] text-ss-dark-blue'>
                                         <SquaresStackedIcon className={`h-5 w-5`} />
                                         Create Multiple Tables
                                     </button>

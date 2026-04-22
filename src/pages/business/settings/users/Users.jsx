@@ -57,12 +57,12 @@ const Users = () => {
           {/* <div className='w-full'> */}
             <div className='w-full pb-6 mx-auto'>
               <div className='lg:flex justify-between items-center mb-4 w-full'>
-                <div className='w-8/12'>
+                <div className='w-full xl:w-8/12'>
                   <h1 className='text-3xl font-bold text-ss-dark-gray'>System Users</h1>
                   <p className='text-gray-500 text-sm'>Please see details of your user account below. You can change any details you need to and click on "Update Profile" to save updates.</p>
                 </div>
                 
-                <div className='w-4/12 flex flex-row-reverse'>
+                <div className='w-full xl:w-4/12 xl:flex flex-row-reverse'>
                   <Link to={`new-user`}>
                     <button className='w-full lg:w-max flex gap-x-2 items-center justify-center mt-5 lg:mt-0 bg-ss-dark-blue border border-ss-dark-blue px-4 py-3 rounded-lg text-white transition duration-200 hover:bg-ss-black font-[550]'>
                         <PlusIcon className={`h-5 w-5`} />

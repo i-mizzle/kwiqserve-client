@@ -181,6 +181,31 @@ const BusinessSettings = () => {
     }
   }
 
+  const [updating, setUpdating] = useState(false)
+  const pushUpdates = async () => {
+    try {
+      const headers = authHeader()
+      setUpdating(true)
+      await axios.patch(`${baseUrl}/business`, businessPayload, {headers})
+      dispatch({
+        type: SET_SUCCESS,
+        payload: "Business details updated successfully!"
+      })
+      setReload(reload+1)
+      setUpdating(false)
+      setTimeout(() => {
+        setDeviceForDeletion(null)
+      }, 100);
+    } catch (error) {
+      console.log('error deleting device: ', error)
+      dispatch({
+        type: ERROR,
+        error
+      })
+      setUpdating(false)
+    }
+  }
+
   return (
     <>
       <div className="w-full">
@@ -188,7 +213,7 @@ const BusinessSettings = () => {
           <Loader />
         : 
         <>
-          <div className='w-8/12 pb-10 border-b border-gray-300 mb-5'>
+          <div className='w-full xl:w-8/12 pb-10 border-b border-gray-300 mb-5'>
             <h1 className='text-3xl font-bold text-ss-dark-gray'>Business Settings</h1>
             <p className='text-gray-500 text-sm'>Please see details of your business below. You can change any details you need to and click on "Update Business Details" to save updates.</p>
           
@@ -303,11 +328,11 @@ const BusinessSettings = () => {
             </div>
 
             <div className='w-max mt-4'>
-              <FormButton buttonLabel={`Update Business Details`} buttonAction={()=>{}} />
+              <FormButton buttonLabel={`Update Business Details`} buttonAction={()=>{pushUpdates()}} processing={updating} />
             </div>
           </div>
 
-          <div className='w-8/12 pb-10 border-b border-gray-300 mb-5'>
+          <div className='w-full xl:w-8/12 pb-10 border-b border-gray-300 mb-5'>
 
             <h1 className='text-xl font-bold text-ss-dark-gray'>Settlement/Remittance Preferences</h1>
             <p className='text-gray-500 text-sm mb-3'>How soon do you want remittances made? Select an option below and click "Save Settlement Preferences"</p>
@@ -327,7 +352,7 @@ const BusinessSettings = () => {
             
           </div>
 
-          <div className='w-8/12  pb-10 border-b border-gray-300 mb-5'>
+          <div className='w-full xl:w-8/12  pb-10 border-b border-gray-300 mb-5'>
             <h1 className='text-xl font-bold text-ss-dark-gray'>Collection Accounts</h1>
             <p className='text-gray-500 text-sm'>Below are accounts for business collections. you can create a new account by clicking on "Add new account" below.</p>
 
@@ -339,7 +364,7 @@ const BusinessSettings = () => {
             <div className='mt-5'>
               {businessSettings?.receivingAccounts?.length > 0 ?
               
-                <div className='grid grid-cols-2 gap-3'>
+                <div className='grid grid-cols-1 lg:grid-cols-2 gap-3'>
                   {businessSettings?.receivingAccounts?.map((account, accountIndex) => (
                     <div key={accountIndex} className='relative rounded bg-gray-50'>
                       {account.preferredForRemittance && <span className='text-xs absolute top-3 right-3 text-green-600 bg-green-600/10 rounded px-2 py-1'>Remittance Account</span>}
@@ -370,7 +395,7 @@ const BusinessSettings = () => {
             
           </div>
 
-          <div className='w-8/12 pb-10 border-b border-gray-300 mb-5'>
+          <div className='w-full xl:w-8/12 pb-10 border-b border-gray-300 mb-5'>
             <h1 className='text-xl font-bold text-ss-dark-gray'>POS Devices</h1>
             <p className='text-gray-500 text-sm'>Below are POS devices for business collections. The devices listed here will be presented to you (or your employees) at the point of receiving payments and they can select which device funds are paid into. You can create a new POS device by clicking on "Add new device" below.</p>
 
@@ -382,7 +407,7 @@ const BusinessSettings = () => {
             <div className='mt-5'>
               {businessSettings?.posDevices?.length > 0 ?
               
-                <div className='grid grid-cols-2 gap-3'>
+                <div className='grid grid-cols-1 lg:grid-cols-2 gap-3'>
                   {businessSettings?.posDevices?.map((device, deviceIndex) => (
                     <div key={deviceIndex} className='relative rounded bg-gray-50'>
                       {/* {account.preferredForRemittance && <span className='text-xs absolute top-3 right-3 text-green-600 bg-green-600/10 rounded px-2 py-1'>Remittance Account</span>} */}

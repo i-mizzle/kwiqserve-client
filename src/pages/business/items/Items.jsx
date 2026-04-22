@@ -153,7 +153,7 @@ const Items = () => {
                 :  */}
                 <div className='min-h-screen h-inherit'>
                     <div className='w-full lg:flex flex-row gap-x-8'>
-                        <div className='w-full pb-6 px-4 lg:px-8 mt-4'>
+                        <div className='w-full pb-6 lg:px-8 mt-4'>
                         <div className='lg:flex justify-between items-center mt-6 mb-4'>
                             <div className='w-full lg:w-1/2'>
                                 <h1 className='text-3xl font-bold text-ss-dark-gray'>Items/Products </h1>
