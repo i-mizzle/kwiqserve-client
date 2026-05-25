@@ -99,7 +99,7 @@ export const sendSubscriptionToBackend = async (subscription) => {
   const response = await fetch(`${baseUrl}/push-notifications/subscriptions`, {
     method: 'POST',
     headers: authHeader(),
-    body: JSON.stringify({ subscription }),
+    body: JSON.stringify({ subscription: subscription }),
   });
 
   // console.log('Push subscription sent to backend, response:', response);
