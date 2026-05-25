@@ -15,6 +15,47 @@ function urlBase64ToUint8Array(base64String) {
   return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)));
 }
 
+function arrayBufferToBase64(buffer) {
+  if (!buffer) {
+    return '';
+  }
+
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+
+  for (let i = 0; i < bytes.length; i += 1) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+
+  return window.btoa(binary);
+}
+
+function normalizeSubscriptionPayload(subscription) {
+  if (!subscription) {
+    return null;
+  }
+
+  const subscriptionJson =
+    typeof subscription.toJSON === 'function' ? subscription.toJSON() : subscription;
+
+  const endpoint = subscriptionJson?.endpoint || subscription?.endpoint || '';
+  let p256dh = subscriptionJson?.keys?.p256dh || '';
+  let auth = subscriptionJson?.keys?.auth || '';
+
+  if ((!p256dh || !auth) && typeof subscription.getKey === 'function') {
+    p256dh = p256dh || arrayBufferToBase64(subscription.getKey('p256dh'));
+    auth = auth || arrayBufferToBase64(subscription.getKey('auth'));
+  }
+
+  return {
+    endpoint,
+    keys: {
+      p256dh,
+      auth,
+    },
+  };
+}
+
 export const getPushEnvironmentStatus = () => {
   if (typeof window === 'undefined') {
     return { isSupported: false, reason: 'Not running in a browser environment.' };
@@ -96,16 +137,27 @@ export const subscribeToPush = async () => {
 };
 
 export const sendSubscriptionToBackend = async (subscription) => {
+  const normalizedSubscription = normalizeSubscriptionPayload(subscription);
+
+  if (!normalizedSubscription?.endpoint) {
+    throw new Error('Push subscription is invalid: missing endpoint.');
+  }
+
+  if (!normalizedSubscription?.keys?.p256dh || !normalizedSubscription?.keys?.auth) {
+    throw new Error('Push subscription is invalid: missing encryption keys.');
+  }
+
   const response = await fetch(`${baseUrl}/push-notifications/subscriptions`, {
     method: 'POST',
-    headers: authHeader(),
-    body: JSON.stringify({ subscription: subscription }),
+    headers: {
+      ...authHeader(),
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ subscription: normalizedSubscription }),
   });
 
-  // console.log('Push subscription sent to backend, response:', response);
-
   if (!response.ok) {
-    const json = await response.json();
-    throw new Error(`Failed to save push subscription on the server. | ${JSON.stringify({ subscription: subscription })} | ${JSON.stringify(json)}`);
+    const errorText = await response.text();
+    throw new Error(errorText || 'Failed to save push subscription on the server.');
   }
 };
