@@ -1,6 +1,6 @@
 // services/pushNotifications.ts
 
-import { baseUrl } from "../utils";
+import { authHeader, baseUrl } from "../utils";
 
 const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY;
 const SERVICE_WORKER_URL = `${import.meta.env.BASE_URL || '/'}sw.js`;
@@ -98,9 +98,7 @@ export const subscribeToPush = async () => {
 export const sendSubscriptionToBackend = async (subscription) => {
   const response = await fetch(`${baseUrl}/push-notifications/subscriptions`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: authHeader(),
     body: JSON.stringify({ subscription }),
   });
 
