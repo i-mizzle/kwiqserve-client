@@ -94,7 +94,7 @@ export const subscribeToPush = async () => {
 };
 
 export const sendSubscriptionToBackend = async (subscription) => {
-  const response = await fetch('/api/push/subscribe', {
+  const response = await fetch('/push-notifications/subscriptions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
