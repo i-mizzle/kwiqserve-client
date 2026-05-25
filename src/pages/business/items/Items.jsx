@@ -19,6 +19,7 @@ import { clearDeletedCategory, fetchCategories } from '../../../store/actions/ca
 import { fetchItems } from '../../../store/actions/itemsActions'
 import ItemSnippet from '../../../components/elements/items/ItemSnippet'
 import ArrowNarrowRight from '../../../components/elements/icons/ArrowNarrowRight'
+import PhotoIcon from '../../../components/elements/icons/PhotoIcon';
 
 const Items = () => {
     const [refresh, setRefresh] = useState(0);
