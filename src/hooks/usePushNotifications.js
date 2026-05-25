@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import {
+  getPushEnvironmentStatus,
   registerServiceWorker,
   requestNotificationPermission,
   subscribeToPush,
@@ -10,17 +11,35 @@ import {
 
 export const usePushNotifications = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isCheckingStatus, setIsCheckingStatus] = useState(true);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
   const [error, setError] = useState(null);
+
+  const getExistingSubscription = async () => {
+    const registrations = await navigator.serviceWorker.getRegistrations();
+
+    for (const registration of registrations) {
+      const subscription = await registration.pushManager.getSubscription();
+      if (subscription) {
+        return subscription;
+      }
+    }
+
+    return null;
+  };
 
   useEffect(() => {
     let isMounted = true;
 
     const checkPushNotificationStatus = async () => {
-      if (!(window.Notification && 'serviceWorker' in navigator)) {
+      const environmentStatus = getPushEnvironmentStatus();
+
+      if (!environmentStatus.isSupported) {
         if (isMounted) {
           setIsBlocked(true);
+          setError(environmentStatus.reason);
+          setIsCheckingStatus(false);
         }
         return;
       }
@@ -28,15 +47,14 @@ export const usePushNotifications = () => {
       if (Notification.permission === 'denied') {
         if (isMounted) {
           setIsBlocked(true);
+          setError('Notifications are blocked in browser settings for this site.');
+          setIsCheckingStatus(false);
         }
         return;
       }
 
       try {
-        const registration = await navigator.serviceWorker.getRegistration();
-        const subscription = registration
-          ? await registration.pushManager.getSubscription()
-          : null;
+        const subscription = await getExistingSubscription();
 
         if (!isMounted) {
           return;
@@ -44,6 +62,7 @@ export const usePushNotifications = () => {
 
         setIsSubscribed(Boolean(subscription));
         setIsBlocked(false);
+        setError(null);
       } catch (err) {
         if (!isMounted) {
           return;
@@ -51,6 +70,10 @@ export const usePushNotifications = () => {
 
         console.error(err);
         setError(err.message || 'Failed to check notification status');
+      } finally {
+        if (isMounted) {
+          setIsCheckingStatus(false);
+        }
       }
     };
 
@@ -66,16 +89,21 @@ export const usePushNotifications = () => {
       setIsLoading(true);
       setError(null);
 
+      const environmentStatus = getPushEnvironmentStatus();
+      if (!environmentStatus.isSupported) {
+        throw new Error(environmentStatus.reason);
+      }
+
+      // Ask permission first so users get immediate browser feedback on click.
+      await requestNotificationPermission();
+
       // 1. Register SW
       await registerServiceWorker();
 
-      // 2. Ask permission
-      await requestNotificationPermission();
-
-      // 3. Subscribe
+      // 2. Subscribe
       const subscription = await subscribeToPush();
 
-      // 4. Send to backend
+      // 3. Send to backend
       await sendSubscriptionToBackend(subscription);
 
       setIsBlocked(false);
@@ -92,6 +120,7 @@ export const usePushNotifications = () => {
   return {
     enablePushNotifications,
     isLoading,
+    isCheckingStatus,
     isSubscribed,
     isBlocked,
     error,
