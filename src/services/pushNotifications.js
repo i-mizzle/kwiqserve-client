@@ -106,6 +106,6 @@ export const sendSubscriptionToBackend = async (subscription) => {
 
   if (!response.ok) {
     const json = await response.json();
-    throw new Error(`Failed to save push subscription on the server. ${JSON.stringify(json)}`);
+    throw new Error(`Failed to save push subscription on the server. | ${JSON.stringify({ subscription: subscription })} | ${JSON.stringify(json)}`);
   }
 };
