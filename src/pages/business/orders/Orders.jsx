@@ -51,10 +51,11 @@ const Orders = () => {
 
     const columnWidths = {
         // id: "w-full lg:w-1/12",
-        orderAlias: "w-full lg:w-4/12",
+        orderAlias: "w-full lg:w-3/12",
+        ref: "w-full lg:w-2/12",
         table: "w-full lg:w-2/12",
         items: "w-full lg:w-1/12",
-        status: "w-full lg:w-2/12",
+        status: "w-full lg:w-1/12",
         value: "w-full lg:w-2/12",
         payment: "w-full lg:w-1/12",
     }
@@ -67,6 +68,7 @@ const Orders = () => {
         data.push(
             {
                 orderAlias: <OrderSummary item={item} />,
+                ref: item.orderRef,
                 table: item.table?.name,
                 items: `${item.items?.length || 0} items`,
                 status: <OrderStatus status={item.status} />,
@@ -270,7 +272,7 @@ const Orders = () => {
                                                             }
                                                         </div>
                                                         <div className='w-full'>
-                                                            <p className='font-medium text-gray-700 font-space-grotesk'>{order.alias}</p>
+                                                            <p className='font-medium text-gray-700 font-space-grotesk'>{order.orderRef}</p>
                                                             <p className='text-sm mb-2.5 text-gray-500'>{order.items?.length || 0} items in order from {order.sourceMenu?.name}</p>
                                                             <div className='flex items-center gap-x-2.5'>
                                                                 <OrderStatus status={order.status} />

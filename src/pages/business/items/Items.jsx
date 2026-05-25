@@ -243,7 +243,7 @@ const Items = () => {
 
                         
                         {!itemsState.loadingItems ? <div className='w-full'>
-                                {searched && <button onClick={()=>{setRefresh(refresh+1)}} className='mt-5 px-3 py-2 border rounded border-gray-400 text-gray-600 text-sm w-max flex items-center gap-x-2'>
+                                {searched && <button onClick={()=>{setRefresh(refresh+1)}} className='mt-5 py-2 border rounded border-gray-400 text-gray-600 text-sm w-max flex items-center gap-x-2'>
                                 <CloseIcon className={`w-4 h-4`} /> Clear search
                                 </button>}
                                 <span className='hidden xl:block'>

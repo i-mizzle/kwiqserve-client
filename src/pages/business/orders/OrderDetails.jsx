@@ -644,12 +644,11 @@ const OrderDetails = () => {
                                     <h3 className='font-courier-prime text-3xl text-gray-600'><span className='text-sm'>NGN </span>{(orderTotal(newOrderDetails, settingsState?.settings)?.total + calculateFee(orderTotal(newOrderDetails, settingsState?.settings)?.total))?.toLocaleString()}</h3>
                                 </div>
                                 {(!newOrderDetails?.paymentStatus || newOrderDetails?.paymentStatus === 'unpaid') && <div className='mt-5 flex items-center gap-x-2.5'>
-                                    <Tooltip title="Park order for later" placement="top-start">
+                                    {/* <Tooltip title="Park order for later" placement="top-start">
                                         <button onClick={()=>{setSetOrderAlias(true)}} className='rounded-lg h-18.75 w-25 flex items-center gap-x-3 justify-center bg-gray-200 text-gray-400 font-light transition duration-200 hover:bg-gray-800 cursor-pointer hover:text-white'>
                                             <BookmarkIcon className={`w-6 h-6`} />
-                                            {/* Receive payment &amp; close order  */}
                                         </button>
-                                    </Tooltip>
+                                    </Tooltip> */}
                                     <button onClick={()=>{startPayment()}} className='rounded-lg h-18.75 w-full flex cursor-pointer items-center gap-x-3 justify-center bg-ss-dark-blue text-white transition duration-200 hover:bg-ss-black font-semibold'>
                                         <CheckIconCircled className={`w-6 h-6`} />
                                         Receive payment &amp; close order 

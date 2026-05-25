@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
-import { baseUrl, businessDetails, calculateFee } from '../../utils'
+import { baseUrl, businessDetails, calculateFee, clientId } from '../../utils'
 import { ERROR } from '../../store/types'
 import { checkoutCart, fetchCart } from '../../store/actions/cartActions'
 import TableLayout from '../../components/Layouts/TableLayout'
@@ -264,6 +264,7 @@ const Cart = () => {
       paymentMethod: activePaymentOption,
       paymentStatus: 'pending',
       sourceMenu: priceCard._id,
+      clientId: clientId(),
       table: tableId,
       business: businessDetails()?._id || storeId,
       orderBy: userDetails,
@@ -526,7 +527,7 @@ const Cart = () => {
                       {/* <span className='text-[14px]'>({cartState?.order?.vat.toLocaleString()} VAT)</span> */}
                     </p>
                   </div>
-                  <Link to={`/customer-order/${cartState?.order?.orderRef}`} className='flex items-center justify-center mt-4 gap-x-2 mx-auto p-3 rounded border border-ss-dark-blue/50 bg-ss-pale-blue/50 text-ss-dark-blue text-sm font-semibold transition duration-200'>
+                  <Link to={`/customer-orders/${cartState?.order?.orderRef}`} className='flex items-center justify-center mt-4 gap-x-2 mx-auto p-3 rounded border border-ss-dark-blue/50 bg-ss-pale-blue/50 text-ss-dark-blue text-sm font-semibold transition duration-200'>
                       See Order Details
                       <ArrowIcon className={`w-4 h-4`} />
                   </Link>

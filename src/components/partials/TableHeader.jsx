@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { businessDetails } from '../../utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchCart } from '../../store/actions/cartActions'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import BagIcon from '../elements/icons/BagIcon'
 import InlinePreloader from '../elements/InlinePreloader'
 
@@ -11,6 +11,7 @@ const TableHeader = () => {
     const cartSelector = useSelector((state => state.cart))
     const dispatch = useDispatch()
     const { tableId } = useParams()
+    const location = useLocation()
 
     useEffect(() => {
         if (!business?._id) {
@@ -37,6 +38,9 @@ const TableHeader = () => {
                     <BagIcon className={`text-ss-dark-blue w-5 h-5`} />
                 </Link>}
             </header>
+
+            {location.pathname !== '/customer-orders' && <Link to={`/customer-orders`} className='px-5 py-3 border border-ss-dark-blue/50 shadow-lg shadow-ss-dark-blue/10 rounded-full bg-ss-pale-blue text-ss-dark-blue font-semibold text-xs fixed bottom-10 right-5 z-999'>Your Orders</Link>}
+            {/* {location.pathname === '/customer-orders' && <Link to={`/tables/${tableId}`} className='px-5 py-3 border border-ss-dark-blue/50 shadow-lg shadow-ss-dark-blue/10 rounded-full bg-ss-pale-blue text-ss-dark-blue font-semibold text-xs fixed bottom-10 right-5 z-999'>Back to table</Link>} */}
         </>
     )
 }

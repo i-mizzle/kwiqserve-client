@@ -39,6 +39,7 @@ import UserDetails from './pages/business/settings/users/UserDetails.jsx'
 import NewUser from './pages/business/settings/users/NewUser.jsx'
 import CustomerOrderDetails from './pages/public/CustomerOrderDetails.jsx'
 import Notifier from './components/elements/Notifier.jsx'
+import CustomerOrders from './pages/public/CustomerOrders.jsx';
 
 function App() {
   return (
@@ -55,7 +56,8 @@ function App() {
           <Route path="/tables/:tableId" element={<PublicTable />} />
           <Route path="/tables/:tableId/cart" element={<Cart />} />
           <Route path="/tables/:tableId/verify-payment" element={<PaymentVerification />} />
-          <Route path="/customer-order/:orderRef" element={<CustomerOrderDetails />} />
+          <Route path="/customer-orders" element={<CustomerOrders />} />
+          <Route path="/customer-orders/:orderRef" element={<CustomerOrderDetails />} />
 
           <Route path="/business" element={<Business />}>
             <Route path="/business/" element={<Navigate replace to="/business/dashboard" />} />

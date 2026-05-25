@@ -73,7 +73,7 @@ const PaymentVerification = () => {
                                     <p className='uppercase tracking-[0.5em] text-xs mb-1 text-gray-500 mt-3'>order ref</p>
                                     <h1 className='font-semibold text-ss-dark-blue mb-5 text-3xl'>{order.orderRef}</h1>
 
-                                    <Link to={`/customer-order/${order.orderRef}`} className='flex items-center justify-center gap-x-2 mx-auto p-3 rounded border border-ss-dark-blue/50 bg-ss-pale-blue/50 text-ss-dark-blue text-sm font-semibold transition duration-200'>
+                                    <Link to={`/customer-orders/${order.orderRef}`} className='flex items-center justify-center gap-x-2 mx-auto p-3 rounded border border-ss-dark-blue/50 bg-ss-pale-blue/50 text-ss-dark-blue text-sm font-semibold transition duration-200'>
                                         See Order Details
                                         <ArrowIcon className={`w-4 h-4`} />
                                     </Link>
