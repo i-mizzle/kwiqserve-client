@@ -184,7 +184,7 @@ const Orders = () => {
             <>
                 <div className='min-h-screen h-inherit'>
                     <div className='w-full xl:flex flex-row gap-x-8'>
-                        <div className={`w-full pb-6 px-3 xl:px-12 mt-4`}>
+                        <div className={`w-full pb-6 xl:px-12 mt-4`}>
                             <div className='lg:flex justify-between items-center mt-4 mb-4'>
                                 <div>
                                     <h1 className='text-3xl font-bold text-ss-dark-gray'>Orders <span className='text-[14px] font-normal'>({ordersState.orders?.total || '0'} orders)</span></h1>
@@ -248,9 +248,9 @@ const Orders = () => {
 
                                     <div className='block xl:hidden'>
                                         {ordersState.orders?.orders?.map((order, orderIndex) => (
-                                            <Link to={`/business/orders/order/${order._id}`} key={orderIndex} className='w-full block relative mb-5 gap-x-2.5 bg-white my-2.5 rounded-lg shadow-xl shadow-green-500/5'>
+                                            <Link to={`/business/orders/order/${order._id}`} key={orderIndex} className='w-full block relative mb-5 gap-x-2.5 bg-white my-2.5 rounded-lg shadow-lg border border-gray-100 shadow-green-500/5'>
                                                 
-                                                <div className='flex items-end justify-between gap-x-2.5 border-b p-5'>
+                                                <div className='flex items-end justify-between gap-x-2.5 border-b border-gray-300 p-5'>
                                                     {/* <OrderSummary item={order} /> */}
                                                     <div className='w-full flex items-start gap-x-2.5'>
                                                         <div className='w-10 flex items-center justify-center h-15'>
@@ -279,7 +279,7 @@ const Orders = () => {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className='flex items-center justify-between px-5 py-2.5 bg-green-50 bg-opacity-20'>
+                                                <div className='flex items-center justify-between px-5 py-2.5 rounded-b-lg bg-green-50 bg-opacity-20'>
                                                     <p className='text-xs text-gray-600'>{new Date(order?.createdAt).toDateString()} - {new Date(order?.createdAt).toLocaleTimeString()}</p>
                                                     <Currency amount={order.total || 0} vat={order.vat !== 0 && order.vat}/>
                                                 </div>

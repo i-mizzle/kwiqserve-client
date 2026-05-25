@@ -173,8 +173,8 @@ const TableDetails = () => {
       {loading ? 
         <Loader />
         :
-        <div className='w-full relative pt-12'>
-          <div className='w-full 2xl:w-10/12 mx-auto pb-6 px-3 xl:flex items-start gap-x-5'>
+        <div className='w-full relative pt-2 xl:pt-12'>
+          <div className='w-full 2xl:w-10/12 mx-auto pb-6 lg:px-3 xl:flex items-start gap-x-5'>
             <div className='w-full xl:w-9/12'>
               <div className='w-full lg:flex items-start gap-x-5 pb-12'>
                 <div className='w-full xl:w-1/2'>

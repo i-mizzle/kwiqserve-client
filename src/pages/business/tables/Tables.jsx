@@ -106,7 +106,7 @@ const Tables = () => {
                                         <PlusIcon className={`h-5 w-5`} />
                                         Create a Table
                                     </button>
-                                    <button onClick={()=>{toggleNewTables('multiple')}} className='flex xl:w-max w-full gap-x-2 items-center justify-center mt-5 lg:mt-0 bg-ss-pale-blue border border-ss-dark-blue px-4 py-3 rounded-lg transition duration-200 hover:bg-blue-200 cursor-pointer font-[550] text-ss-dark-blue'>
+                                    <button onClick={()=>{toggleNewTables('multiple')}} className='flex xl:w-max mb-4 w-full gap-x-2 items-center justify-center mt-5 lg:mt-0 bg-ss-pale-blue border border-ss-dark-blue px-4 py-3 rounded-lg transition duration-200 hover:bg-blue-200 cursor-pointer font-[550] text-ss-dark-blue'>
                                         <SquaresStackedIcon className={`h-5 w-5`} />
                                         Create Multiple Tables
                                     </button>

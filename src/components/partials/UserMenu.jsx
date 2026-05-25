@@ -40,7 +40,7 @@ const UserMenu = ({businessDetails, userDetails, logOut}) => {
             {hasPermissions(['*', 'business.*', 'business.users.*', 'business.users.read']) && 
               <Menu.Item>
               {({ active }) => (
-                <Link to="/business/users"
+                <Link to="/business/settings/users"
                 className={`${
                   active ? 'bg-gray-200 text-white' : 'text-gray-900'
                 } group xl:hidden flex rounded-md items-center w-full px-2 py-2 my-2 text-sm`}
@@ -49,7 +49,7 @@ const UserMenu = ({businessDetails, userDetails, logOut}) => {
                 </Link>
               )}
             </Menu.Item>}
-            
+
             <Menu.Item>
               {({ active }) => (
                 <Link to="/business/menus"
@@ -92,7 +92,7 @@ const UserMenu = ({businessDetails, userDetails, logOut}) => {
                 <Link to="/business/settings/business-settings"
                 className={`${
                   active ? 'bg-gray-200 text-white' : 'text-gray-900'
-                } group flex rounded-md items-center w-full px-2 py-2 my-2 text-sm`}
+                } group flex rounded-md items-center w-full px-2 py-2 my-2 text-sm xl:hidden`}
               >
                   Business Details
                 </Link>

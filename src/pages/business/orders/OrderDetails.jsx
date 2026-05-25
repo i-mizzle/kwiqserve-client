@@ -582,7 +582,7 @@ const OrderDetails = () => {
                             </div>}
 
                             <div className='relative w-full mt-5'>
-                                {newOrderDetails?.items?.length > 0 ? <div className='w-full px-8 xl:px-5'>
+                                {newOrderDetails?.items?.length > 0 ? <div className='w-full lg:px-8 xl:px-5'>
                                     <h3 className='text-lg font-medium mb-4'>Items in this order</h3>
                                     {newOrderDetails.items && newOrderDetails.items.length > 0 && newOrderDetails.items.map((item, itemIndex) => (
                                         <div key={itemIndex} className='flex flex-row gap-x-4 justify-between my-3 pt-1 pb-2 rounded border-b border-gray-300'>
@@ -623,7 +623,7 @@ const OrderDetails = () => {
 
                             {newOrderDetails?.items?.length > 0 && <div className='w-full mt-12 pb-12'>
 
-                                <div className='w-full flex justify-between items-center p-2.5'>
+                                <div className='w-full flex justify-between items-center py-2.5'>
                                     <div className='flex items-center gap-x-4'>
                                         {newOrderDetails?.paymentStatus !== 'paid' && <div className='flex items-center'>
                                             <button onClick={()=>{printBill()}} className='rounded-lg h-12.5 px-4 font-semibold flex items-center gap-x-2 justify-center bg-ss-pale-blue border-2 border-ss-dark-blue text-ss-dark-blue transition duration-200 hover:bg-blue-300 cursor-pointer'>
@@ -641,9 +641,9 @@ const OrderDetails = () => {
                                     </div>
 
                                     {/* <h3 className='font-courier-prime text-5xl text-gray-600'>{orderTotal}</h3> */}
-                                    <h3 className='font-courier-prime text-3xl text-gray-600 pr-2.5'><span className='text-sm'>NGN </span>{(orderTotal(newOrderDetails, settingsState?.settings)?.total + calculateFee(orderTotal(newOrderDetails, settingsState?.settings)?.total))?.toLocaleString()}</h3>
+                                    <h3 className='font-courier-prime text-3xl text-gray-600'><span className='text-sm'>NGN </span>{(orderTotal(newOrderDetails, settingsState?.settings)?.total + calculateFee(orderTotal(newOrderDetails, settingsState?.settings)?.total))?.toLocaleString()}</h3>
                                 </div>
-                                {(!newOrderDetails?.paymentStatus || newOrderDetails?.paymentStatus === 'unpaid') && <div className='px-2.5 mt-5 flex items-center gap-x-2.5'>
+                                {(!newOrderDetails?.paymentStatus || newOrderDetails?.paymentStatus === 'unpaid') && <div className='mt-5 flex items-center gap-x-2.5'>
                                     <Tooltip title="Park order for later" placement="top-start">
                                         <button onClick={()=>{setSetOrderAlias(true)}} className='rounded-lg h-18.75 w-25 flex items-center gap-x-3 justify-center bg-gray-200 text-gray-400 font-light transition duration-200 hover:bg-gray-800 cursor-pointer hover:text-white'>
                                             <BookmarkIcon className={`w-6 h-6`} />
@@ -655,7 +655,7 @@ const OrderDetails = () => {
                                         Receive payment &amp; close order 
                                     </button>
                                 </div>}
-                                {newOrderDetails?.paymentStatus === 'paid' && <div className='flex items-center px-5'>
+                                {newOrderDetails?.paymentStatus === 'paid' && <div className='flex items-center'>
                                     <button onClick={()=>{printReceipt()}} className='h-16.25 w-full flex items-center gap-x-3 justify-center bg-green-500 text-white font-semibold transition duration-200 hover:bg-green-800 rounded-lg'>
                                         <PrinterIcon className={`w-6 h-6`} />
                                        Print receipt 

@@ -19,7 +19,7 @@ const AppLayout = ({children, pageTitle}) => {
     // }
     const business = businessDetails()
     // console.log(business)
-    const { enablePushNotifications, isLoading, isSubscribed } = usePushNotifications();
+    const { enablePushNotifications, isLoading, isSubscribed, isBlocked } = usePushNotifications();
     
     return (
         <Fragment>
@@ -32,7 +32,7 @@ const AppLayout = ({children, pageTitle}) => {
                         />
                     </div>
 
-                    {!isSubscribed && <div className='mt-20 rounded-lg -mb-15 p-3 bg-yellow-50 border border-yellow-800/20 mx-auto w-11/12 lg:w-9/12 shadow-xl shadow-yellow-800/5 lg:flex items-start'>
+                    {!isSubscribed && !isBlocked && <div className='mt-20 rounded-lg -mb-15 p-3 bg-yellow-50 border border-yellow-800/20 mx-auto w-11/12 lg:w-9/12 shadow-xl shadow-yellow-800/5 lg:flex items-start'>
                         <div className='w-10 mr-3 hidden xl:block'>
                             <BellAlertIcon className={`w-8 h-8 text-yellow-800/50 animate-pulse rotate-25`} />
                         </div>

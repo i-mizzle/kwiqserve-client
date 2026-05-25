@@ -259,7 +259,7 @@ const Payments = () => {
                         <ErrorMessage message={error} dismissHandler={()=>{setError(false)}} />
                     }
 
-                    <div className="w-full px-5 xl:px-12 py-4">
+                    <div className="w-full lg:px-5 xl:px-12 py-4">
                         <div className='lg:flex flex-row justify-between items-center py-3 mb-1 xl:mb-5'>
                             <div className="w-full">
                                 <h1 className='text-3xl font-bold text-ss-dark-gray'>Your Business Payments <span className='text-[14px] font-normal'>({ordersState.orders?.total || '0'} transactions)</span></h1>
@@ -268,8 +268,8 @@ const Payments = () => {
                             </div>
 
                             
-                            <div className=' flex flex-row-reverse w-2/12'>
-                                <button onClick={()=>{getTransactionsCsv()}} className='flex gap-x-2 items-center justify-center bg-ss-dark-blue border border-ss-dark-blue px-4 py-3 rounded-lg text-white transition duration-200 hover:bg-ss-black font-[550]'>
+                            <div className=' flex flex-row-reverse w-full xl:w-2/12 my-4 lg:my-0'>
+                                <button onClick={()=>{getTransactionsCsv()}} className='flex gap-x-2 items-center justify-center bg-ss-dark-blue border border-ss-dark-blue px-4 py-3 rounded-lg text-white transition duration-200 hover:bg-ss-black font-[550] w-full lg:w-max'>
                                     {fetchingCsv ? <InlinePreloader /> : 
                                     <span className='flex gap-x-2 items-center justify-center'>
                                         <ArrowUpTrayIcon className={`h-5 w-5`} />
@@ -279,8 +279,8 @@ const Payments = () => {
                             </div>
                         </div>
 
-                        <div className='w-full flex items-start justify-between'>
-                            <div className='w-full'>
+                        <div className='w-full xl:flex items-start justify-between'>
+                            <div className='w-full mb-5 xl:mb-0'>
                                 <Filters filterOptions={filterOptions} returnSelected={(selectedFilters)=>{setFilters(selectedFilters)}} />
                             </div>
                             <div className='w-full lg:w-6/12 flex flex-row-reverse gap-x-4 items-center'>
@@ -290,7 +290,7 @@ const Payments = () => {
                     </div>
 
                     {!transactionsState.fetchingTransactions ? <div className='w-full'>
-                        <div className='px-6 xl:px-12 mt-5 xl:mt-12'>
+                        <div className='xl:px-12 mt-5 xl:mt-12'>
                             {searching 
                                 ? 
                                     <div className='px-44 py-4 flex flex-row items-center justify-center gap-x-5 p-5 w-full text-xs text-center bg-black bg-opacity-20 rounded-lg mt-8'>
@@ -330,10 +330,10 @@ const Payments = () => {
                                     <div className='block xl:hidden pb-5'>
                                         {transactionsState.transactions?.transactions?.map((transaction, transactionIndex)=> (
                                             <div key={transactionIndex} className='rounded-lg shadow-xl shadow-ss-dark-blue/5 mb-5 bg-white'>
-                                                <div className='w-full flex items-start justify-between gap-x-2.5 p-5 border-b'>
+                                                <div className='w-full flex items-start justify-between gap-x-2.5 p-5 border-b border-gray-200'>
                                                     <div className='w-full'>
                                                         <TransactionLink type={transaction.order ? 'inflow' : 'outflow'} reference={transaction.transactionReference} index={transactionIndex} />
-                                                    <p className='text-xs -mt-1.25 ml-12.5'>{new Date(transaction?.createdAt).toDateString()} - {new Date(transaction?.createdAt).toLocaleTimeString()}</p>
+                                                        <p className='text-xs mt-2 ml-8'>{new Date(transaction?.createdAt).toDateString()} - {new Date(transaction?.createdAt).toLocaleTimeString()}</p>
                                                     </div>
                                                     <div className='w-37.5 flex flex-row-reverse'>
                                                         <Currency amount={transaction.amount || 0}/>

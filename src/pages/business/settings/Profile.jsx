@@ -109,7 +109,7 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className='w-8/12'>
+          <div className='w-full l:w-8/12'>
             <h1 className='text-xl font-bold text-ss-dark-gray'>Security</h1>
             <p className='text-gray-500 text-sm'>Create and manage menus for your menu items. Click on a price card to view details or create a new one by clicking "Create a Menu"</p>
 

@@ -297,7 +297,7 @@ const Cart = () => {
             </div>
             {activeStep === 1 && 
               <div className='w-full'>
-                <div className='w-full lg:w-8/12 xl:w-7/12 2xl:w-5/12 mt-4 mx-auto p-8 bg-white shadow-xl shadow-ss-dark-blue/10'>
+                <div className='w-full lg:w-8/12 xl:w-7/12 2xl:w-5/12 mt-4 mx-auto p-4 lg:p-8 bg-white shadow-xl shadow-ss-dark-blue/10'>
                   {cartState?.cart?.items.length > 0 ? <div className=''>
                     <h3 className='font-semibold text-4xl'>Your Order</h3>
                     <p className='mt-2 mb-2 pb-4 text-sm border-b border-gray-300'>You can add or remove items from your bag by clicking the +/- buttons and click on "Proceed to checkout" when you're ready.</p>
@@ -323,7 +323,7 @@ const Cart = () => {
             {activeStep === 2 && 
               <div className='w-full xl:flex items-start gap-x-3.75 justify-center relative'>
                 <div className='w-full xl:w-5/12'>
-                  <div className='p-8 bg-white w-full shadow-xl shadow-green-500/5 mb-5 mt-4'>
+                  <div className='p-4 lg:p-8 bg-white w-full shadow-xl shadow-green-500/5 mb-5 mt-4'>
                     <p className="uppercase tracking-[0.2em] text-gray-600">YOUR DETAILS</p>
                     <p className='mt-2 mb-2 pb-4 border-b border-gray-300 text-sm'>Your name and contact details</p>
 
@@ -462,7 +462,7 @@ const Cart = () => {
 
                   {/* </div> */}
 
-                  <div className='p-8 bg-white mx-auto mb-5 shadow-xl shadow-green-500/5'>
+                  <div className='p-4 lg:p-8 bg-white mx-auto mb-5 shadow-xl shadow-green-500/5'>
                     <p className="uppercase tracking-[0.2em] text-gray-600">PAYMENT METHOD</p>
                     <p className='mt-2 mb-2 pb-4 border-b border-gray-300 text-sm'>Please select your preferred method of payment for this order.</p>
 
@@ -475,7 +475,7 @@ const Cart = () => {
 
                   </div>
                 </div>
-                <div className='w-full xl:w-4/12 p-8 bg-white mt-2 shadow-xl shadow-green-500/5 xl:sticky xl:top-12.5'>
+                <div className='w-full xl:w-4/12 p-4 lg:p-8 bg-white mt-2 shadow-xl shadow-green-500/5 xl:sticky xl:top-12.5'>
                   <div className=''>
                     <h1 className="text-gray-600 text-4xl">Checkout Items</h1>
                     <p className='mt-2 mb-2 pb-4 border-b border-gray-300 text-sm'>You can add or remove items from your bag by clicking the +/- buttons</p>
