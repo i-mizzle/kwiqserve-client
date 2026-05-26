@@ -1,22 +1,46 @@
 self.addEventListener('push', (event) => {
-  const data = event.data.json();
+  let payload = {};
 
-  event.waitUntil(
-    self.registration.showNotification(data.title, {
-      body: data.body,
-      vibrate: [200, 100, 200], // vibrate, pause, vibrate
-      icon: '/icon.png',
-      data: {
-        url: data.url
-      }
-    })
-  );
+  try {
+    payload = event.data ? event.data.json() : {};
+  } catch {
+    payload = { title: 'Notification', body: 'You have a new update', url: '/' };
+  }
+
+  const title = payload.title || 'Notification';
+  const options = {
+    body: payload.body,
+    icon: payload.icon,
+    badge: payload.badge,
+    image: payload.image,
+    tag: payload.tag,
+    renotify: payload.renotify,
+    requireInteraction: payload.requireInteraction,
+    silent: payload.silent,
+    vibrate: payload.vibrate,
+    timestamp: payload.timestamp,
+    data: {
+      url: payload.url || '/'
+    }
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
 });
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
+  const targetUrl = event.notification.data?.url || '/';
 
   event.waitUntil(
-    self.clients.openWindow(event.notification.data.url)
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if (client.url === targetUrl && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      if (self.clients.openWindow) {
+        return self.clients.openWindow(targetUrl);
+      }
+    })
   );
 });

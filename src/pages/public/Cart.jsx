@@ -513,7 +513,7 @@ const Cart = () => {
 
           {cartState?.order && <div className='min-h-screen h-inherit bg-gray-100 p-4 lg:p-24 xl:p-32 pt-25'>
             <div className='w-full'>
-              <div className='w-11/12 lg:w-8/12 xl:w-7/12 2xl:w-5/12 mx-auto p-8 bg-white'>
+              <div className='w-full lg:w-8/12 xl:w-7/12 2xl:w-5/12 mx-auto p-8 bg-white'>
                 <div className=''>
                   <h3 className='font-semibold text-2xl'>Thank you</h3>
                   <p className='mt-2 mb-2 pb-4 border-b border-gray-300'>Your order has been placed and is currently being processed</p>
