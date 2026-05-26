@@ -81,7 +81,7 @@ const UserMenu = ({businessDetails, userDetails, logOut}) => {
                   active ? 'bg-gray-200 text-white' : 'text-gray-900'
                 } group flex rounded-md items-center gap-x-1.25 w-full px-2 py-2 my-2 text-sm`}
               >
-                  <CogIcon className={`w-5.5 h-5.5 text-ss-dark-blue`} />
+                  <CogIcon className={`w-5.5 h-5.5 text-ss-dark-blue hidden xl:inline-block`} />
                   Profile & Settings
                 </Link>
               )}
